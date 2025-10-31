@@ -14,10 +14,8 @@ public:
 	GLfloat getXChange();
 	GLfloat getYChange();
 	GLfloat getmuevex() { return muevex; }
-	GLboolean getadelante() { return adelante; }
 
 
-	GLfloat getarticulacion1() { return articulacion1; }
 
 	GLboolean getPrendida() { return luzPrendida; }
 	GLboolean getPrendida2() { return luzPrendida2; }
@@ -31,18 +29,7 @@ public:
 	void setPuertaCerrada() { puertaCerrada = !puertaCerrada; }
 	void setPuertaAbriendose() { puertaAbriendose = !puertaAbriendose; }
 
-	// Dado
-	GLboolean getDadoInicio() { return dadoInicio; }
-	GLboolean getDadoLanzado() { return dadoLanzado; }
-	void setDadoInicio() { dadoInicio = !dadoInicio; }
-	void setDadoLanzado() { dadoLanzado = !dadoLanzado; }
 
-	GLfloat getRotX() { return RotX; }
-	GLfloat getRotY() { return RotY; }
-	GLfloat getRotZ() { return RotZ; }
-	void setRotX() { RotX = 0.0f; }
-	void setRotY() { RotY = 0.0f; }
-	void setRotZ() { RotZ = 0.0f; }
 
 
 

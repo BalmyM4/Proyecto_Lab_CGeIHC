@@ -17,19 +17,10 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	muevex = 0.0f;
 	adelante = true;
 
-	articulacion1 = 0.0f;
-	dir1 = 1.0f;
 	
 	// Puerta
 	puertaCerrada = true;
 	puertaAbriendose = false;
-
-	// Dado
-	dadoInicio = true;
-	dadoLanzado = false;
-	RotX = 0.0f;
-	RotY = 0.0f;
-	RotZ = 0.0f;
 
 
 	lucesPuntuales = 0.0f;
@@ -181,38 +172,6 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		}
 	}
 
-	if (key == GLFW_KEY_V && action == GLFW_PRESS)
-	{
-		if (!theWindow->dadoLanzado)
-		{
-			theWindow->dadoLanzado = true;
-		}
-	}
-
-	if (key == GLFW_KEY_Y && action == GLFW_PRESS)
-	{
-		theWindow->RotX += 5.0;
-	}
-	if (key == GLFW_KEY_H && action == GLFW_PRESS)
-	{
-		theWindow->RotY += 5.0;
-	}
-	if (key == GLFW_KEY_B && action == GLFW_PRESS)
-	{
-		theWindow->RotZ += 5.0;
-	}
-	if (key == GLFW_KEY_U && action == GLFW_PRESS)
-	{
-		theWindow->RotX -= 5.0;
-	}
-	if (key == GLFW_KEY_J && action == GLFW_PRESS)
-	{
-		theWindow->RotY -= 5.0;
-	}
-	if (key == GLFW_KEY_N && action == GLFW_PRESS)
-	{
-		theWindow->RotZ -= 5.0;
-	}
 
 
 

@@ -90,8 +90,12 @@ Model Puerta_reja_piso;
 Model Puerta_reja_puerta_izquierda;
 Model Puerta_reja_puerta_derecha;
 
+
+// Banco Hollow Knight
+Model hk_Banco;
+
 // Lampara Hollow Knight
-Model Lampara_HK;
+Model hk_Lampara;
 
 // Ring
 Model Ring;
@@ -376,9 +380,14 @@ int main()
 	Puerta_reja_puerta_derecha = Model();
 	Puerta_reja_puerta_derecha.LoadModel("Models/Hollow_knight/hk_Puerta_reja_puerta_derecha.obj");
 
+
+	// Banco Hollow Knight
+	hk_Banco = Model();
+	hk_Banco.LoadModel("Models/Hollow_knight/hk_Banco.obj");
+
 	// Lampara Hollow Knight
-	Lampara_HK = Model();
-	Lampara_HK.LoadModel("Models/Hollow_knight/hk_Lampara.obj");
+	hk_Lampara = Model();
+	hk_Lampara.LoadModel("Models/Hollow_knight/hk_Lampara.obj");
 
 	// Ring
 	Ring = Model();
@@ -388,7 +397,7 @@ int main()
 	Roca = Model();
 	Roca.LoadModel("Models/Escenario/es_Roca_canasta.obj");
 	RocaPequenia = Model();
-	RocaPequenia.LoadModel("Models/Escenario/es_Roca_canasta_pequeña.obj");
+	RocaPequenia.LoadModel("Models/Escenario/es_Roca_canasta_pequenia.obj");
 
 
 	// =================================================================== //
@@ -537,9 +546,9 @@ int main()
 		model = glm::mat4(1.0);
 
 		// Posicionamiento global
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -150.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.01f, -150.0f));
 		ringCentro = model;
-		model = glm::scale(model, glm::vec3(4.0f, 3.0f, 4.0f));
+		model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Ring.RenderModel();
 
@@ -550,7 +559,69 @@ int main()
 		//																					//
 		// ================================================================================ //
 
+		// Roca grande ---------------------------------------------------------
+		model = glm::mat4(1.0);
 
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-30.0f, 55.0f, 10.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.5f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Roca.RenderModel();
+
+		// Roca pequeña ---------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(30.0f, 55.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.5f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		RocaPequenia.RenderModel();
+
+		// ================================================================================ //
+		//																					//
+		//							Bancas_HK y Lamparas_HK									//
+		//																					//
+		// ================================================================================ //
+
+		// Banca del fondo ---------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(0.0f, 4.0f, -80.0f));
+		modelaux = model;
+		model = glm::scale(model, glm::vec3(15.0f, 15.0f, 15.0f));
+		model = glm::rotate(model, 180.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Banco.RenderModel();
+
+		// Lampara asociada a la banca del fondo -------------------------------
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(15.0f, -4.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Lampara.RenderModel();
+
+		// Banca de adelante ---------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(0.0f, 4.0f, 80.0f));
+		modelaux = model;
+		model = glm::scale(model, glm::vec3(15.0f, 15.0f, 15.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Banco.RenderModel();
+
+		// Lampara asociada a la banca de adelante -------------------------------
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(-15.0f, -4.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		model = glm::rotate(model, 180.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Lampara.RenderModel();
 
 
 		// ================================================================================ //
