@@ -1,0 +1,18 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(538,5): warning MSB8028: El directorio intermedio (x64\Release\) contiene archivos compartidos de otro proyecto (P8_BFGP.vcxproj). Esto puede dar lugar a un comportamiento incorrecto de limpieza y recompilación.
+  practica9full _G3.cpp
+C:\Users\patob\Desktop\Compu\P9_BFGP\P9_BFGP\P9_BFGP\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "practica9full%20_G3.cpp")
+  
+C:\Users\patob\Desktop\Compu\P9_BFGP\P9_BFGP\P9_BFGP\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "practica9full%20_G3.cpp")
+  
+C:\Users\patob\Desktop\Compu\P9_BFGP\P9_BFGP\P9_BFGP\practica9full _G3.cpp(162,24): warning C4267: 'inicializando': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos
+C:\Users\patob\Desktop\Compu\P9_BFGP\P9_BFGP\P9_BFGP\practica9full _G3.cpp(529,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\patob\Desktop\Compu\P9_BFGP\P9_BFGP\P9_BFGP\practica9full _G3.cpp(531,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\patob\Desktop\Compu\P9_BFGP\P9_BFGP\P9_BFGP\practica9full _G3.cpp(1021,22): warning C4305: '+=': truncamiento de 'double' a 'float'
+  Generando código
+  Previous IPDB not found, fall back to full compilation.
+C:\Users\patob\Desktop\Compu\P9_BFGP\P9_BFGP\P9_BFGP\Window.cpp(97): warning C4715: 'Window::Initialise': no todas las rutas de acceso de control devuelven un valor
+  All 958 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Generación de código finalizada
+  P9_BFGP.vcxproj -> C:\Users\patob\Desktop\Compu\P9_BFGP\P9_BFGP\x64\Release\P9_BFGP.exe
