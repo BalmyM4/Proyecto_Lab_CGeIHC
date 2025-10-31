@@ -52,6 +52,22 @@ float toffsetcartelu = 0.0f;
 float toffsetcartelv = 0.0f;
 float tiempoAcumulado = 0.0f;
 
+// Luciernagas
+float Lu_aXZ = 10.0f;
+float Lu_aY = 5.0f;
+float Lu_frecAng = 2.0f;
+float Lu_phi = 0.0f;
+float Lu_mov = 0.0f;
+
+float Lu_x = 0.0f;
+float Lu_y = 0.0f;
+float Lu_z = 0.0f;
+
+float Lu_alaAbajo = 0.0f;
+float Lu_rot_ala = 0.0f;
+
+
+
 // =================================================================== //
 
 
@@ -90,8 +106,16 @@ Model Puerta_reja_piso;
 Model Puerta_reja_puerta_izquierda;
 Model Puerta_reja_puerta_derecha;
 
+// Banco Hollow Knight
+Model hk_Banco;
+
 // Lampara Hollow Knight
-Model Lampara_HK;
+Model hk_Lampara;
+
+// Luciernaga Hollow Knight
+Model hk_Luciernaga_cuerpo;
+Model hk_Luciernaga_ala;
+Model hk_Luciernaga_ala_izq;
 
 // Ring
 Model Ring;
@@ -376,9 +400,21 @@ int main()
 	Puerta_reja_puerta_derecha = Model();
 	Puerta_reja_puerta_derecha.LoadModel("Models/Hollow_knight/hk_Puerta_reja_puerta_derecha.obj");
 
+	// Banco Hollow Knight
+	hk_Banco = Model();
+	hk_Banco.LoadModel("Models/Hollow_knight/hk_Banco.obj");
+
 	// Lampara Hollow Knight
-	Lampara_HK = Model();
-	Lampara_HK.LoadModel("Models/Hollow_knight/hk_Lampara.obj");
+	hk_Lampara = Model();
+	hk_Lampara.LoadModel("Models/Hollow_knight/hk_Lampara.obj");
+
+	// Luciernaga Hollow Knight
+	hk_Luciernaga_cuerpo = Model();
+	hk_Luciernaga_cuerpo.LoadModel("Models/Hollow_knight/hk_Luciernaga_cuerpo.obj");
+	hk_Luciernaga_ala = Model();
+	hk_Luciernaga_ala.LoadModel("Models/Hollow_knight/hk_Luciernaga_ala.obj");
+	hk_Luciernaga_ala_izq = Model();
+	hk_Luciernaga_ala_izq.LoadModel("Models/Hollow_knight/hk_Luciernaga_ala_izq.obj");
 
 	// Ring
 	Ring = Model();
@@ -388,7 +424,7 @@ int main()
 	Roca = Model();
 	Roca.LoadModel("Models/Escenario/es_Roca_canasta.obj");
 	RocaPequenia = Model();
-	RocaPequenia.LoadModel("Models/Escenario/es_Roca_canasta_pequeña.obj");
+	RocaPequenia.LoadModel("Models/Escenario/es_Roca_canasta_pequenia.obj");
 
 
 	// =================================================================== //
@@ -457,6 +493,8 @@ int main()
 	glm::mat4 model(1.0);
 	glm::mat4 modelaux(1.0);
 	glm::mat4 ringCentro(1.0);
+	glm::mat4 luciernagaPos(1.0);
+
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 
@@ -537,9 +575,9 @@ int main()
 		model = glm::mat4(1.0);
 
 		// Posicionamiento global
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -150.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.01f, -150.0f));
 		ringCentro = model;
-		model = glm::scale(model, glm::vec3(4.0f, 3.0f, 4.0f));
+		model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Ring.RenderModel();
 
@@ -551,6 +589,268 @@ int main()
 		// ================================================================================ //
 
 
+		// Roca grande ---------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-30.0f, 55.0f, 10.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.5f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Roca.RenderModel();
+
+		// Roca pequeña ---------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(30.0f, 55.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.5f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		RocaPequenia.RenderModel();
+
+
+		// ================================================================================ //
+		//																					//
+		//					Bancas_HK, Lamparas_HK y Luciernagas_HK							//
+		//																					//
+		// ================================================================================ //
+
+		// Animación de las luciernagas --------------------------------------------
+
+		Lu_mov += deltaTime * 0.01;
+
+	
+
+		// Alas angulo
+		if (Lu_alaAbajo)
+		{
+			if (Lu_rot_ala > -65.0f)
+			{
+				Lu_rot_ala -= 4.0f * deltaTime;
+			}
+			else
+			{
+				Lu_alaAbajo = !Lu_alaAbajo;
+			}
+		}
+		else
+		{
+			if (Lu_rot_ala < 35.0f)
+			{
+				Lu_rot_ala += 4.0f * deltaTime;
+			}
+			else
+			{
+				Lu_alaAbajo = !Lu_alaAbajo;
+			}
+		}
+
+
+		// Banca del fondo ---------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(0.0f, 4.0f, -80.0f));
+		modelaux = model;
+		model = glm::scale(model, glm::vec3(15.0f, 15.0f, 15.0f));
+		model = glm::rotate(model, 180.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Banco.RenderModel();
+
+		// Lampara asociada a la banca del fondo ---------------------------------
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(15.0f, -4.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Lampara.RenderModel();
+
+		// Luciernagas asociadas a la lampara de la banca del fondo ---------------
+
+		Lu_x = Lu_aXZ * cos(Lu_mov);
+		Lu_z = Lu_aXZ * sin(Lu_mov);
+		Lu_y = Lu_aY * sin(Lu_frecAng * Lu_mov);
+
+		// Cuerpo [0]
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(0.0f + Lu_x, 15.0f + Lu_y, 0.0f + Lu_z));
+		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		luciernagaPos = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_cuerpo.RenderModel();
+
+		// Ala derecha [0]
+		model = luciernagaPos;
+		model = glm::translate(model, glm::vec3(-0.3f, 0.0f, 0.0f));
+		model = glm::rotate(model, Lu_rot_ala * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_ala.RenderModel();
+
+		// Ala izquierda [0]
+		model = luciernagaPos;
+		model = glm::translate(model, glm::vec3(0.3f, 0.0f, 0.0f));
+		model = glm::rotate(model, -1 * Lu_rot_ala * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_ala_izq.RenderModel();
+
+		Lu_x = (Lu_aXZ * cos(Lu_mov)) / (1 + pow(sin(Lu_mov), 2));
+		Lu_z = (Lu_aXZ * sin(Lu_mov) * cos(Lu_mov)) / (1 + pow(sin(Lu_mov), 2));
+		Lu_y = Lu_aY * sin(Lu_frecAng * Lu_mov + Lu_phi);
+
+		// Cuerpo [1]
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(0.0f - Lu_x, 15.0f - Lu_y, 0.0f - Lu_z));
+		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		luciernagaPos = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_cuerpo.RenderModel();
+
+		// Ala derecha [1]
+		model = luciernagaPos;
+		model = glm::translate(model, glm::vec3(-0.3f, 0.0f, 0.0f));
+		model = glm::rotate(model, Lu_rot_ala * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_ala.RenderModel();
+
+		// Ala izquierda [1]
+		model = luciernagaPos;
+		model = glm::translate(model, glm::vec3(0.3f, 0.0f, 0.0f));
+		model = glm::rotate(model, -1 * Lu_rot_ala * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_ala_izq.RenderModel();
+
+		Lu_x = 2.0f * sin(Lu_mov) * (exp(cos(Lu_mov)) - 2 * cos(4 * Lu_mov) - pow(sin(Lu_mov / 12), 5));
+		Lu_z = 2.0f * cos(Lu_mov) * (exp(cos(Lu_mov)) - 2 * cos(4 * Lu_mov) - pow(sin(Lu_mov / 12), 5));
+		Lu_y = 2.0f * sin(0.5f * Lu_mov) + 0.5f * sin(5.0f * Lu_mov);
+
+		Lu_x += 0.3f * (sin(3.1f * Lu_mov));
+		Lu_z += 0.3f * (cos(2.7f * Lu_mov));
+
+		// Cuerpo [2]
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(0.0f + Lu_x, 10.0f + Lu_y, 0.0f + Lu_z));
+		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		luciernagaPos = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_cuerpo.RenderModel();
+
+		// Ala derecha [2]
+		model = luciernagaPos;
+		model = glm::translate(model, glm::vec3(-0.3f, 0.0f, 0.0f));
+		model = glm::rotate(model, Lu_rot_ala * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_ala.RenderModel();
+
+		// Ala izquierda [2]
+		model = luciernagaPos;
+		model = glm::translate(model, glm::vec3(0.3f, 0.0f, 0.0f));
+		model = glm::rotate(model, -1 * Lu_rot_ala * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_ala_izq.RenderModel();
+
+
+		// Banca de adelante ---------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(0.0f, 4.0f, 80.0f));
+		modelaux = model;
+		model = glm::scale(model, glm::vec3(15.0f, 15.0f, 15.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Banco.RenderModel();
+
+		// Lampara asociada a la banca de adelante -------------------------------
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(-15.0f, -4.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		model = glm::rotate(model, 180.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Lampara.RenderModel();
+
+		// Luciernagas asociadas a la banca de adelante --------------------------
+
+		Lu_x = Lu_aXZ * cos(Lu_mov);
+		Lu_z = Lu_aXZ * sin(Lu_mov);
+		Lu_y = Lu_aY * sin(Lu_frecAng * Lu_mov);
+
+		// Cuerpo [0]
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(0.0f + Lu_x, 15.0f + Lu_y, 0.0f + Lu_z));
+		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		luciernagaPos = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_cuerpo.RenderModel();
+
+		// Ala derecha [0]
+		model = luciernagaPos;
+		model = glm::translate(model, glm::vec3(-0.3f, 0.0f, 0.0f));
+		model = glm::rotate(model, Lu_rot_ala * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_ala.RenderModel();
+
+		// Ala izquierda [0]
+		model = luciernagaPos;
+		model = glm::translate(model, glm::vec3(0.3f, 0.0f, 0.0f));
+		model = glm::rotate(model, -1 * Lu_rot_ala * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_ala_izq.RenderModel();
+
+		Lu_x = (Lu_aXZ * cos(Lu_mov)) / (1 + pow(sin(Lu_mov), 2));
+		Lu_z = (Lu_aXZ * sin(Lu_mov) * cos(Lu_mov)) / (1 + pow(sin(Lu_mov), 2));
+		Lu_y = Lu_aY * sin(Lu_frecAng * Lu_mov + Lu_phi);
+
+		// Cuerpo [1]
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(0.0f - Lu_x, 15.0f - Lu_y, 0.0f - Lu_z));
+		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		luciernagaPos = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_cuerpo.RenderModel();
+
+		// Ala derecha [1]
+		model = luciernagaPos;
+		model = glm::translate(model, glm::vec3(-0.3f, 0.0f, 0.0f));
+		model = glm::rotate(model, Lu_rot_ala * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_ala.RenderModel();
+
+		// Ala izquierda [1]
+		model = luciernagaPos;
+		model = glm::translate(model, glm::vec3(0.3f, 0.0f, 0.0f));
+		model = glm::rotate(model, -1 * Lu_rot_ala * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_ala_izq.RenderModel();
+
+		Lu_x = 2.0f * sin(Lu_mov) * (exp(cos(Lu_mov)) - 2 * cos(4 * Lu_mov) - pow(sin(Lu_mov / 12), 5));
+		Lu_z = 2.0f * cos(Lu_mov) * (exp(cos(Lu_mov)) - 2 * cos(4 * Lu_mov) - pow(sin(Lu_mov / 12), 5));
+		Lu_y = 2.0f * sin(0.5f * Lu_mov) + 0.5f * sin(5.0f * Lu_mov);
+
+		Lu_x += 0.3f * (sin(3.1f * Lu_mov));
+		Lu_z += 0.3f * (cos(2.7f * Lu_mov));
+
+		// Cuerpo [2]
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(0.0f + Lu_x, 10.0f + Lu_y, 0.0f + Lu_z));
+		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		luciernagaPos = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_cuerpo.RenderModel();
+
+		// Ala derecha [2]
+		model = luciernagaPos;
+		model = glm::translate(model, glm::vec3(-0.3f, 0.0f, 0.0f));
+		model = glm::rotate(model, Lu_rot_ala * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_ala.RenderModel();
+
+		// Ala izquierda [2]
+		model = luciernagaPos;
+		model = glm::translate(model, glm::vec3(0.3f, 0.0f, 0.0f));
+		model = glm::rotate(model, -1 * Lu_rot_ala * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_ala_izq.RenderModel();
 
 
 		// ================================================================================ //
