@@ -90,12 +90,15 @@ Model Puerta_reja_piso;
 Model Puerta_reja_puerta_izquierda;
 Model Puerta_reja_puerta_derecha;
 
-
 // Banco Hollow Knight
 Model hk_Banco;
 
 // Lampara Hollow Knight
 Model hk_Lampara;
+
+// Luciernaga Hollow Knight
+Model hk_Luciernaga_cuerpo;
+Model hk_Luciernaga_ala;
 
 // Ring
 Model Ring;
@@ -380,7 +383,6 @@ int main()
 	Puerta_reja_puerta_derecha = Model();
 	Puerta_reja_puerta_derecha.LoadModel("Models/Hollow_knight/hk_Puerta_reja_puerta_derecha.obj");
 
-
 	// Banco Hollow Knight
 	hk_Banco = Model();
 	hk_Banco.LoadModel("Models/Hollow_knight/hk_Banco.obj");
@@ -388,6 +390,12 @@ int main()
 	// Lampara Hollow Knight
 	hk_Lampara = Model();
 	hk_Lampara.LoadModel("Models/Hollow_knight/hk_Lampara.obj");
+
+	// Luciernaga Hollow Knight
+	hk_Luciernaga_cuerpo = Model();
+	hk_Luciernaga_cuerpo.LoadModel("Models/Hollow_knight/hk_Luciernaga_cuerpo.obj");
+	hk_Luciernaga_ala = Model();
+	hk_Luciernaga_ala.LoadModel("Models/Hollow_knight/hk_Luciernaga_ala.obj");
 
 	// Ring
 	Ring = Model();
@@ -466,6 +474,8 @@ int main()
 	glm::mat4 model(1.0);
 	glm::mat4 modelaux(1.0);
 	glm::mat4 ringCentro(1.0);
+	glm::mat4 luciernagaPos(1.0);
+
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 
@@ -559,6 +569,7 @@ int main()
 		//																					//
 		// ================================================================================ //
 
+
 		// Roca grande ---------------------------------------------------------
 		model = glm::mat4(1.0);
 
@@ -579,11 +590,13 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		RocaPequenia.RenderModel();
 
+
 		// ================================================================================ //
 		//																					//
-		//							Bancas_HK y Lamparas_HK									//
+		//					Bancas_HK, Lamparas_HK y Luciernagas_HK							//
 		//																					//
 		// ================================================================================ //
+
 
 		// Banca del fondo ---------------------------------------------------------
 		model = glm::mat4(1.0);
@@ -597,12 +610,30 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_Banco.RenderModel();
 
-		// Lampara asociada a la banca del fondo -------------------------------
+		// Lampara asociada a la banca del fondo ---------------------------------
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(15.0f, -4.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_Lampara.RenderModel();
+
+		// Luciernagas asociadas a la lampara de la banca del fondo ---------------
+
+		// Cuerpo
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(0.0f, 10.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		luciernagaPos = model;
+
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_cuerpo.RenderModel();
+
+		// Ala derecha
+		model = luciernagaPos;
+		model = glm::translate(model, glm::vec3(0.4f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_Luciernaga_cuerpo.RenderModel();
+
 
 		// Banca de adelante ---------------------------------------------------------
 		model = glm::mat4(1.0);
@@ -622,6 +653,9 @@ int main()
 		model = glm::rotate(model, 180.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_Lampara.RenderModel();
+
+		
+
 
 
 		// ================================================================================ //
