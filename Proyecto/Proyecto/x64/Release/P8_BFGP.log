@@ -1,0 +1,16 @@
+﻿  practica8.cpp
+C:\Users\patob\Desktop\Compu\P8_BFGP\P8_BFGP\P8_BFGP\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "practica8.cpp")
+  
+C:\Users\patob\Desktop\Compu\P8_BFGP\P8_BFGP\P8_BFGP\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "practica8.cpp")
+  
+C:\Users\patob\Desktop\Compu\P8_BFGP\P8_BFGP\P8_BFGP\practica8.cpp(116,24): warning C4267: 'inicializando': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos
+C:\Users\patob\Desktop\Compu\P8_BFGP\P8_BFGP\P8_BFGP\practica8.cpp(444,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\patob\Desktop\Compu\P8_BFGP\P8_BFGP\P8_BFGP\practica8.cpp(446,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+  Generando código
+  Previous IPDB not found, fall back to full compilation.
+C:\Users\patob\Desktop\Compu\P8_BFGP\P8_BFGP\P8_BFGP\Window.cpp(85): warning C4715: 'Window::Initialise': no todas las rutas de acceso de control devuelven un valor
+  All 934 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Generación de código finalizada
+  P8_BFGP.vcxproj -> C:\Users\patob\Desktop\Compu\P8_BFGP\P8_BFGP\x64\Release\P8_BFGP.exe
