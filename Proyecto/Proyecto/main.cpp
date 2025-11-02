@@ -360,7 +360,7 @@ int main()
 	pisoTexture = Texture("Textures/Escenario/4_Piso.png");
 	pisoTexture.LoadTextureA();
 
-	// Skybox Textures
+	// Skybox Textures (Day)
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
@@ -369,7 +369,17 @@ int main()
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_bk.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");
 
-	skybox = Skybox(skyboxFaces);
+	// Skybox Textures (Night)
+	std::vector<std::string> skyboxFaces2;
+	skyboxFaces2.push_back("Textures/Skybox/cupertin-lake-night_rt.tga");
+	skyboxFaces2.push_back("Textures/Skybox/cupertin-lake-night_lf.tga");
+	skyboxFaces2.push_back("Textures/Skybox/cupertin-lake-night_dn.tga");
+	skyboxFaces2.push_back("Textures/Skybox/cupertin-lake-night_up.tga");
+	skyboxFaces2.push_back("Textures/Skybox/cupertin-lake-night_bk.tga");
+	skyboxFaces2.push_back("Textures/Skybox/cupertin-lake-night_ft.tga");
+
+	//Creación del skybox
+	skybox = Skybox(skyboxFaces, skyboxFaces2);
 
 	// Materiales
 	Material_brillante = Material(4.0f, 256);
@@ -475,7 +485,10 @@ int main()
 	
 	// =================================================================== //
 
-
+	//Duración ciclo dia/noche
+	float ciclo = 10.0f;
+	float t;
+	float a;
 
 	// Variables
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
@@ -509,7 +522,12 @@ int main()
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
 
-	
+		//dia/noche
+		t = fmod(glfwGetTime(), ciclo) / ciclo;
+		a = 0.5f * (1.0f - cos(2.0f * 3.14159265f * t));
+
+		skybox.setFactor(a);
+		//skybox.setFactor(0.0f);
 		//Recibir eventos del usuario
 		glfwPollEvents();
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
@@ -552,7 +570,6 @@ int main()
 		color = glm::vec3(1.0f, 1.0f, 1.0f);
 		toffset = glm::vec2(0.0f, 0.0f);
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
-
 		// Piso
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -150.0f));

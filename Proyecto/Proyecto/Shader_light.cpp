@@ -209,6 +209,11 @@ GLuint Shader::getOffsetLocation()
 	return uniformTextureOffset;
 }
 
+GLint Shader::GetUniformLocation(const char* name)
+{
+	return glGetUniformLocation(shaderID, name);
+}
+
 void Shader::SetDirectionalLight(DirectionalLight * dLight)
 {
 	dLight->UseLight(uniformDirectionalLight.uniformAmbientIntensity, uniformDirectionalLight.uniformcolor,

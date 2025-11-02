@@ -6,20 +6,14 @@ Skybox::Skybox()
 {
 }
 
-Skybox::Skybox(std::vector<std::string> faceLocations)
-{
-	skyShader = new Shader();
-	skyShader->CreateFromFiles("shaders/skybox.vert", "shaders/skybox.frag");
-	uniformProjection = skyShader->GetProjectionLocation();
-	uniformView = skyShader->GetViewLocation();
-
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+void Skybox::Cubemap(const std::vector<std::string>& faceLocations, GLuint& Texture) {
+	glGenTextures(1, &Texture);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, Texture);
 	int width, height, bitDepth;
 	for (size_t i = 0; i < 6; i++)
 	{
 
-		unsigned char *texData = stbi_load(faceLocations[i].c_str(), &width, &height, &bitDepth, 0); //el tipo unsigned char es para un array de bytes de la imagen, obtener datos de la imagen 
+		unsigned char* texData = stbi_load(faceLocations[i].c_str(), &width, &height, &bitDepth, 0); //el tipo unsigned char es para un array de bytes de la imagen, obtener datos de la imagen 
 		if (!texData)
 		{
 			printf("No se encontró : %s", faceLocations[i].c_str());
@@ -27,7 +21,7 @@ Skybox::Skybox(std::vector<std::string> faceLocations)
 		}
 		//para cambiar el origen a la esquina inferior izquierda como necesitamos
 		//stbi_set_flip_vertically_on_load(true);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X +i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData); //SIN CANAL ALPHA A ENOS QUE QUERAMOS AGREGAR EFECTO DE PARALLAX
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData); //SIN CANAL ALPHA A ENOS QUE QUERAMOS AGREGAR EFECTO DE PARALLAX
 		stbi_image_free(texData); //para liberar la información de la imagen
 	}
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -35,6 +29,21 @@ Skybox::Skybox(std::vector<std::string> faceLocations)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+
+Skybox::Skybox(std::vector<std::string> faceLocations, std::vector<std::string> faceLocations2)
+{
+	skyShader = new Shader();
+	skyShader->CreateFromFiles("shaders/skybox.vert", "shaders/skybox.frag");
+	uniformProjection = skyShader->GetProjectionLocation();
+	uniformView = skyShader->GetViewLocation();
+
+	uniformdia = skyShader->GetUniformLocation("diaskybox");
+	uniformnoche = skyShader->GetUniformLocation("nocheskybox");
+	uniformMixFactor = skyShader->GetUniformLocation("u_mixFactor");
+
+	Cubemap(faceLocations, textureId);
+	Cubemap(faceLocations2, textureId2);
 
 	//Creando el Mesh del skybox
 	unsigned int skyboxIndices[] = {
@@ -81,8 +90,18 @@ void Skybox::DrawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 	skyShader->UseShader();
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+	glUniform1i(uniformdia, 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId2);
+	glUniform1i(uniformnoche, 1);
+
+	glUniform1f(uniformMixFactor, factor);
+
+
 	//skyShader->Validate();
 	skyMesh->RenderMesh();
 	glDepthMask(true);

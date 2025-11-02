@@ -14,15 +14,26 @@ class Skybox
 {
 public:
 	Skybox();
-	Skybox(std::vector<std::string> faceLocations);
+	Skybox(std::vector<std::string> faceLocations, std::vector<std::string> faceLocations2);
 	void DrawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
-		
+	
+	void setFactor(float f) { factor = glm::clamp(f, 0.0f, 1.0f); }
+
 	~Skybox();
 private:
 	Mesh* skyMesh;
 	Shader* skyShader;
+	//Dia
 	GLuint textureId;
-	GLuint uniformProjection, uniformView;
+	//Noche
+	GLuint textureId2;
 
+	GLint uniformdia;
+	GLint uniformnoche;
+	GLint uniformMixFactor;
+	GLuint uniformProjection, uniformView;
+	float factor;
+
+	void Cubemap(const std::vector<std::string>& faces, GLuint& outTextureId);
 };
 
