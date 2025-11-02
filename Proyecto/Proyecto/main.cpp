@@ -66,6 +66,17 @@ float Lu_z = 0.0f;
 float Lu_alaAbajo = 0.0f;
 float Lu_rot_ala = 0.0f;
 
+// Iselda 
+float movCabeza;
+float rotxManoDer = 0.0f;
+float rotyManoDer = 0.0f;
+float rotzManoDer = 0.0f;
+
+bool subexManoDer = true;
+bool subeyManoDer = true;
+bool subezManoDer = true;
+
+float movIselda = 0.0f;
 
 
 // =================================================================== //
@@ -123,6 +134,16 @@ Model Ring;
 // Rocas
 Model Roca;
 Model RocaPequenia;
+
+// Iselda Hollow Knight
+Model hk_mesa_iselda;
+Model hk_body_iselda;
+Model hk_head_iselda;
+Model hk_arm_right0_iselda;
+Model hk_arm_right1_iselda;
+Model hk_arm_left0_iselda;
+Model hk_arm_left1_iselda;
+
 
 // =================================================================== //
 
@@ -426,6 +447,22 @@ int main()
 	RocaPequenia = Model();
 	RocaPequenia.LoadModel("Models/Escenario/es_Roca_canasta_pequenia.obj");
 
+	// Iselda Hollow Knight
+	hk_mesa_iselda = Model();
+	hk_mesa_iselda.LoadModel("Models/Hollow_knight/hk_mesa_iselda.obj");
+	hk_body_iselda = Model();
+	hk_body_iselda.LoadModel("Models/Hollow_knight/hk_body_iselda.obj");
+	hk_head_iselda = Model();
+	hk_head_iselda.LoadModel("Models/Hollow_knight/hk_head_iselda.obj");
+	hk_arm_right0_iselda = Model();
+	hk_arm_right0_iselda.LoadModel("Models/Hollow_knight/hk_arm_right0_iselda.obj");
+	hk_arm_right1_iselda = Model();
+	hk_arm_right1_iselda.LoadModel("Models/Hollow_knight/hk_arm_right1_iselda.obj");
+	hk_arm_left0_iselda = Model();
+	hk_arm_left0_iselda.LoadModel("Models/Hollow_knight/hk_arm_left0_iselda.obj");
+	hk_arm_left1_iselda = Model();
+	hk_arm_left1_iselda.LoadModel("Models/Hollow_knight/hk_arm_left1_iselda.obj");
+
 
 	// =================================================================== //
 	//																	   //
@@ -494,6 +531,7 @@ int main()
 	glm::mat4 modelaux(1.0);
 	glm::mat4 ringCentro(1.0);
 	glm::mat4 luciernagaPos(1.0);
+	glm::mat4 iseldaPos(1.0);
 
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
@@ -619,8 +657,6 @@ int main()
 		// Animación de las luciernagas --------------------------------------------
 
 		Lu_mov += deltaTime * 0.01;
-
-	
 
 		// Alas angulo
 		if (Lu_alaAbajo)
@@ -970,6 +1006,119 @@ int main()
 		meshList[7]->RenderMesh();
 
 
+		// ================================================================================ //
+		//																					//
+		//									Iselda											//
+		//																					//
+		// ================================================================================ //
+
+		// Variable de tiempo acumulado
+		movIselda += deltaTime * 0.02;
+
+		// Movimiento senoidal cabeza
+		movCabeza = sin(movIselda * 2.5f) * 0.03f;
+		
+		// Movimiento mano
+		if (subexManoDer) 
+		{
+			if (rotxManoDer <= 1.6374)
+				rotxManoDer += deltaTime * 0.1;
+			else 
+				subexManoDer = !subexManoDer;
+		}
+		else 
+		{
+			if (rotxManoDer >= 0.0)
+				rotxManoDer -= deltaTime * 0.1;
+			else
+				subexManoDer = !subexManoDer;
+		}
+
+		if (subeyManoDer) 
+		{
+			if (rotyManoDer >= -3.3855)
+				rotyManoDer += deltaTime * 0.1;
+			else
+				subeyManoDer = !subeyManoDer;
+		}
+		else
+		{
+			if (rotyManoDer <= 0.0f)
+				rotyManoDer -= deltaTime * 0.1;
+			else
+				subeyManoDer = !subeyManoDer;
+		}
+		if (subezManoDer) 
+		{
+			if (rotzManoDer <= 20.4411)
+				rotzManoDer += deltaTime * 0.1;
+			else
+				subezManoDer = !subezManoDer;
+		}
+		else 
+		{
+			if (rotzManoDer >= 0.0f)
+				rotzManoDer -= deltaTime * 0.1;
+			else
+				subezManoDer = !subezManoDer;
+		}
+		
+
+
+		// Mesa Iselda -----------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(80.0f, 0.0f, 80.0f));
+		model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
+		model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		iseldaPos = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_mesa_iselda.RenderModel();
+
+		// Cuerpo Iselda ---------------------------------------------------------
+		model = iseldaPos;
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_body_iselda.RenderModel();
+
+		// Cabeza Iselda ---------------------------------------------------------
+		model = iseldaPos;
+		model = glm::translate(model, glm::vec3(0.0f, movCabeza, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_head_iselda.RenderModel();
+
+		// Brazo derecho Iselda --------------------------------------------------
+		model = iseldaPos;
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		modelaux = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_arm_right0_iselda.RenderModel();
+		
+		// Mano derecha Iselda ---------------------------------------------------
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, (rotxManoDer) * toRadians, glm::vec3(1, 0, 0));
+		model = glm::rotate(model, (rotyManoDer) * toRadians, glm::vec3(0, 1, 0));
+		model = glm::rotate(model, (rotzManoDer) * toRadians, glm::vec3(0, 0, 1));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_arm_right1_iselda.RenderModel();
+
+		// Brazo izquierdo Iselda ------------------------------------------------
+		model = iseldaPos;
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		modelaux = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_arm_left0_iselda.RenderModel();
+
+		// Mano izquierdo Iselda -------------------------------------------------
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		hk_arm_left1_iselda.RenderModel();
+
+		 
 		// ================================================================================ //
 
 
