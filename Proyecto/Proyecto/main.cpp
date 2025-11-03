@@ -52,6 +52,11 @@ float toffsetcartelu = 0.0f;
 float toffsetcartelv = 0.0f;
 float tiempoAcumulado = 0.0f;
 
+// Fuego
+float toffsetfuegou = 0.0f;
+float toffsetfuegov = 0.0f;
+float tiempoAcumuladoFuego = 0.0f;
+
 // Luciernagas
 float Lu_aXZ = 10.0f;
 float Lu_aY = 5.0f;
@@ -102,6 +107,9 @@ Texture pisoTexture;
 // Para el cartel de la puerta
 Texture hk_font_Proyecto_GCEIHC;
 
+// para el fuego
+Texture es_fuego;
+
 
 // =================================================================== //
 //																	   //
@@ -143,6 +151,9 @@ Model hk_arm_right0_iselda;
 Model hk_arm_right1_iselda;
 Model hk_arm_left0_iselda;
 Model hk_arm_left1_iselda;
+
+// Antorcha
+Model es_Antorcha;
 
 
 // =================================================================== //
@@ -236,26 +247,46 @@ void CreateObjects()
 		10.0f, 0.0f, 10.0f,		10.0f, 10.0f,	0.0f, -1.0f, 0.0f
 	};
 	unsigned int vegetacionIndices[] = {
-	   0, 1, 2,
-	   0, 2, 3,
-	   4,5,6,
-	   4,6,7
+		// Cara frontal
+		0, 1, 2,
+		0, 2, 3,
+		// Cara trasera
+		4, 5, 6,
+		4, 6, 7,
+		// Cara izquierda
+		8, 9, 10,
+		8, 10, 11,
+		// Cara derecha
+		12, 13, 14,
+		12, 14, 15
 	};
 
 	GLfloat vegetacionVertices[] = {
-		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.5f, -0.5f, 0.0f,		1.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.5f, 0.5f, 0.0f,		1.0f, 1.0f,		0.0f, 0.0f, 0.0f,
-		-0.5f, 0.5f, 0.0f,		0.0f, 1.0f,		0.0f, 0.0f, 0.0f,
+		// ----- Frente (z = +0.5)
+		-0.5f, -0.5f,  0.5f,   0.0f, 0.666f,   0.0f, 0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,   0.25f, 0.666f,  0.0f, 0.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,   0.25f, 0.999f,    0.0f, 0.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,   0.0f, 0.999f,     0.0f, 0.0f, 1.0f,
 
-		0.0f, -0.5f, -0.5f,		0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.0f, -0.5f, 0.5f,		1.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.0f, 0.5f, 0.5f,		1.0f, 1.0f,		0.0f, 0.0f, 0.0f,
-		0.0f, 0.5f, -0.5f,		0.0f, 1.0f,		0.0f, 0.0f, 0.0f,
+		// ----- Atrás (z = -0.5)
+		 0.5f, -0.5f, -0.5f,   0.0f, 0.666f,   0.0f, 0.0f, -1.0f,
+		-0.5f, -0.5f, -0.5f,   0.25f, 0.666f,  0.0f, 0.0f, -1.0f,
+		-0.5f,  0.5f, -0.5f,   0.25f, 0.999f,    0.0f, 0.0f, -1.0f,
+		 0.5f,  0.5f, -0.5f,   0.0f, 0.999f,     0.0f, 0.0f, -1.0f,
 
+		 // ----- Izquierda (x = -0.5)
+		 -0.5f, -0.5f, -0.5f,   0.0f, 0.666f,  -1.0f, 0.0f, 0.0f,
+		 -0.5f, -0.5f,  0.5f,   0.25f, 0.666f, -1.0f, 0.0f, 0.0f,
+		 -0.5f,  0.5f,  0.5f,   0.25f, 0.999f,   -1.0f, 0.0f, 0.0f,
+		 -0.5f,  0.5f, -0.5f,   0.0f, 0.999f,    -1.0f, 0.0f, 0.0f,
 
+		 // ----- Derecha (x = +0.5)
+		  0.5f, -0.5f,  0.5f,   0.0f, 0.666f,   1.0f, 0.0f, 0.0f,
+		  0.5f, -0.5f, -0.5f,   0.25f, 0.666f,  1.0f, 0.0f, 0.0f,
+		  0.5f,  0.5f, -0.5f,   0.25f, 0.999f,    1.0f, 0.0f, 0.0f,
+		  0.5f,  0.5f,  0.5f,   0.0f, 0.999f,     1.0f, 0.0f, 0.0f,
 	};
-	
+
 
 	unsigned int flechaIndices[] = {
 	   0, 1, 2,
@@ -323,7 +354,7 @@ void CreateObjects()
 
 
 	Mesh* obj4 = new Mesh();
-	obj4->CreateMesh(vegetacionVertices, vegetacionIndices, 64, 12);
+	obj4->CreateMesh(vegetacionVertices, vegetacionIndices, 256, 48);
 	meshList.push_back(obj4);
 
 	Mesh* obj5 = new Mesh();
@@ -410,6 +441,10 @@ int main()
 	hk_font_Proyecto_GCEIHC = Texture("Textures/Hollow_knight/hk_font_Proyecto_GCEIHC.png");
 	hk_font_Proyecto_GCEIHC.LoadTextureA();
 
+	// Textura del fuego
+	es_fuego = Texture("Textures/Escenario/es_fuego.png");
+	es_fuego.LoadTextureA();
+
 
 	// =================================================================== //
 	//																	   //
@@ -472,6 +507,10 @@ int main()
 	hk_arm_left0_iselda.LoadModel("Models/Hollow_knight/hk_arm_left0_iselda.obj");
 	hk_arm_left1_iselda = Model();
 	hk_arm_left1_iselda.LoadModel("Models/Hollow_knight/hk_arm_left1_iselda.obj");
+
+	// Antorcha
+	es_Antorcha = Model();
+	es_Antorcha.LoadModel("Models/Escenario/es_antorcha.obj");
 
 
 	// =================================================================== //
@@ -549,7 +588,7 @@ int main()
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 
-
+	float xtorch, ztorch;
 
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
@@ -635,6 +674,7 @@ int main()
 		model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Ring.RenderModel();
+
 
 
 		// ================================================================================ //
@@ -905,7 +945,6 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_Luciernaga_ala_izq.RenderModel();
 
-
 		// ================================================================================ //
 		//																					//
 		//									Puerta 											//
@@ -1022,6 +1061,10 @@ int main()
 		hk_font_Proyecto_GCEIHC.UseTexture();
 		meshList[7]->RenderMesh();
 
+		// Reset cords uv ------------------------------
+		toffset = glm::vec2(0.0f, 0.0f);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+
 
 		// ================================================================================ //
 		//																					//
@@ -1030,7 +1073,7 @@ int main()
 		// ================================================================================ //
 
 		// Variable de tiempo acumulado
-		movIselda += deltaTime * 0.02;
+		movIselda += deltaTime * 0.015;
 
 		// Movimiento senoidal cabeza
 		movCabeza = sin(movIselda * 2.5f) * 0.03f;
@@ -1038,48 +1081,18 @@ int main()
 		// Movimiento mano
 		if (subexManoDer) 
 		{
-			if (rotxManoDer <= 1.6374)
-				rotxManoDer += deltaTime * 0.1;
+			if (rotxManoDer <= 20.4411)
+				rotxManoDer += deltaTime * 0.5;
 			else 
 				subexManoDer = !subexManoDer;
 		}
 		else 
 		{
-			if (rotxManoDer >= 0.0)
-				rotxManoDer -= deltaTime * 0.1;
+			if (rotxManoDer >= -20.4411)
+				rotxManoDer -= deltaTime * 0.5;
 			else
 				subexManoDer = !subexManoDer;
 		}
-
-		if (subeyManoDer) 
-		{
-			if (rotyManoDer >= -3.3855)
-				rotyManoDer += deltaTime * 0.1;
-			else
-				subeyManoDer = !subeyManoDer;
-		}
-		else
-		{
-			if (rotyManoDer <= 0.0f)
-				rotyManoDer -= deltaTime * 0.1;
-			else
-				subeyManoDer = !subeyManoDer;
-		}
-		if (subezManoDer) 
-		{
-			if (rotzManoDer <= 20.4411)
-				rotzManoDer += deltaTime * 0.1;
-			else
-				subezManoDer = !subezManoDer;
-		}
-		else 
-		{
-			if (rotzManoDer >= 0.0f)
-				rotzManoDer -= deltaTime * 0.1;
-			else
-				subezManoDer = !subezManoDer;
-		}
-		
 
 
 		// Mesa Iselda -----------------------------------------------------------
@@ -1115,10 +1128,8 @@ int main()
 		
 		// Mano derecha Iselda ---------------------------------------------------
 		model = modelaux;
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(-0.29f, 1.32f, -0.54f));
 		model = glm::rotate(model, (rotxManoDer) * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, (rotyManoDer) * toRadians, glm::vec3(0, 1, 0));
-		model = glm::rotate(model, (rotzManoDer) * toRadians, glm::vec3(0, 0, 1));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_arm_right1_iselda.RenderModel();
 
@@ -1135,7 +1146,176 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_arm_left1_iselda.RenderModel();
 
-		 
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		// ================================================================================ //
+		//																					//
+		//								Antorchas VA AL FINAL								//
+		//																					//
+		// ================================================================================ //
+
+		
+		// Para el posicionamiento de las antorchas y fuegos
+		xtorch = 40.0f;
+		ztorch = 40.0f;
+
+		// Antorcha 1 ---------------------------------------------------------
+		model = glm::mat4(1.0);
+		modelaux = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-1 * xtorch, 0.0f, ztorch));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_Antorcha.RenderModel();
+
+		// Antorcha 2 ---------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(xtorch, 0.0f, ztorch));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_Antorcha.RenderModel();
+
+		// Antorcha 3 ---------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-1 * xtorch, 0.0f, -1 * ztorch));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_Antorcha.RenderModel();
+
+		// Antorcha 4 ---------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(xtorch, 0.0f, -1 * ztorch));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_Antorcha.RenderModel();
+		
+
+		// Animación del fuego ------------------------------------------------
+		tiempoAcumuladoFuego += deltaTime;
+
+		if (tiempoAcumuladoFuego >= 5.0f)
+		{
+			toffsetfuegou += 0.25;
+
+			if (toffsetfuegou >= 1.0)
+			{
+				toffsetfuegou = 0.0;
+				toffsetfuegov -= 0.333f;
+
+				if (toffsetfuegov <= 0.0f)
+				{
+					toffsetfuegov = 0.999f;
+				}
+			}
+
+			tiempoAcumuladoFuego = 0.0f;
+		}
+
+		// Fuego 1 ------------------------------------------------------------
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-1 * xtorch, 13.5f, ztorch));
+		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 2.0f));
+		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		toffset = glm::vec2(toffsetfuegou, toffsetfuegov);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_fuego.UseTexture();
+		meshList[3]->RenderMesh();
+
+		// Fuego 2 ------------------------------------------------------------
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(xtorch, 13.5f, ztorch));
+		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 2.0f));
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		toffset = glm::vec2(toffsetfuegou, toffsetfuegov);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_fuego.UseTexture();
+		meshList[3]->RenderMesh();
+
+		// Fuego 3 ------------------------------------------------------------
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-1 * xtorch, 13.5f, -1 * ztorch));
+		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 2.0f));
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		toffset = glm::vec2(toffsetfuegou, toffsetfuegov);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_fuego.UseTexture();
+		meshList[3]->RenderMesh();
+
+		// Fuego 4 ------------------------------------------------------------
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(xtorch, 13.5f, -1 * ztorch));
+		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 2.0f));
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		toffset = glm::vec2(toffsetfuegou, toffsetfuegov);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_fuego.UseTexture();
+		meshList[3]->RenderMesh();
+
+
+		// Reset cords uv ------------------------------
+		toffset = glm::vec2(0.0f, 0.0f);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glDisable(GL_BLEND);
+
+
 		// ================================================================================ //
 
 

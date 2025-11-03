@@ -1,23 +1,26 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(538,5): warning MSB8028: El directorio intermedio (x64\Debug\) contiene archivos compartidos de otro proyecto (P8_BFGP.vcxproj, P9_BFGP.vcxproj). Esto puede dar lugar a un comportamiento incorrecto de limpieza y recompilación.
-  main.cpp
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+﻿  main.cpp
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
   (compilando archivo de origen "main.cpp")
   
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
   (compilando archivo de origen "main.cpp")
   
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(181,24): warning C4267: 'inicializando': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(520,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(522,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(526,34): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(638,23): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(714,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(715,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(740,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(741,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(817,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(818,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(843,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(844,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(915,22): warning C4305: '+=': truncamiento de 'double' a 'float'
-  Proyecto.vcxproj -> C:\Users\luish\OneDrive\Documents\GitHub\Proyecto_Lab_CGeIHC\Proyecto\x64\Debug\Proyecto.exe
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(213,24): warning C4267: 'inicializando': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(597,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(599,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(603,34): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(716,23): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(790,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(791,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(816,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(817,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(893,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(894,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(919,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(920,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(990,22): warning C4305: '+=': truncamiento de 'double' a 'float'
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1076,26): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1085,30): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1092,30): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+LINK : warning LNK4098: la biblioteca predeterminada'MSVCRT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
+  Proyecto.vcxproj -> D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\x64\Debug\Proyecto.exe
