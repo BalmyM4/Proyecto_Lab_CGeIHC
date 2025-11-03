@@ -15,8 +15,6 @@ public:
 	GLfloat getYChange();
 	GLfloat getmuevex() { return muevex; }
 
-
-
 	GLboolean getPrendida() { return luzPrendida; }
 	GLboolean getPrendida2() { return luzPrendida2; }
 
@@ -29,6 +27,11 @@ public:
 	void setPuertaCerrada() { puertaCerrada = !puertaCerrada; }
 	void setPuertaAbriendose() { puertaAbriendose = !puertaAbriendose; }
 
+	// Hollow Knight
+	GLboolean getHK_Parado() { return hk_parado; }
+	GLboolean getHK_Dash() { return hk_dash; }
+	void setHK_Parado() { hk_parado = !hk_parado; }
+	void setHK_Dash() { hk_dash = !hk_dash; }
 
 
 
@@ -61,12 +64,9 @@ private:
 	GLboolean puertaAbriendose;
 
 
-	// Dado
-	GLboolean dadoInicio;
-	GLboolean dadoLanzado;
-	GLfloat RotX;
-	GLfloat RotY;
-	GLfloat RotZ;
+	// Hollow Knight
+	GLboolean hk_parado;
+	GLboolean hk_dash;
 
 
 	GLboolean luzPrendida;

@@ -22,6 +22,10 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	puertaCerrada = true;
 	puertaAbriendose = false;
 
+	// Hollow Knight
+	hk_parado = true;
+	hk_dash = false;
+
 
 	lucesPuntuales = 0.0f;
 	luzPrendida = true;
@@ -172,7 +176,13 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		}
 	}
 
-
+	if (key == GLFW_KEY_X && action == GLFW_PRESS)
+	{
+		if (!theWindow->hk_dash)
+		{
+			theWindow->hk_dash = true;
+		}
+	}
 
 
 

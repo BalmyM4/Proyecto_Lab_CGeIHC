@@ -47,6 +47,14 @@ const float toRadians = 3.14159265f / 180.0f;
 float bajadaPuerta = 0.0f;
 float rotacionPuerta = 0.0f;
 
+// Hollow Knight
+GLfloat HK_movimiento = 0.0f;
+GLfloat hk_x = 0.0f;
+GLfloat hk_z = 0.0f;
+GLfloat hk_pos = 0.0f;
+GLboolean hk_direccion = true;
+float step;
+
 // Cartel
 float toffsetcartelu = 0.0f;
 float toffsetcartelv = 0.0f;
@@ -82,6 +90,10 @@ bool subeyManoDer = true;
 bool subezManoDer = true;
 
 float movIselda = 0.0f;
+
+// Wumpa
+GLfloat rotWumpa = 0.0f;
+GLfloat wumpaTime = 0.0f;
 
 
 // =================================================================== //
@@ -154,6 +166,14 @@ Model hk_arm_left1_iselda;
 
 // Antorcha
 Model es_Antorcha;
+
+// Hollow Knight
+Model hk_hollow_knight;
+Model hk_dash;
+
+
+// Wumpa de Crash Bandicoot
+Model cb_Wumpa;
 
 
 // =================================================================== //
@@ -512,6 +532,16 @@ int main()
 	es_Antorcha = Model();
 	es_Antorcha.LoadModel("Models/Escenario/es_antorcha.obj");
 
+	// Hollow Knight
+	hk_hollow_knight = Model();
+	hk_hollow_knight.LoadModel("Models/Hollow_knight/hk_hollow_knight.obj");
+	hk_dash = Model();
+	hk_dash.LoadModel("Models/Hollow_knight/hk_dash.obj");
+
+	// Wumpa de Crash Bandicoot
+	cb_Wumpa = Model();
+	cb_Wumpa.LoadModel("Models/Crash_bandicoot/cb_Wumpa.obj");
+
 
 	// =================================================================== //
 	//																	   //
@@ -589,6 +619,11 @@ int main()
 	glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 
 	float xtorch, ztorch;
+
+	// Para los wumpas
+	float localTime;
+	float tw;
+	glm::vec3 posW;
 
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
@@ -952,7 +987,7 @@ int main()
 		// ================================================================================ //
 
 		// Animación de la puerta
-		if (mainWindow.getPuertaAbriendose()) 
+		if (mainWindow.getPuertaAbriendose())
 		{
 			if (mainWindow.getPuertaCerrada())
 			{
@@ -979,13 +1014,13 @@ int main()
 					mainWindow.setPuertaAbriendose();
 					mainWindow.setPuertaCerrada();
 				}
-			}	
+			}
 		}
-		
+
 		// Animación del cartel de la puerta (textura animada)
 		tiempoAcumulado += deltaTime;
 
-		if (tiempoAcumulado >= 11.0f) 
+		if (tiempoAcumulado >= 11.0f)
 		{
 			toffsetcartelu += 0.06;
 
@@ -1000,10 +1035,10 @@ int main()
 
 		// Arco de la puerta ------------------------------------------------------------
 		model = glm::mat4(1.0);
-		
+
 		// Posicionamiento global
 		model = ringCentro;
-		model = glm::translate(model, glm::vec3( 0.0f, 0.0f, 140.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 140.0f));
 		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1017,13 +1052,13 @@ int main()
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Puerta_reja_derecha.RenderModel();
-		
+
 		// Parte izquierda de la puerta ---------------------------------------------------
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(-23.4f, 0.0f, 00.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Puerta_reja_derecha.RenderModel();
-		
+
 		// Parte central de la puerta -----------------------------------------------------
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
@@ -1050,7 +1085,7 @@ int main()
 		model = glm::rotate(model, rotacionPuerta * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Puerta_reja_puerta_izquierda.RenderModel();
-		
+
 		// Para el cartel de la puerta ----------------------------------------------------
 		model = modelaux;
 		toffset = glm::vec2(toffsetcartelu, toffsetcartelv);
@@ -1077,16 +1112,16 @@ int main()
 
 		// Movimiento senoidal cabeza
 		movCabeza = sin(movIselda * 2.5f) * 0.03f;
-		
+
 		// Movimiento mano
-		if (subexManoDer) 
+		if (subexManoDer)
 		{
 			if (rotxManoDer <= 20.4411)
 				rotxManoDer += deltaTime * 0.5;
-			else 
+			else
 				subexManoDer = !subexManoDer;
 		}
-		else 
+		else
 		{
 			if (rotxManoDer >= -20.4411)
 				rotxManoDer -= deltaTime * 0.5;
@@ -1125,11 +1160,11 @@ int main()
 		modelaux = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_arm_right0_iselda.RenderModel();
-		
+
 		// Mano derecha Iselda ---------------------------------------------------
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(-0.29f, 1.32f, -0.54f));
-		model = glm::rotate(model, (rotxManoDer) * toRadians, glm::vec3(1, 0, 0));
+		model = glm::rotate(model, (rotxManoDer)*toRadians, glm::vec3(1, 0, 0));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_arm_right1_iselda.RenderModel();
 
@@ -1146,37 +1181,235 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_arm_left1_iselda.RenderModel();
 
+
+
+		// ================================================================================ //
+		//																					//
+		//								Hollow Knight										//
+		//																					//
+		// ================================================================================ //
+
+		// Hollow Knight --------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-20.0f, 12.0f, 20.0f));
 	
 
+		if (mainWindow.getHK_Dash())
+		{
+			if (HK_movimiento <= 40.0f)
+			{
+				HK_movimiento += 2.0f * deltaTime;
+
+				step = 2.0f * deltaTime;
+				if (!std::isfinite(step)) step = 0.0f;
+
+				if (hk_direccion)
+				{
+					hk_x += step;
+					hk_z -= step;
+				}
+				else
+				{
+					hk_x -= step;
+					hk_z += step;
+				}
+			}
+			else
+			{
+				HK_movimiento = 0.0f;
+				mainWindow.setHK_Dash();
+
+				// cambia la dirección al terminar
+				hk_direccion = !hk_direccion;
+				hk_pos = hk_direccion ? 0.0f : 1.0f;
+			}
+
+			model = glm::translate(model, glm::vec3(hk_x, 4.0f, hk_z));
+			model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
+
+			if (hk_direccion)
+				model = glm::rotate(model, 135.0f * toRadians, glm::vec3(0, 1, 0));
+			else
+				model = glm::rotate(model, -45.0f * toRadians, glm::vec3(0, 1, 0));
+
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_dash.RenderModel();
+		}
+		else
+		{
+			if (hk_pos == 1.0f)
+			{
+				model = glm::translate(model, glm::vec3(hk_x, 0.0f, hk_z));
+				model = glm::rotate(model, 135.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			}
+			else if (hk_pos == 0.0f)
+			{
+				model = glm::translate(model, glm::vec3(hk_x, 0.0f, hk_z));
+				model = glm::rotate(model, -45.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			}
+
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_hollow_knight.RenderModel();
+		}
+
+		if (!std::isfinite(hk_x) || !std::isfinite(hk_z)) {
+			hk_x = hk_z = 0.0f;
+			std::cout << "[WARN] HK posición inválida reseteada.\n";
+		}
 
 
+		// ================================================================================ //
+		//																					//
+		//							Wumpas Crash Bandicoot									//
+		//																					//
+		// ================================================================================ //
+		
+		// Animación de rotación
+		rotWumpa += 5.0f * deltaTime;
+		if (rotWumpa > 360.0f)
+			rotWumpa -= 360.0f;
 
+		// Animación de traslación
+		wumpaTime += 0.1f * deltaTime;
+		if (wumpaTime > 480.0f)
+			wumpaTime -= 480.0f;
 
+		// Primer trio de wumpas
+		for (int i = 0; i < 3; i++) {
 
+			localTime = wumpaTime - i * 5.0f;
+			if (localTime < 0.0f)
+				localTime += 480.0f;
 
+			tw = fmod(localTime, 480.0f);
 
+			if (tw < 120.0f) {
+				posW = glm::vec3(60.0f - tw, 4.0f, 60.0f); // lado 1
+			}
+			else if (tw < 2 * 120.0f) {
+				posW = glm::vec3(-60.0f, 4.0f, 60.0f - (tw - 120.0f)); // lado 2
+			}
+			else if (tw < 3 * 120.0f) {
+				posW = glm::vec3(-60.0f + (tw - 2 * 120.0f), 4.0f, -60.0f); // lado 3
+			}
+			else {
+				posW = glm::vec3(60.0f, 4.0f, -60.0f + (tw - 3 * 120.0f)); // lado 4
+			}
 
+			// Sube y baja
+			posW.y += sin((wumpaTime * 0.5f) + (i * 1.0f)) * 1.5f;
 
+			model = glm::mat4(1.0f);
+			model = ringCentro;
+			model = glm::translate(model, posW);
+			model = glm::rotate(model, rotWumpa * toRadians, glm::vec3(0, 1, 0));
+			model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			cb_Wumpa.RenderModel();
+		}
 
+		// Segundo trio de wumpas
+		for (int i = 0; i < 3; i++) {
 
+			localTime = wumpaTime - i * 5.0f;
+			if (localTime < 0.0f)
+				localTime += 520.0f; // 4 * 130
 
+			tw = fmod(localTime, 520.0f);
 
+			if (tw < 130.0f) {
+				posW = glm::vec3(65.0f - tw, 4.0f, 65.0f);
+			}
+			else if (tw < 260.0f) {
+				posW = glm::vec3(-65.0f, 4.0f, 65.0f - (tw - 130.0f));
+			}
+			else if (tw < 390.0f) {
+				posW = glm::vec3(-65.0f + (tw - 260.0f), 4.0f, -65.0f);
+			}
+			else {
+				posW = glm::vec3(65.0f, 4.0f, -65.0f + (tw - 390.0f));
+			}
 
+			// Sube y baja
+			posW.y += sin((wumpaTime * 0.5f) + (i * 1.0f)) * 1.5f;
 
+			model = glm::mat4(1.0f);
+			model = ringCentro;
+			model = glm::translate(model, posW);
+			model = glm::rotate(model, -rotWumpa * toRadians, glm::vec3(0, 1, 0));
+			model = glm::scale(model, glm::vec3(0.8f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			cb_Wumpa.RenderModel();
+		}
 
+		// Tercer trío (espejo del primero)
+		for (int i = 0; i < 3; i++) {
 
+			localTime = wumpaTime - i * 5.0f;
+			if (localTime < 0.0f)
+				localTime += 480.0f;
 
+			tw = fmod(localTime, 480.0f);
 
+			if (tw < 120.0f) {
+				posW = glm::vec3(-(60.0f - tw), 4.0f, -(60.0f)); // invertido en XZ
+			}
+			else if (tw < 240.0f) {
+				posW = glm::vec3(60.0f, 4.0f, -(60.0f - (tw - 120.0f)));
+			}
+			else if (tw < 360.0f) {
+				posW = glm::vec3(60.0f - (tw - 240.0f), 4.0f, 60.0f);
+			}
+			else {
+				posW = glm::vec3(-60.0f, 4.0f, 60.0f - (tw - 360.0f));
+			}
 
+			posW.y += sin((wumpaTime * 0.5f) + (i * 1.0f)) * 1.5f;
 
+			model = glm::mat4(1.0f);
+			model = ringCentro;
+			model = glm::translate(model, posW);
+			model = glm::rotate(model, -rotWumpa * toRadians, glm::vec3(0, 1, 0));
+			model = glm::scale(model, glm::vec3(0.8f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			cb_Wumpa.RenderModel();
+		}
 
+		// Cuarto trío (espejo del segundo)
+		for (int i = 0; i < 3; i++) {
 
+			localTime = wumpaTime - i * 5.0f;
+			if (localTime < 0.0f)
+				localTime += 520.0f;
 
+			tw = fmod(localTime, 520.0f);
 
+			if (tw < 130.0f) {
+				posW = glm::vec3(-(65.0f - tw), 4.0f, -(65.0f));
+			}
+			else if (tw < 260.0f) {
+				posW = glm::vec3(65.0f, 4.0f, -(65.0f - (tw - 130.0f)));
+			}
+			else if (tw < 390.0f) {
+				posW = glm::vec3(65.0f - (tw - 260.0f), 4.0f, 65.0f);
+			}
+			else {
+				posW = glm::vec3(-65.0f, 4.0f, 65.0f - (tw - 390.0f));
+			}
 
+			posW.y += sin((wumpaTime * 0.5f) + (i * 1.0f)) * 1.5f;
 
-
-
+			model = glm::mat4(1.0f);
+			model = ringCentro;
+			model = glm::translate(model, posW);
+			model = glm::rotate(model, rotWumpa * toRadians, glm::vec3(0, 1, 0));
+			model = glm::scale(model, glm::vec3(0.8f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			cb_Wumpa.RenderModel();
+		}
 
 
 
