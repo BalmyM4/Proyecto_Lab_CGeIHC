@@ -156,6 +156,9 @@ Model hk_arm_left1_iselda;
 Model es_Antorcha;
 
 
+// Gradas
+Model grada;
+
 // =================================================================== //
 
 // Skybox
@@ -512,6 +515,10 @@ int main()
 	es_Antorcha = Model();
 	es_Antorcha.LoadModel("Models/Escenario/es_antorcha.obj");
 
+
+	//Grada
+	grada = Model();
+	grada.LoadModel("Models/Escenario/grada1obj.obj");
 
 	// =================================================================== //
 	//																	   //
@@ -944,6 +951,28 @@ int main()
 		model = glm::rotate(model, -1 * Lu_rot_ala * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_Luciernaga_ala_izq.RenderModel();
+
+
+		// ================================================================================ //
+		//																					//
+		//									Gradas											//
+		//																					//
+		// ================================================================================ //
+		// Grada 1
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		model = glm::translate(model, glm::vec3(30.3f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		grada.RenderModel();
+
+
+		// Grada 2
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		model = glm::translate(model, glm::vec3(-30.3f, 0.0f, 0.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		grada.RenderModel();
 
 		// ================================================================================ //
 		//																					//
