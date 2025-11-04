@@ -133,7 +133,7 @@ void Model::LoadMaterials(const aiScene * scene)
 				if (std::string(path.data).rfind("/"))
 				{
 					//printf("entre a 1 / \n");
-					idx = std::string(path.data).rfind("/");//para quitar del path del modelo todo lo que este antes del \ de ubicación de directorio
+					idx = std::string(path.data).rfind("/");
 					//printf("\npath: %s\n", std::string(path.data).c_str());
 					filename = std::string(path.data).substr(idx + 1);
 					//printf("\nfilename: %s\n", filename.c_str());
@@ -164,6 +164,14 @@ void Model::LoadMaterials(const aiScene * scene)
 				else if (modelBaseName.rfind("es", 0) == 0)
 				{
 					texPath = "Textures/Escenario/" + filename;
+				}
+				else if (modelBaseName.rfind("cb", 0) == 0)
+				{
+					texPath = "Textures/Crash_bandicoot/" + filename;
+				}
+				else if (modelBaseName.rfind("rm", 0) == 0)
+				{
+					texPath = "Textures/Rick_and_morty/" + filename;
 				}
 				else
 				{

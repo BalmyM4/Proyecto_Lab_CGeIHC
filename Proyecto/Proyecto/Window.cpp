@@ -22,6 +22,13 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	puertaCerrada = true;
 	puertaAbriendose = false;
 
+	// Hollow Knight
+	hk_parado = true;
+	hk_dash = false;
+
+	// TNT de Crash Bandicoot
+	tnt_normal = true;
+	tnt_explotando = false;
 
 	lucesPuntuales = 0.0f;
 	luzPrendida = true;
@@ -164,6 +171,7 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		theWindow->luzPrendida2 = !(theWindow->luzPrendida2);
 	}
 
+	// Abrir puerta
 	if (key == GLFW_KEY_C && action == GLFW_PRESS)
 	{
 		if (!theWindow->puertaAbriendose)
@@ -172,7 +180,23 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		}
 	}
 
+	// Dash de Hollow Knight
+	if (key == GLFW_KEY_X && action == GLFW_PRESS)
+	{
+		if (!theWindow->hk_dash)
+		{
+			theWindow->hk_dash = true;
+		}
+	}
 
+	// Explotar TNT de Crash Bandicoot
+	if (key == GLFW_KEY_Z && action == GLFW_PRESS)
+	{
+		if (theWindow->tnt_normal)
+		{
+			theWindow->tnt_normal = false;
+		}
+	}
 
 
 
