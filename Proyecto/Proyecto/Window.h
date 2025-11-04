@@ -15,8 +15,6 @@ public:
 	GLfloat getYChange();
 	GLfloat getmuevex() { return muevex; }
 
-
-
 	GLboolean getPrendida() { return luzPrendida; }
 	GLboolean getPrendida2() { return luzPrendida2; }
 
@@ -29,18 +27,30 @@ public:
 	void setPuertaCerrada() { puertaCerrada = !puertaCerrada; }
 	void setPuertaAbriendose() { puertaAbriendose = !puertaAbriendose; }
 
+	// Hollow Knight
+	GLboolean getHK_Parado() { return hk_parado; }
+	GLboolean getHK_Dash() { return hk_dash; }
+	void setHK_Parado() { hk_parado = !hk_parado; }
+	void setHK_Dash() { hk_dash = !hk_dash; }
 
+
+	// TNT de Crash Bandicoot
+	GLboolean getTNT_Normal() { return tnt_normal; }
+	GLboolean getTNT_Explotando() { return tnt_explotando; }
+	void setTNT_Normal() { tnt_normal = !tnt_normal; }
+	void setTNT_Explotando() { tnt_explotando = !tnt_explotando; }
 
 
 
 	bool getShouldClose() {
-		return  glfwWindowShouldClose(mainWindow);}
+		return  glfwWindowShouldClose(mainWindow);
+	}
 	bool* getsKeys() { return keys; }
 	void swapBuffers() { return glfwSwapBuffers(mainWindow); }
-	
+
 	~Window();
-private: 
-	GLFWwindow *mainWindow;
+private:
+	GLFWwindow* mainWindow;
 	GLint width, height;
 	bool keys[1024];
 	GLint bufferWidth, bufferHeight;
@@ -61,12 +71,15 @@ private:
 	GLboolean puertaAbriendose;
 
 
-	// Dado
-	GLboolean dadoInicio;
-	GLboolean dadoLanzado;
-	GLfloat RotX;
-	GLfloat RotY;
-	GLfloat RotZ;
+	// Hollow Knight
+	GLboolean hk_parado;
+	GLboolean hk_dash;
+
+
+	// Tnt de Crash Bandicoot
+	GLboolean tnt_normal;
+	GLboolean tnt_explotando;
+
 
 
 	GLboolean luzPrendida;

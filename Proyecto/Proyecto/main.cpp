@@ -47,6 +47,14 @@ const float toRadians = 3.14159265f / 180.0f;
 float bajadaPuerta = 0.0f;
 float rotacionPuerta = 0.0f;
 
+// Hollow Knight
+GLfloat HK_movimiento = 0.0f;
+GLfloat hk_x = 0.0f;
+GLfloat hk_z = 0.0f;
+GLfloat hk_pos = 0.0f;
+GLboolean hk_direccion = true;
+float step;
+
 // Cartel
 float toffsetcartelu = 0.0f;
 float toffsetcartelv = 0.0f;
@@ -83,6 +91,30 @@ bool subezManoDer = true;
 
 float movIselda = 0.0f;
 
+// Wumpa
+GLfloat rotWumpa = 0.0f;
+GLfloat wumpaTime = 0.0f;
+
+// TNT de Crash Bandicoot
+float toffsettntu = 0.0f;
+float toffsettntv = 1.0f;
+float toffsetexpu = 0.0f;
+float toffsetexpv = 1.0f;
+float tiempoAcumuladoTnt = 0.0f;
+float tiempoAcumuladoExpTnt = 0.0f;
+bool condandoTnt = true;
+bool explotadoTnt = false;
+bool portalTnt = false;
+bool portalAbriendose = true;
+bool caidaPortal = false;
+bool portalCerrando = false;
+bool resetPortal = false;
+GLfloat sizeTnt = 3.0f;
+GLfloat sizePortal = 0.0f;
+float delayPortal = 0.0f;
+GLfloat tntY = 0.0f;
+
+
 
 // =================================================================== //
 
@@ -107,8 +139,14 @@ Texture pisoTexture;
 // Para el cartel de la puerta
 Texture hk_font_Proyecto_GCEIHC;
 
-// para el fuego
+// Para el fuego
 Texture es_fuego;
+
+// Para las rejas
+Texture hk_rejas;
+
+// Para la explosión de la TNT
+Texture cb_explosion;
 
 
 // =================================================================== //
@@ -154,6 +192,17 @@ Model hk_arm_left1_iselda;
 
 // Antorcha
 Model es_Antorcha;
+
+// Hollow Knight
+Model hk_hollow_knight;
+Model hk_dash;
+
+// Wumpa de Crash Bandicoot
+Model cb_Wumpa;
+
+// TNT de Crash Bandicoot
+Model cb_tnt;
+Model rm_portal;
 
 
 // =================================================================== //
@@ -340,6 +389,43 @@ void CreateObjects()
 		0, 3, 2,
 	};
 
+	unsigned int cruzIndices[] = {
+		// Plano XY
+		0, 1, 2,
+		0, 2, 3,
+
+		// Plano ZY
+		4, 5, 6,
+		4, 6, 7
+	};
+	GLfloat cruzVertices[] = {
+		// ----- Plano XY (z = 0)
+		-0.5f, -0.5f,  0.0f,   0.0f,  0.5f,   0.0f, 0.0f, 1.0f,  // abajo izq
+		 0.5f, -0.5f,  0.0f,   0.25f, 0.5f,   0.0f, 0.0f, 1.0f,  // abajo der
+		 0.5f,  0.5f,  0.0f,   0.25f, 1.0f,   0.0f, 0.0f, 1.0f,  // arriba der
+		-0.5f,  0.5f,  0.0f,   0.0f,  1.0f,   0.0f, 0.0f, 1.0f,  // arriba izq
+
+		// ----- Plano ZY (x = 0)
+		 0.0f, -0.5f, -0.5f,   0.0f,  0.5f,   1.0f, 0.0f, 0.0f,  // abajo atrás
+		 0.0f, -0.5f,  0.5f,   0.25f, 0.5f,   1.0f, 0.0f, 0.0f,  // abajo frente
+		 0.0f,  0.5f,  0.5f,   0.25f, 1.0f,   1.0f, 0.0f, 0.0f,  // arriba frente
+		 0.0f,  0.5f, -0.5f,   0.0f,  1.0f,   1.0f, 0.0f, 0.0f   // arriba atrás
+	};
+
+	unsigned int planoXZ_Indices[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	GLfloat planoXZ_Vertices[] = {
+		// ----- Plano XZ (y = 0)
+		-0.5f, 0.0f, -0.5f,   0.5f, 0.0f,   0.0f, 1.0f, 0.0f, // esquina inferior izq
+		 0.5f, 0.0f, -0.5f,   0.75f, 0.0f,   0.0f, 1.0f, 0.0f, // esquina inferior der
+		 0.5f, 0.0f,  0.5f,   0.75f, 0.5f,   0.0f, 1.0f, 0.0f, // esquina superior der
+		-0.5f, 0.0f,  0.5f,   0.5f, 0.5f,   0.0f, 1.0f, 0.0f  // esquina superior izq
+	};
+
+
 	Mesh *obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(obj1);
@@ -373,6 +459,13 @@ void CreateObjects()
 	obj8->CreateMesh(verticesCartel, cartelIndices, 32, 6);
 	meshList.push_back(obj8);
 
+	Mesh* obj9 = new Mesh();
+	obj9->CreateMesh(cruzVertices, cruzIndices, 64, 12);
+	meshList.push_back(obj9);
+
+	Mesh* obj10 = new Mesh();
+	obj10->CreateMesh(planoXZ_Vertices, planoXZ_Indices, 32, 6);
+	meshList.push_back(obj10);
 }
 
 
@@ -445,6 +538,14 @@ int main()
 	es_fuego = Texture("Textures/Escenario/es_fuego.png");
 	es_fuego.LoadTextureA();
 
+	// Textura de las rejas
+	hk_rejas = Texture("Textures/Hollow_knight/hk_rejas.png");
+	hk_rejas.LoadTextureA();
+
+	// Textura de la explosión de la TNT
+	cb_explosion = Texture("Textures/Crash_bandicoot/cb_explosion.png");
+	cb_explosion.LoadTextureA();
+
 
 	// =================================================================== //
 	//																	   //
@@ -511,6 +612,25 @@ int main()
 	// Antorcha
 	es_Antorcha = Model();
 	es_Antorcha.LoadModel("Models/Escenario/es_antorcha.obj");
+
+	// Hollow Knight
+	hk_hollow_knight = Model();
+	hk_hollow_knight.LoadModel("Models/Hollow_knight/hk_hollow_knight.obj");
+	hk_dash = Model();
+	hk_dash.LoadModel("Models/Hollow_knight/hk_dash.obj");
+
+	// Wumpa de Crash Bandicoot
+	cb_Wumpa = Model();
+	cb_Wumpa.LoadModel("Models/Crash_bandicoot/cb_Wumpa.obj");
+
+	// tnt de Crash Bandicoot
+	cb_tnt = Model();
+	cb_tnt.LoadModel("Models/Crash_bandicoot/cb_tnt.obj");
+
+	// portal de rick y morty
+	rm_portal = Model();
+	rm_portal.LoadModel("Models/Rick_and_morty/rm_Portal.obj");
+
 
 
 	// =================================================================== //
@@ -589,6 +709,14 @@ int main()
 	glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 
 	float xtorch, ztorch;
+
+	// Para los wumpas
+	float localTime;
+	float tw;
+	glm::vec3 posW;
+
+	// Para la tnt
+	glm::vec3 posTNT;
 
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
@@ -952,7 +1080,7 @@ int main()
 		// ================================================================================ //
 
 		// Animación de la puerta
-		if (mainWindow.getPuertaAbriendose()) 
+		if (mainWindow.getPuertaAbriendose())
 		{
 			if (mainWindow.getPuertaCerrada())
 			{
@@ -979,13 +1107,13 @@ int main()
 					mainWindow.setPuertaAbriendose();
 					mainWindow.setPuertaCerrada();
 				}
-			}	
+			}
 		}
-		
+
 		// Animación del cartel de la puerta (textura animada)
 		tiempoAcumulado += deltaTime;
 
-		if (tiempoAcumulado >= 11.0f) 
+		if (tiempoAcumulado >= 11.0f)
 		{
 			toffsetcartelu += 0.06;
 
@@ -1000,10 +1128,10 @@ int main()
 
 		// Arco de la puerta ------------------------------------------------------------
 		model = glm::mat4(1.0);
-		
+
 		// Posicionamiento global
 		model = ringCentro;
-		model = glm::translate(model, glm::vec3( 0.0f, 0.0f, 140.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 140.0f));
 		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1017,13 +1145,13 @@ int main()
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Puerta_reja_derecha.RenderModel();
-		
+
 		// Parte izquierda de la puerta ---------------------------------------------------
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(-23.4f, 0.0f, 00.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Puerta_reja_derecha.RenderModel();
-		
+
 		// Parte central de la puerta -----------------------------------------------------
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
@@ -1050,7 +1178,7 @@ int main()
 		model = glm::rotate(model, rotacionPuerta * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Puerta_reja_puerta_izquierda.RenderModel();
-		
+
 		// Para el cartel de la puerta ----------------------------------------------------
 		model = modelaux;
 		toffset = glm::vec2(toffsetcartelu, toffsetcartelv);
@@ -1077,16 +1205,16 @@ int main()
 
 		// Movimiento senoidal cabeza
 		movCabeza = sin(movIselda * 2.5f) * 0.03f;
-		
+
 		// Movimiento mano
-		if (subexManoDer) 
+		if (subexManoDer)
 		{
 			if (rotxManoDer <= 20.4411)
 				rotxManoDer += deltaTime * 0.5;
-			else 
+			else
 				subexManoDer = !subexManoDer;
 		}
-		else 
+		else
 		{
 			if (rotxManoDer >= -20.4411)
 				rotxManoDer -= deltaTime * 0.5;
@@ -1125,11 +1253,11 @@ int main()
 		modelaux = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_arm_right0_iselda.RenderModel();
-		
+
 		// Mano derecha Iselda ---------------------------------------------------
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(-0.29f, 1.32f, -0.54f));
-		model = glm::rotate(model, (rotxManoDer) * toRadians, glm::vec3(1, 0, 0));
+		model = glm::rotate(model, (rotxManoDer)*toRadians, glm::vec3(1, 0, 0));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_arm_right1_iselda.RenderModel();
 
@@ -1146,39 +1274,235 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_arm_left1_iselda.RenderModel();
 
-	
 
 
+		// ================================================================================ //
+		//																					//
+		//								Hollow Knight										//
+		//																					//
+		// ================================================================================ //
+
+		// Hollow Knight --------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-20.0f, 12.0f, 20.0f));
 
 
+		if (mainWindow.getHK_Dash())
+		{
+			if (HK_movimiento <= 40.0f)
+			{
+				HK_movimiento += 2.0f * deltaTime;
+
+				step = 2.0f * deltaTime;
+				if (!std::isfinite(step)) step = 0.0f;
+
+				if (hk_direccion)
+				{
+					hk_x += step;
+					hk_z -= step;
+				}
+				else
+				{
+					hk_x -= step;
+					hk_z += step;
+				}
+			}
+			else
+			{
+				HK_movimiento = 0.0f;
+				mainWindow.setHK_Dash();
+
+				// cambia la dirección al terminar
+				hk_direccion = !hk_direccion;
+				hk_pos = hk_direccion ? 0.0f : 1.0f;
+			}
+
+			model = glm::translate(model, glm::vec3(hk_x, 4.0f, hk_z));
+			model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
+
+			if (hk_direccion)
+				model = glm::rotate(model, 135.0f * toRadians, glm::vec3(0, 1, 0));
+			else
+				model = glm::rotate(model, -45.0f * toRadians, glm::vec3(0, 1, 0));
+
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_dash.RenderModel();
+		}
+		else
+		{
+			if (hk_pos == 1.0f)
+			{
+				model = glm::translate(model, glm::vec3(hk_x, 0.0f, hk_z));
+				model = glm::rotate(model, 135.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			}
+			else if (hk_pos == 0.0f)
+			{
+				model = glm::translate(model, glm::vec3(hk_x, 0.0f, hk_z));
+				model = glm::rotate(model, -45.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			}
+
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_hollow_knight.RenderModel();
+		}
+
+		if (!std::isfinite(hk_x) || !std::isfinite(hk_z)) {
+			hk_x = hk_z = 0.0f;
+			std::cout << "[WARN] HK posición inválida reseteada.\n";
+		}
 
 
+		// ================================================================================ //
+		//																					//
+		//							Wumpas Crash Bandicoot									//
+		//																					//
+		// ================================================================================ //
 
+		// Animación de rotación
+		rotWumpa += 5.0f * deltaTime;
+		if (rotWumpa > 360.0f)
+			rotWumpa -= 360.0f;
 
+		// Animación de traslación
+		wumpaTime += 0.1f * deltaTime;
+		if (wumpaTime > 480.0f)
+			wumpaTime -= 480.0f;
 
+		// Primer trio de wumpas
+		for (int i = 0; i < 3; i++) {
 
+			localTime = wumpaTime - i * 5.0f;
+			if (localTime < 0.0f)
+				localTime += 480.0f;
 
+			tw = fmod(localTime, 480.0f);
 
+			if (tw < 120.0f) {
+				posW = glm::vec3(60.0f - tw, 4.0f, 60.0f); // lado 1
+			}
+			else if (tw < 2 * 120.0f) {
+				posW = glm::vec3(-60.0f, 4.0f, 60.0f - (tw - 120.0f)); // lado 2
+			}
+			else if (tw < 3 * 120.0f) {
+				posW = glm::vec3(-60.0f + (tw - 2 * 120.0f), 4.0f, -60.0f); // lado 3
+			}
+			else {
+				posW = glm::vec3(60.0f, 4.0f, -60.0f + (tw - 3 * 120.0f)); // lado 4
+			}
 
+			// Sube y baja
+			posW.y += sin((wumpaTime * 0.5f) + (i * 1.0f)) * 1.5f;
 
+			model = glm::mat4(1.0f);
+			model = ringCentro;
+			model = glm::translate(model, posW);
+			model = glm::rotate(model, rotWumpa * toRadians, glm::vec3(0, 1, 0));
+			model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			cb_Wumpa.RenderModel();
+		}
 
+		// Segundo trio de wumpas
+		for (int i = 0; i < 3; i++) {
 
+			localTime = wumpaTime - i * 5.0f;
+			if (localTime < 0.0f)
+				localTime += 520.0f; // 4 * 130
 
+			tw = fmod(localTime, 520.0f);
 
+			if (tw < 130.0f) {
+				posW = glm::vec3(65.0f - tw, 4.0f, 65.0f);
+			}
+			else if (tw < 260.0f) {
+				posW = glm::vec3(-65.0f, 4.0f, 65.0f - (tw - 130.0f));
+			}
+			else if (tw < 390.0f) {
+				posW = glm::vec3(-65.0f + (tw - 260.0f), 4.0f, -65.0f);
+			}
+			else {
+				posW = glm::vec3(65.0f, 4.0f, -65.0f + (tw - 390.0f));
+			}
 
+			// Sube y baja
+			posW.y += sin((wumpaTime * 0.5f) + (i * 1.0f)) * 1.5f;
 
+			model = glm::mat4(1.0f);
+			model = ringCentro;
+			model = glm::translate(model, posW);
+			model = glm::rotate(model, -rotWumpa * toRadians, glm::vec3(0, 1, 0));
+			model = glm::scale(model, glm::vec3(0.8f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			cb_Wumpa.RenderModel();
+		}
 
+		// Tercer trío (espejo del primero)
+		for (int i = 0; i < 3; i++) {
 
+			localTime = wumpaTime - i * 5.0f;
+			if (localTime < 0.0f)
+				localTime += 480.0f;
 
+			tw = fmod(localTime, 480.0f);
 
+			if (tw < 120.0f) {
+				posW = glm::vec3(-(60.0f - tw), 4.0f, -(60.0f)); // invertido en XZ
+			}
+			else if (tw < 240.0f) {
+				posW = glm::vec3(60.0f, 4.0f, -(60.0f - (tw - 120.0f)));
+			}
+			else if (tw < 360.0f) {
+				posW = glm::vec3(60.0f - (tw - 240.0f), 4.0f, 60.0f);
+			}
+			else {
+				posW = glm::vec3(-60.0f, 4.0f, 60.0f - (tw - 360.0f));
+			}
 
+			posW.y += sin((wumpaTime * 0.5f) + (i * 1.0f)) * 1.5f;
 
+			model = glm::mat4(1.0f);
+			model = ringCentro;
+			model = glm::translate(model, posW);
+			model = glm::rotate(model, -rotWumpa * toRadians, glm::vec3(0, 1, 0));
+			model = glm::scale(model, glm::vec3(0.8f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			cb_Wumpa.RenderModel();
+		}
 
+		// Cuarto trío (espejo del segundo)
+		for (int i = 0; i < 3; i++) {
 
+			localTime = wumpaTime - i * 5.0f;
+			if (localTime < 0.0f)
+				localTime += 520.0f;
 
+			tw = fmod(localTime, 520.0f);
 
+			if (tw < 130.0f) {
+				posW = glm::vec3(-(65.0f - tw), 4.0f, -(65.0f));
+			}
+			else if (tw < 260.0f) {
+				posW = glm::vec3(65.0f, 4.0f, -(65.0f - (tw - 130.0f)));
+			}
+			else if (tw < 390.0f) {
+				posW = glm::vec3(65.0f - (tw - 260.0f), 4.0f, 65.0f);
+			}
+			else {
+				posW = glm::vec3(-65.0f, 4.0f, 65.0f - (tw - 390.0f));
+			}
 
+			posW.y += sin((wumpaTime * 0.5f) + (i * 1.0f)) * 1.5f;
 
+			model = glm::mat4(1.0f);
+			model = ringCentro;
+			model = glm::translate(model, posW);
+			model = glm::rotate(model, rotWumpa * toRadians, glm::vec3(0, 1, 0));
+			model = glm::scale(model, glm::vec3(0.8f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			cb_Wumpa.RenderModel();
+		}
 
 
 
@@ -1313,6 +1637,264 @@ int main()
 		// Reset cords uv ------------------------------
 		toffset = glm::vec2(0.0f, 0.0f);
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glDisable(GL_BLEND);
+
+
+		// ================================================================================ //
+		//																					//
+		//							Rejas borde VA AL FINAL									//
+		//																					//
+		// ================================================================================ //
+
+		// Atrás
+		for (int i = 0; i < 27; i++)
+		{
+			model = ringCentro;
+			model = glm::translate(model, glm::vec3(-130.0f + (10 * i), 10.0f, -140.0f));
+			model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_rejas.UseTexture();
+			meshList[4]->RenderMesh();
+		}
+
+		// Izquierda
+		for (int i = 0; i < 27; i++)
+		{
+			model = ringCentro;
+			model = glm::translate(model, glm::vec3(-140.0f, 10.0f, -130.0f + (10 * i)));
+			model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_rejas.UseTexture();
+			meshList[4]->RenderMesh();
+		}
+
+		// Derecha
+		for (int i = 0; i < 27; i++)
+		{
+			model = ringCentro;
+			model = glm::translate(model, glm::vec3(140.0f, 10.0f, -130.0f + (10 * i)));
+			model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_rejas.UseTexture();
+			meshList[4]->RenderMesh();
+		}
+
+		// En frente derecha
+		for (int i = 0; i < 10; i++)
+		{
+			model = ringCentro;
+			model = glm::translate(model, glm::vec3(40.0f + (10 * i), 10.0f, 140.0f));
+			model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_rejas.UseTexture();
+			meshList[4]->RenderMesh();
+		}
+
+		// En frente izquierda
+		for (int i = 0; i < 10; i++)
+		{
+			model = ringCentro;
+			model = glm::translate(model, glm::vec3(-40.0f - (10 * i), 10.0f, 140.0f));
+			model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_rejas.UseTexture();
+			meshList[4]->RenderMesh();
+		}
+
+
+		// ================================================================================ //
+		//																					//
+		//								TNT Crash Bandicoot									//
+		//																					//
+		// ================================================================================ //
+
+		posTNT = glm::vec3(100.0f, 0.0f, 0.0f);
+
+		// Animación de la TNT
+		if (!mainWindow.getTNT_Normal())
+		{
+			if (condandoTnt)
+			{
+				tiempoAcumuladoTnt += 0.1f + deltaTime;
+				if (tiempoAcumuladoTnt >= 50.0f)
+				{
+					toffsettntv -= 0.20f;
+					if (toffsettntv <= 0.40f)
+					{
+						toffsettntv = 0.8f;
+						condandoTnt = false;
+						explotadoTnt = true;
+					}
+					tiempoAcumuladoTnt = 0.0f;
+				}
+			}
+
+			if (explotadoTnt)
+			{
+				sizeTnt = 0.0f;
+
+				tiempoAcumuladoExpTnt += 0.1f + deltaTime;
+				if (tiempoAcumuladoExpTnt >= 5.0f)
+				{
+					toffsetexpu += 0.25f;
+					if (toffsetexpu >= 1.0f)
+					{
+						toffsetexpu = 0.0f;
+						toffsetexpv -= 0.5f;
+
+						if (toffsetexpv <= 0.0f)
+						{
+							toffsetexpv = 1.0f;
+							explotadoTnt = false;
+						}
+					}
+					tiempoAcumuladoExpTnt = 0.0f;
+				}
+
+
+				model = ringCentro;
+				model = glm::translate(model, posTNT + glm::vec3(0.0f, 5.0f, 0.0f));
+				model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				toffset = glm::vec2(toffsetexpu, toffsetexpv);
+				glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+				cb_explosion.UseTexture();
+				meshList[8]->RenderMesh();
+				glDisable(GL_BLEND);
+
+			}
+
+			delayPortal += 0.1f * deltaTime;
+			if (delayPortal >= 30.0f)
+			{
+				portalTnt = true;
+				delayPortal = 0.0f;
+			}
+
+
+			if (portalTnt)
+			{
+				toffsettntu = 0.0f;
+				toffsettntv = 1.0f;
+
+				if (portalAbriendose)
+				{
+					sizePortal += 0.25f * deltaTime;
+					if (sizePortal >= 25.0f)
+					{
+						sizePortal = 25.0f;
+						portalAbriendose = false;
+					}
+				}
+
+				delayPortal += 0.25f * deltaTime;
+				if (delayPortal >= 30.0f && !portalAbriendose && !caidaPortal && !portalCerrando)
+				{
+					delayPortal = 0.0f;
+					caidaPortal = true;
+					tntY = 36.0f;
+				}
+
+				if (caidaPortal)
+				{
+					sizeTnt += 0.1f * deltaTime;
+					if (sizeTnt >= 3.0f)
+						sizeTnt = 3.0f;
+
+					tntY -= 0.5f * deltaTime;
+					if (tntY <= 0.0f)
+					{
+						tntY = 0.0f;
+						caidaPortal = false;
+						portalCerrando = true;
+					}
+				}
+
+				if (portalCerrando)
+				{
+					sizePortal -= 0.5f * deltaTime;
+					if (sizePortal <= 0.0f)
+					{
+						sizePortal = 0.0f;
+						portalCerrando = false;
+						portalTnt = false;
+						resetPortal = true;
+					}
+				}
+
+
+				model = ringCentro;
+				model = glm::translate(model, posTNT + glm::vec3(0.0f, 35.0f, 0.0f));
+				model = glm::scale(model, glm::vec3(sizePortal, sizePortal, sizePortal));
+				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+				rm_portal.RenderModel();
+
+			}
+
+			if (resetPortal)
+			{
+				sizePortal = 0.0f;
+				toffsettntu = 0.0f;
+				toffsettntv = 1.0f;
+				tiempoAcumuladoTnt = 0.0f;
+				tiempoAcumuladoExpTnt = 0.0f;
+				toffsetexpu = 0.0f;
+				toffsetexpv = 1.0f;
+				condandoTnt = true;
+				resetPortal = false;
+				portalAbriendose = true;
+				mainWindow.setTNT_Normal();
+				delayPortal = 0.0f;
+			}
+
+		}
+
+
+		// TNT ------------------------------------------------------------
+		model = ringCentro;
+		model = glm::translate(model, posTNT + glm::vec3(0.0f, tntY, 0.0f));
+		model = glm::scale(model, glm::vec3(sizeTnt, sizeTnt, sizeTnt));
+		toffset = glm::vec2(toffsettntu, toffsettntv);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_tnt.RenderModel();
+
+		// Polvo TNT --------------------------------------------------------
+		model = ringCentro;
+		model = glm::translate(model, posTNT);
+		model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		toffset = glm::vec2(0.0f, 0.0f);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_explosion.UseTexture();
+		meshList[9]->RenderMesh();
 		glDisable(GL_BLEND);
 
 
