@@ -95,6 +95,26 @@ float movIselda = 0.0f;
 GLfloat rotWumpa = 0.0f;
 GLfloat wumpaTime = 0.0f;
 
+// TNT de Crash Bandicoot
+float toffsettntu = 0.0f;
+float toffsettntv = 1.0f;
+float toffsetexpu = 0.0f;
+float toffsetexpv = 1.0f;
+float tiempoAcumuladoTnt = 0.0f;
+float tiempoAcumuladoExpTnt = 0.0f;
+bool condandoTnt = true;
+bool explotadoTnt = false;
+bool portalTnt = false;
+bool portalAbriendose = true;
+bool caidaPortal = false;
+bool portalCerrando = false;
+bool resetPortal = false;
+GLfloat sizeTnt = 3.0f;
+GLfloat sizePortal = 0.0f;
+float delayPortal = 0.0f;
+GLfloat tntY = 0.0f;
+
+
 
 // =================================================================== //
 
@@ -119,8 +139,14 @@ Texture pisoTexture;
 // Para el cartel de la puerta
 Texture hk_font_Proyecto_GCEIHC;
 
-// para el fuego
+// Para el fuego
 Texture es_fuego;
+
+// Para las rejas
+Texture hk_rejas;
+
+// Para la explosión de la TNT
+Texture cb_explosion;
 
 
 // =================================================================== //
@@ -171,9 +197,12 @@ Model es_Antorcha;
 Model hk_hollow_knight;
 Model hk_dash;
 
-
 // Wumpa de Crash Bandicoot
 Model cb_Wumpa;
+
+// TNT de Crash Bandicoot
+Model cb_tnt;
+Model rm_portal;
 
 
 // =================================================================== //
@@ -360,6 +389,43 @@ void CreateObjects()
 		0, 3, 2,
 	};
 
+	unsigned int cruzIndices[] = {
+		// Plano XY
+		0, 1, 2,
+		0, 2, 3,
+
+		// Plano ZY
+		4, 5, 6,
+		4, 6, 7
+	};
+	GLfloat cruzVertices[] = {
+		// ----- Plano XY (z = 0)
+		-0.5f, -0.5f,  0.0f,   0.0f,  0.5f,   0.0f, 0.0f, 1.0f,  // abajo izq
+		 0.5f, -0.5f,  0.0f,   0.25f, 0.5f,   0.0f, 0.0f, 1.0f,  // abajo der
+		 0.5f,  0.5f,  0.0f,   0.25f, 1.0f,   0.0f, 0.0f, 1.0f,  // arriba der
+		-0.5f,  0.5f,  0.0f,   0.0f,  1.0f,   0.0f, 0.0f, 1.0f,  // arriba izq
+
+		// ----- Plano ZY (x = 0)
+		 0.0f, -0.5f, -0.5f,   0.0f,  0.5f,   1.0f, 0.0f, 0.0f,  // abajo atrás
+		 0.0f, -0.5f,  0.5f,   0.25f, 0.5f,   1.0f, 0.0f, 0.0f,  // abajo frente
+		 0.0f,  0.5f,  0.5f,   0.25f, 1.0f,   1.0f, 0.0f, 0.0f,  // arriba frente
+		 0.0f,  0.5f, -0.5f,   0.0f,  1.0f,   1.0f, 0.0f, 0.0f   // arriba atrás
+	};
+
+	unsigned int planoXZ_Indices[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	GLfloat planoXZ_Vertices[] = {
+		// ----- Plano XZ (y = 0)
+		-0.5f, 0.0f, -0.5f,   0.5f, 0.0f,   0.0f, 1.0f, 0.0f, // esquina inferior izq
+		 0.5f, 0.0f, -0.5f,   0.75f, 0.0f,   0.0f, 1.0f, 0.0f, // esquina inferior der
+		 0.5f, 0.0f,  0.5f,   0.75f, 0.5f,   0.0f, 1.0f, 0.0f, // esquina superior der
+		-0.5f, 0.0f,  0.5f,   0.5f, 0.5f,   0.0f, 1.0f, 0.0f  // esquina superior izq
+	};
+
+
 	Mesh *obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(obj1);
@@ -393,6 +459,13 @@ void CreateObjects()
 	obj8->CreateMesh(verticesCartel, cartelIndices, 32, 6);
 	meshList.push_back(obj8);
 
+	Mesh* obj9 = new Mesh();
+	obj9->CreateMesh(cruzVertices, cruzIndices, 64, 12);
+	meshList.push_back(obj9);
+
+	Mesh* obj10 = new Mesh();
+	obj10->CreateMesh(planoXZ_Vertices, planoXZ_Indices, 32, 6);
+	meshList.push_back(obj10);
 }
 
 
@@ -464,6 +537,14 @@ int main()
 	// Textura del fuego
 	es_fuego = Texture("Textures/Escenario/es_fuego.png");
 	es_fuego.LoadTextureA();
+
+	// Textura de las rejas
+	hk_rejas = Texture("Textures/Hollow_knight/hk_rejas.png");
+	hk_rejas.LoadTextureA();
+
+	// Textura de la explosión de la TNT
+	cb_explosion = Texture("Textures/Crash_bandicoot/cb_explosion.png");
+	cb_explosion.LoadTextureA();
 
 
 	// =================================================================== //
@@ -541,6 +622,15 @@ int main()
 	// Wumpa de Crash Bandicoot
 	cb_Wumpa = Model();
 	cb_Wumpa.LoadModel("Models/Crash_bandicoot/cb_Wumpa.obj");
+
+	// tnt de Crash Bandicoot
+	cb_tnt = Model();
+	cb_tnt.LoadModel("Models/Crash_bandicoot/cb_tnt.obj");
+
+	// portal de rick y morty
+	rm_portal = Model();
+	rm_portal.LoadModel("Models/Rick_and_morty/rm_Portal.obj");
+
 
 
 	// =================================================================== //
@@ -624,6 +714,9 @@ int main()
 	float localTime;
 	float tw;
 	glm::vec3 posW;
+
+	// Para la tnt
+	glm::vec3 posTNT;
 
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
@@ -1195,7 +1288,7 @@ int main()
 		// Posicionamiento global
 		model = ringCentro;
 		model = glm::translate(model, glm::vec3(-20.0f, 12.0f, 20.0f));
-	
+
 
 		if (mainWindow.getHK_Dash())
 		{
@@ -1266,7 +1359,7 @@ int main()
 		//							Wumpas Crash Bandicoot									//
 		//																					//
 		// ================================================================================ //
-		
+
 		// Animación de rotación
 		rotWumpa += 5.0f * deltaTime;
 		if (rotWumpa > 360.0f)
@@ -1414,8 +1507,6 @@ int main()
 
 
 
-
-
 		// ================================================================================ //
 		//																					//
 		//								Antorchas VA AL FINAL								//
@@ -1546,6 +1637,264 @@ int main()
 		// Reset cords uv ------------------------------
 		toffset = glm::vec2(0.0f, 0.0f);
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glDisable(GL_BLEND);
+
+
+		// ================================================================================ //
+		//																					//
+		//							Rejas borde VA AL FINAL									//
+		//																					//
+		// ================================================================================ //
+
+		// Atrás
+		for (int i = 0; i < 27; i++)
+		{
+			model = ringCentro;
+			model = glm::translate(model, glm::vec3(-130.0f + (10 * i), 10.0f, -140.0f));
+			model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_rejas.UseTexture();
+			meshList[4]->RenderMesh();
+		}
+
+		// Izquierda
+		for (int i = 0; i < 27; i++)
+		{
+			model = ringCentro;
+			model = glm::translate(model, glm::vec3(-140.0f, 10.0f, -130.0f + (10 * i)));
+			model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_rejas.UseTexture();
+			meshList[4]->RenderMesh();
+		}
+
+		// Derecha
+		for (int i = 0; i < 27; i++)
+		{
+			model = ringCentro;
+			model = glm::translate(model, glm::vec3(140.0f, 10.0f, -130.0f + (10 * i)));
+			model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_rejas.UseTexture();
+			meshList[4]->RenderMesh();
+		}
+
+		// En frente derecha
+		for (int i = 0; i < 10; i++)
+		{
+			model = ringCentro;
+			model = glm::translate(model, glm::vec3(40.0f + (10 * i), 10.0f, 140.0f));
+			model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_rejas.UseTexture();
+			meshList[4]->RenderMesh();
+		}
+
+		// En frente izquierda
+		for (int i = 0; i < 10; i++)
+		{
+			model = ringCentro;
+			model = glm::translate(model, glm::vec3(-40.0f - (10 * i), 10.0f, 140.0f));
+			model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hk_rejas.UseTexture();
+			meshList[4]->RenderMesh();
+		}
+
+
+		// ================================================================================ //
+		//																					//
+		//								TNT Crash Bandicoot									//
+		//																					//
+		// ================================================================================ //
+
+		posTNT = glm::vec3(100.0f, 0.0f, 0.0f);
+
+		// Animación de la TNT
+		if (!mainWindow.getTNT_Normal())
+		{
+			if (condandoTnt)
+			{
+				tiempoAcumuladoTnt += 0.1f + deltaTime;
+				if (tiempoAcumuladoTnt >= 50.0f)
+				{
+					toffsettntv -= 0.20f;
+					if (toffsettntv <= 0.40f)
+					{
+						toffsettntv = 0.8f;
+						condandoTnt = false;
+						explotadoTnt = true;
+					}
+					tiempoAcumuladoTnt = 0.0f;
+				}
+			}
+
+			if (explotadoTnt)
+			{
+				sizeTnt = 0.0f;
+
+				tiempoAcumuladoExpTnt += 0.1f + deltaTime;
+				if (tiempoAcumuladoExpTnt >= 5.0f)
+				{
+					toffsetexpu += 0.25f;
+					if (toffsetexpu >= 1.0f)
+					{
+						toffsetexpu = 0.0f;
+						toffsetexpv -= 0.5f;
+
+						if (toffsetexpv <= 0.0f)
+						{
+							toffsetexpv = 1.0f;
+							explotadoTnt = false;
+						}
+					}
+					tiempoAcumuladoExpTnt = 0.0f;
+				}
+
+
+				model = ringCentro;
+				model = glm::translate(model, posTNT + glm::vec3(0.0f, 5.0f, 0.0f));
+				model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				toffset = glm::vec2(toffsetexpu, toffsetexpv);
+				glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+				cb_explosion.UseTexture();
+				meshList[8]->RenderMesh();
+				glDisable(GL_BLEND);
+
+			}
+
+			delayPortal += 0.1f * deltaTime;
+			if (delayPortal >= 30.0f)
+			{
+				portalTnt = true;
+				delayPortal = 0.0f;
+			}
+
+
+			if (portalTnt)
+			{
+				toffsettntu = 0.0f;
+				toffsettntv = 1.0f;
+
+				if (portalAbriendose)
+				{
+					sizePortal += 0.25f * deltaTime;
+					if (sizePortal >= 25.0f)
+					{
+						sizePortal = 25.0f;
+						portalAbriendose = false;
+					}
+				}
+
+				delayPortal += 0.25f * deltaTime;
+				if (delayPortal >= 30.0f && !portalAbriendose && !caidaPortal && !portalCerrando)
+				{
+					delayPortal = 0.0f;
+					caidaPortal = true;
+					tntY = 36.0f;
+				}
+
+				if (caidaPortal)
+				{
+					sizeTnt += 0.1f * deltaTime;
+					if (sizeTnt >= 3.0f)
+						sizeTnt = 3.0f;
+
+					tntY -= 0.5f * deltaTime;
+					if (tntY <= 0.0f)
+					{
+						tntY = 0.0f;
+						caidaPortal = false;
+						portalCerrando = true;
+					}
+				}
+
+				if (portalCerrando)
+				{
+					sizePortal -= 0.5f * deltaTime;
+					if (sizePortal <= 0.0f)
+					{
+						sizePortal = 0.0f;
+						portalCerrando = false;
+						portalTnt = false;
+						resetPortal = true;
+					}
+				}
+
+
+				model = ringCentro;
+				model = glm::translate(model, posTNT + glm::vec3(0.0f, 35.0f, 0.0f));
+				model = glm::scale(model, glm::vec3(sizePortal, sizePortal, sizePortal));
+				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+				rm_portal.RenderModel();
+
+			}
+
+			if (resetPortal)
+			{
+				sizePortal = 0.0f;
+				toffsettntu = 0.0f;
+				toffsettntv = 1.0f;
+				tiempoAcumuladoTnt = 0.0f;
+				tiempoAcumuladoExpTnt = 0.0f;
+				toffsetexpu = 0.0f;
+				toffsetexpv = 1.0f;
+				condandoTnt = true;
+				resetPortal = false;
+				portalAbriendose = true;
+				mainWindow.setTNT_Normal();
+				delayPortal = 0.0f;
+			}
+
+		}
+
+
+		// TNT ------------------------------------------------------------
+		model = ringCentro;
+		model = glm::translate(model, posTNT + glm::vec3(0.0f, tntY, 0.0f));
+		model = glm::scale(model, glm::vec3(sizeTnt, sizeTnt, sizeTnt));
+		toffset = glm::vec2(toffsettntu, toffsettntv);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_tnt.RenderModel();
+
+		// Polvo TNT --------------------------------------------------------
+		model = ringCentro;
+		model = glm::translate(model, posTNT);
+		model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		toffset = glm::vec2(0.0f, 0.0f);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_explosion.UseTexture();
+		meshList[9]->RenderMesh();
 		glDisable(GL_BLEND);
 
 

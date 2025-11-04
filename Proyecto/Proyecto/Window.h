@@ -34,16 +34,23 @@ public:
 	void setHK_Dash() { hk_dash = !hk_dash; }
 
 
+	// TNT de Crash Bandicoot
+	GLboolean getTNT_Normal() { return tnt_normal; }
+	GLboolean getTNT_Explotando() { return tnt_explotando; }
+	void setTNT_Normal() { tnt_normal = !tnt_normal; }
+	void setTNT_Explotando() { tnt_explotando = !tnt_explotando; }
+
 
 
 	bool getShouldClose() {
-		return  glfwWindowShouldClose(mainWindow);}
+		return  glfwWindowShouldClose(mainWindow);
+	}
 	bool* getsKeys() { return keys; }
 	void swapBuffers() { return glfwSwapBuffers(mainWindow); }
-	
+
 	~Window();
-private: 
-	GLFWwindow *mainWindow;
+private:
+	GLFWwindow* mainWindow;
 	GLint width, height;
 	bool keys[1024];
 	GLint bufferWidth, bufferHeight;
@@ -67,6 +74,12 @@ private:
 	// Hollow Knight
 	GLboolean hk_parado;
 	GLboolean hk_dash;
+
+
+	// Tnt de Crash Bandicoot
+	GLboolean tnt_normal;
+	GLboolean tnt_explotando;
+
 
 
 	GLboolean luzPrendida;

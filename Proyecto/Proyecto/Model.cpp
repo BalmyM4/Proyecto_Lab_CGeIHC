@@ -169,6 +169,10 @@ void Model::LoadMaterials(const aiScene * scene)
 				{
 					texPath = "Textures/Crash_bandicoot/" + filename;
 				}
+				else if (modelBaseName.rfind("rm", 0) == 0)
+				{
+					texPath = "Textures/Rick_and_morty/" + filename;
+				}
 				else
 				{
 					texPath = "Textures/" + filename;
