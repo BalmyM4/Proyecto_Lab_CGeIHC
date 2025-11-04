@@ -113,6 +113,7 @@ GLfloat sizeTnt = 3.0f;
 GLfloat sizePortal = 0.0f;
 float delayPortal = 0.0f;
 GLfloat tntY = 0.0f;
+float rotarPortal = 0.0f;
 
 
 
@@ -1802,6 +1803,11 @@ int main()
 				toffsettntu = 0.0f;
 				toffsettntv = 1.0f;
 
+				// Animación portal
+				rotarPortal += 1.0f * deltaTime;
+				if (rotarPortal >= 360.0f)
+					rotarPortal = 0.0f;
+
 				if (portalAbriendose)
 				{
 					sizePortal += 0.25f * deltaTime;
@@ -1850,6 +1856,7 @@ int main()
 
 				model = ringCentro;
 				model = glm::translate(model, posTNT + glm::vec3(0.0f, 35.0f, 0.0f));
+				model = glm::rotate(model, rotarPortal * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 				model = glm::scale(model, glm::vec3(sizePortal, sizePortal, sizePortal));
 				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 				rm_portal.RenderModel();
