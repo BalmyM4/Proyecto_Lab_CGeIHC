@@ -639,7 +639,7 @@ int main()
 
 	//Grada
 	grada = Model();
-	grada.LoadModel("Models/Escenario/grada1obj.obj");
+	grada.LoadModel("Models/Escenario/es_grada.obj");
 
 	// =================================================================== //
 	//																	   //
@@ -1089,19 +1089,20 @@ int main()
 		// ================================================================================ //
 		// Grada 1
 		model = ringCentro;
-		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
-		model = glm::translate(model, glm::vec3(30.3f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -47.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		grada.RenderModel();
 
 
-		// Grada 2
-		model = ringCentro;
-		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
-		model = glm::translate(model, glm::vec3(-30.3f, 0.0f, 0.0f));
-		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		grada.RenderModel();
+		//// Grada 2
+		//model = ringCentro;
+		//model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
+		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 47.0f));
+		//model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//grada.RenderModel();
 
 		// ================================================================================ //
 		//																					//
