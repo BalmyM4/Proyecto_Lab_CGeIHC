@@ -115,7 +115,9 @@ float delayPortal = 0.0f;
 GLfloat tntY = 0.0f;
 float rotarPortal = 0.0f;
 
-
+// Abrir megacaja
+float toffsetrotcaja = 1.0f;
+float rotcaja = 0.0f;
 
 // =================================================================== //
 
@@ -208,6 +210,10 @@ Model rm_portal;
 
 // Gradas
 Model grada;
+
+// Brawl stars
+Model megacaja1;
+Model megacaja2;
 
 // =================================================================== //
 
@@ -640,6 +646,13 @@ int main()
 	//Grada
 	grada = Model();
 	grada.LoadModel("Models/Escenario/es_grada.obj");
+
+	//Mega caja 
+	megacaja1 = Model();
+	megacaja1.LoadModel("Models/Brawl_stars/bs_megacaja_arriba.obj");
+
+	megacaja2 = Model();
+	megacaja2.LoadModel("Models/Brawl_stars/bs_megacaja_abajo.obj");
 
 	// =================================================================== //
 	//																	   //
@@ -1090,10 +1103,46 @@ int main()
 		// Grada 1
 		model = ringCentro;
 		model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -47.0f));
+		model = glm::translate(model, glm::vec3(0.0f, -0.65f, -47.0f));
 		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		grada.RenderModel();
+
+
+
+		// ================================================================================ //
+		//																					//
+		//									brawl stars											//
+		//																					//
+		// ================================================================================ //
+		
+
+		if (mainWindow.getMegacaja() ) {
+			if (rotcaja < 60.0f) {
+				rotcaja += toffsetrotcaja * deltaTime;
+			}
+		}
+		else {
+			if (rotcaja > 0.0f) {
+				rotcaja -= toffsetrotcaja * deltaTime;
+			}
+		}
+		
+		
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(-30.0f, 0.9, 0.0));
+		model = glm::rotate(model, rotcaja * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		megacaja1.RenderModel();
+
+
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(-28.85f, 0.22f, 0.0));
+		//model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		megacaja2.RenderModel();
 
 
 		//// Grada 2

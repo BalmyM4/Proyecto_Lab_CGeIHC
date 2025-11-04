@@ -5,22 +5,22 @@ D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\Window.h(12,36): warning C4244: 
 D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
   (compilando archivo de origen "main.cpp")
   
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(266,24): warning C4267: 'inicializando': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(733,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(735,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(739,34): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(852,23): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(926,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(927,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(952,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(953,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1029,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1030,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1055,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1056,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1149,22): warning C4305: '+=': truncamiento de 'double' a 'float'
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1235,26): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1244,30): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1251,30): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(272,24): warning C4267: 'inicializando': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(746,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(748,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(752,34): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(865,23): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(939,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(940,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(965,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(966,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1042,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1043,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1068,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1069,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1198,22): warning C4305: '+=': truncamiento de 'double' a 'float'
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1284,26): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1293,30): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\Practicassss\ProyectoFinal\Proyecto\Proyecto\main.cpp(1300,30): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
 LINK : warning LNK4098: la biblioteca predeterminada'MSVCRT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
   Proyecto.vcxproj -> D:\Practicassss\ProyectoFinal\Proyecto\x64\Debug\Proyecto.exe
