@@ -30,6 +30,10 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	tnt_normal = true;
 	tnt_explotando = false;
 
+
+	// brawl stars
+	bs_megacaja = false;
+
 	lucesPuntuales = 0.0f;
 	luzPrendida = true;
 	luzPrendida2 = true;
@@ -198,7 +202,11 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		}
 	}
 
-
+	// Abrir megacaja
+	if (key == GLFW_KEY_V && action == GLFW_PRESS)
+	{
+		theWindow->bs_megacaja = !theWindow->bs_megacaja;
+	}
 
 
 	if (key >= 0 && key < 1024)

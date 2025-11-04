@@ -40,7 +40,8 @@ public:
 	void setTNT_Normal() { tnt_normal = !tnt_normal; }
 	void setTNT_Explotando() { tnt_explotando = !tnt_explotando; }
 
-
+	// Mega caja 
+	GLboolean getMegacaja() { return bs_megacaja; }
 
 	bool getShouldClose() {
 		return  glfwWindowShouldClose(mainWindow);
@@ -80,6 +81,9 @@ private:
 	GLboolean tnt_normal;
 	GLboolean tnt_explotando;
 
+
+	// Mega caja brawl stars
+	GLboolean bs_megacaja;
 
 
 	GLboolean luzPrendida;
