@@ -229,6 +229,9 @@ Model megacaja2;
 // El primo
 Model elprimo;
 
+// Dr Cortex
+Model cb_dr_cortex;
+
 
 // =================================================================== //
 
@@ -678,7 +681,6 @@ int main()
 	rm_portal.LoadModel("Models/Rick_and_morty/rm_Portal.obj");
 
 
-
 	//Grada
 	grada = Model();
 	grada.LoadModel("Models/Escenario/es_grada.obj");
@@ -690,11 +692,16 @@ int main()
 	megacaja2 = Model();
 	megacaja2.LoadModel("Models/Brawl_stars/bs_megacaja_abajo.obj");
 
+	// El primo
 	elprimo = Model();
 	elprimo.LoadModel("Models/Brawl_stars/bs_primoulti.obj");
 
 	/*elprimo = Model();
 	elprimo.LoadModel("Models/Brawl_stars/Mobile - Brawl Stars - El Primo.fbx");*/
+
+	// Dr Cortex
+	cb_dr_cortex = Model();
+	cb_dr_cortex.LoadModel("Models/Crash_bandicoot/cb_dr_cortex.obj");
 
 	
 	// =================================================================== //
@@ -922,7 +929,7 @@ int main()
 		cb_brazo_izq_1.RenderModel();
 
 
-		/*
+		
 		// ================================================================================ //
 		//																					//
 		//									Ring											//
@@ -1215,6 +1222,7 @@ int main()
 		//									Gradas											//
 		//																					//
 		// ================================================================================ //
+	
 		// Grada 1
 		model = ringCentro;
 		model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
@@ -1223,6 +1231,12 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		grada.RenderModel();
 
+
+		// ================================================================================ //
+		//																					//
+		//									Primo											//
+		//																					//
+		// ================================================================================ //
 
 		// Primo
 		model = ringCentro;
@@ -1235,7 +1249,7 @@ int main()
 
 		// ================================================================================ //
 		//																					//
-		//									brawl stars											//
+		//									brawl stars										//
 		//																					//
 		// ================================================================================ //
 		
@@ -1252,6 +1266,7 @@ int main()
 		}
 		
 		
+		// Megacaja 1 --------------------------------------------------------------------
 		model = ringCentro;
 		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
 		model = glm::translate(model, glm::vec3(-30.0f, 0.9, 0.0));
@@ -1259,13 +1274,31 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		megacaja1.RenderModel();
 
-
 		model = ringCentro;
 		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
 		model = glm::translate(model, glm::vec3(-28.85f, 0.22f, 0.0));
 		//model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		megacaja2.RenderModel();
+
+
+		// Megacaja 2 --------------------------------------------------------------------
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(30.0f, 0.9, 0.0));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, rotcaja * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		megacaja1.RenderModel();
+
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(28.85f, 0.22f, 0.0));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		megacaja2.RenderModel();
+
 
 
 		//// Grada 2
@@ -1563,6 +1596,7 @@ int main()
 		//																					//
 		// ================================================================================ //
 
+
 		// Animación de rotación
 		rotWumpa += 5.0f * deltaTime;
 		if (rotWumpa > 360.0f)
@@ -1707,6 +1741,23 @@ int main()
 			cb_Wumpa.RenderModel();
 		}
 
+
+		// ================================================================================ //
+		//																					//
+		//							Wumpas Crash Bandicoot									//
+		//																					//
+		// ================================================================================ //
+
+
+		// Dr Cortex --------------------------------------------------------
+		model = glm::mat4(1.0f);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(100.0f, 0.0f, -100.0f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_dr_cortex.RenderModel();
 
 
 
@@ -2109,7 +2160,7 @@ int main()
 
 		// ================================================================================ //
 
-		*/
+		
 
 		glDisable(GL_BLEND);
 		
