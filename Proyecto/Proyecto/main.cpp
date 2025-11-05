@@ -138,6 +138,7 @@ Camera camera;
 // Texturas básicas
 Texture plainTexture;
 Texture pisoTexture;
+Texture cespedTexture;
 
 // Para el cartel de la puerta
 Texture hk_font_Proyecto_GCEIHC;
@@ -232,6 +233,13 @@ Model elprimo;
 // Dr Cortex
 Model cb_dr_cortex;
 
+// Piramide
+Model es_piramide;
+
+// Aguila
+Model es_aguila;
+Model es_aguila_ala_der;
+Model es_aguila_ala_izq;
 
 // =================================================================== //
 
@@ -533,6 +541,9 @@ int main()
 	plainTexture.LoadTextureA();
 	pisoTexture = Texture("Textures/Escenario/4_Piso.png");
 	pisoTexture.LoadTextureA();
+	cespedTexture = Texture("Textures/Escenario/cesped-verde.png");
+	cespedTexture.LoadTextureA();
+
 
 	// Skybox Textures (Day)
 	std::vector<std::string> skyboxFaces;
@@ -704,6 +715,18 @@ int main()
 	cb_dr_cortex = Model();
 	cb_dr_cortex.LoadModel("Models/Crash_bandicoot/cb_dr_cortex.obj");
 
+	// Piramide
+	es_piramide = Model();
+	es_piramide.LoadModel("Models/Escenario/es_pyramid.obj");
+
+	// Aguila
+	es_aguila = Model();
+	es_aguila.LoadModel("Models/Escenario/es_aguila.obj");
+	es_aguila_ala_izq = Model();
+	es_aguila_ala_izq.LoadModel("Models/Escenario/es_aguila_ala_izq.obj");
+	es_aguila_ala_der = Model();
+	es_aguila_ala_der.LoadModel("Models/Escenario/es_aguila_ala_der.obj");
+
 	
 	// =================================================================== //
 	//																	   //
@@ -866,16 +889,29 @@ int main()
 		color = glm::vec3(1.0f, 1.0f, 1.0f);
 		toffset = glm::vec2(0.0f, 0.0f);
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+
 		// Piso
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -150.0f));
-		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
+		model = glm::scale(model, glm::vec3(20.0f, 1.0f, 20.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		pisoTexture.UseTexture();
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[2]->RenderMesh();
+
+		// Piso cesped
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, -0.1f, -150.0f));
+		model = glm::scale(model, glm::vec3(100.0f, 1.0f, 100.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		cespedTexture.UseTexture();
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		meshList[2]->RenderMesh();
+
 
 
 		// ================================================================================ //
@@ -1793,6 +1829,22 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cb_dr_cortex.RenderModel();
 
+
+		// ================================================================================ //
+		//																					//
+		//									Piramide										//
+		//																					//
+		// ================================================================================ //
+
+		// Piramide --------------------------------------------------------
+		model = glm::mat4(1.0f);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(-350.0f, 0.0f, -350.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_piramide.RenderModel();
 
 
 		// ================================================================================ //
