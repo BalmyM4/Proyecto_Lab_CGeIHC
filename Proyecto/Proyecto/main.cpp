@@ -1828,7 +1828,7 @@ int main()
 		//																					//
 		// ================================================================================ //
 
-		posTNT = glm::vec3(100.0f, 0.0f, 0.0f);
+		posTNT = glm::vec3(-100.0f, 0.0f, 100.0f);
 
 		// Animación de la TNT
 		if (!mainWindow.getTNT_Normal())
