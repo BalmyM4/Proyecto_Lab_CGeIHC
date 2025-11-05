@@ -86,9 +86,6 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="practica7.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="Shader_light.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -107,6 +104,9 @@
     <ClCompile Include="Window.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader_light.frag">
@@ -121,5 +121,10 @@
     <None Include="shaders\skybox.vert">
       <Filter>Archivos de recursos</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="keyframes_aguila.txt">
+      <Filter>Archivos de recursos</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -5,21 +5,24 @@ D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.h(12,36): warning C4244: 'r
 D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
   (compilando archivo de origen "main.cpp")
   
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(299,24): warning C4267: 'inicializando': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(839,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(841,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(845,34): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1062,23): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1137,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1138,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1163,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1164,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1242,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1243,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1268,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1269,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1424,22): warning C4305: '+=': truncamiento de 'double' a 'float'
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1510,26): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1519,30): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1526,30): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(316,24): warning C4267: 'inicializando': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1039,9): warning C4566: el carácter representado por el nombre de carácter universal '\u2212' no se puede representar en la página de códigos actual (1252)
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1097,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1099,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1103,34): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1325,23): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1400,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1401,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1426,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1427,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1505,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1506,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1531,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1532,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1687,22): warning C4305: '+=': truncamiento de 'double' a 'float'
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1773,26): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1782,30): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1789,30): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(2104,22): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(2114,22): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
   Proyecto.vcxproj -> D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\x64\Debug\Proyecto.exe
