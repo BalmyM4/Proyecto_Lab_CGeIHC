@@ -158,6 +158,18 @@ Texture cb_explosion;
 //																	   //
 // =================================================================== //
 
+// Crash Bandicoot (Avatar)
+Model cb_cuerpo;
+Model cb_pierna_der_0;
+Model cb_pierna_der_1;
+Model cb_pierna_izq_0;
+Model cb_pierna_izq_1;
+Model cb_brazo_der_0;
+Model cb_brazo_der_1;
+Model cb_brazo_izq_0;
+Model cb_brazo_izq_1;
+
+
 // Puerta reja
 Model Puerta_reja_arco;
 Model Puerta_reja_derecha;
@@ -207,7 +219,6 @@ Model cb_Wumpa;
 Model cb_tnt;
 Model rm_portal;
 
-
 // Gradas
 Model grada;
 
@@ -215,7 +226,9 @@ Model grada;
 Model megacaja1;
 Model megacaja2;
 
+// El primo
 Model elprimo;
+
 
 // =================================================================== //
 
@@ -579,6 +592,27 @@ int main()
 	Puerta_reja_puerta_derecha = Model();
 	Puerta_reja_puerta_derecha.LoadModel("Models/Hollow_knight/hk_Puerta_reja_puerta_derecha.obj");
 
+	// Crash Bandicoot (Avatar)
+	cb_cuerpo = Model();
+	cb_cuerpo.LoadModel("Models/Crash_bandicoot/cb_cuerpo.obj");
+	cb_pierna_der_0 = Model();
+	cb_pierna_der_0.LoadModel("Models/Crash_bandicoot/cb_pierna_der_0.obj");
+	cb_pierna_der_1 = Model();
+	cb_pierna_der_1.LoadModel("Models/Crash_bandicoot/cb_pierna_der_1.obj");
+	cb_brazo_der_0 = Model();
+	cb_brazo_der_0.LoadModel("Models/Crash_bandicoot/cb_brazo_der_0.obj");
+	cb_brazo_der_1 = Model();
+	cb_brazo_der_1.LoadModel("Models/Crash_bandicoot/cb_brazo_der_1.obj");
+	cb_pierna_izq_0 = Model();
+	cb_pierna_izq_0.LoadModel("Models/Crash_bandicoot/cb_pierna_izq_0.obj");
+	cb_pierna_izq_1 = Model();
+	cb_pierna_izq_1.LoadModel("Models/Crash_bandicoot/cb_pierna_izq_1.obj");
+	cb_brazo_izq_0 = Model();
+	cb_brazo_izq_0.LoadModel("Models/Crash_bandicoot/cb_brazo_izq_0.obj");
+	cb_brazo_izq_1 = Model();
+	cb_brazo_izq_1.LoadModel("Models/Crash_bandicoot/cb_brazo_izq_1.obj");
+
+
 	// Banco Hollow Knight
 	hk_Banco = Model();
 	hk_Banco.LoadModel("Models/Hollow_knight/hk_Banco.obj");
@@ -734,6 +768,8 @@ int main()
 	glm::mat4 ringCentro(1.0);
 	glm::mat4 luciernagaPos(1.0);
 	glm::mat4 iseldaPos(1.0);
+	glm::mat4 crashAux(1.0);
+	glm::mat4 crashExtrAux(1.0);
 
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
@@ -817,6 +853,76 @@ int main()
 		meshList[2]->RenderMesh();
 
 
+		// ================================================================================ //
+		//																					//
+		//							Crash Bandicoot (avatar)								//
+		//																					//
+		// ================================================================================ //
+
+		// Cuerpo -------------------------------------------------------------
+		model = glm::mat4(1.0);
+
+		// Posicionamiento global
+		model = glm::translate(model, glm::vec3(0.0f + mainWindow.getmovex_cb(), 6.2f, 0.0f + mainWindow.getmovez_cb()));
+		model = glm::rotate(model, mainWindow.getrotz_cb() * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		crashAux = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_cuerpo.RenderModel();
+
+		// Pierna derecha 0 ---------------------------------------------------
+		model = crashAux;
+		model = glm::translate(model, glm::vec3(0.1f, 0.0f, 0.0f));
+		crashExtrAux = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_pierna_der_0.RenderModel();
+
+		// Pierna derecha 1 ---------------------------------------------------
+		model = crashExtrAux;
+		model = glm::translate(model, glm::vec3(0.5f, -2.5f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_pierna_der_1.RenderModel();
+
+		// Pierna izquierda 0 ---------------------------------------------------
+		model = crashAux;
+		model = glm::translate(model, glm::vec3(-0.1f, 0.0f, 0.0f));
+		crashExtrAux = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_pierna_izq_0.RenderModel();
+
+		// Pierna izquierda 1 ---------------------------------------------------
+		model = crashExtrAux;
+		model = glm::translate(model, glm::vec3(-0.5f, -2.5f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_pierna_izq_1.RenderModel();
+
+		// Brazo derecho 0 ---------------------------------------------------
+		model = crashAux;
+		model = glm::translate(model, glm::vec3(2.2f, 5.08f, 0.97f));
+		crashExtrAux = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_brazo_der_0.RenderModel();
+
+		// Brazo derecho 1 ---------------------------------------------------
+		model = crashExtrAux;
+		model = glm::translate(model, glm::vec3(1.5f, -3.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_brazo_der_1.RenderModel();
+
+		// Brazo izquierdo 0 ---------------------------------------------------
+		model = crashAux;
+		model = glm::translate(model, glm::vec3(-2.5f, 4.8f, 1.1f));
+		crashExtrAux = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_brazo_izq_0.RenderModel();
+
+		// Brazo izquierdo 1 ---------------------------------------------------
+		model = crashExtrAux;
+		model = glm::translate(model, glm::vec3(-1.5f, -3.0f, -0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_brazo_izq_1.RenderModel();
+
+
+		/*
 		// ================================================================================ //
 		//																					//
 		//									Ring											//
@@ -2003,7 +2109,7 @@ int main()
 
 		// ================================================================================ //
 
-
+		*/
 
 		glDisable(GL_BLEND);
 		

@@ -18,6 +18,12 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	adelante = true;
 
 	
+	// Crash bandicoot
+	movex_cb = 0.0f;
+	movez_cb = 0.0f;
+	rotz_cb = 0.0f;
+
+
 	// Puerta
 	puertaCerrada = true;
 	puertaAbriendose = false;
@@ -128,27 +134,8 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
-	if (key == GLFW_KEY_U)
-	{
-		theWindow-> muevex += 1.0;
-		theWindow->adelante = true;
-	}
-	if (key == GLFW_KEY_Y)
-	{
-		theWindow-> muevex -= 1.0;
-		theWindow->adelante = false;
-	}
-	if (key == GLFW_KEY_I)
-	{
-		theWindow->articulacion1 += 2.5 * theWindow->dir1;
 
-		if (theWindow->articulacion1 == 60)
-			theWindow->dir1 *= -1.0f;
-		else if (theWindow->articulacion1 == 0)
-			theWindow->dir1 *= -1.0f;
-	}
-
-
+	/*
 	if (key == GLFW_KEY_L)
 	{
 		theWindow->lucesPuntuales = 0.0;
@@ -173,7 +160,32 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	if (key == GLFW_KEY_O && action == GLFW_PRESS)
 	{
 		theWindow->luzPrendida2 = !(theWindow->luzPrendida2);
+	}*/
+
+
+	// Movimiento Crash Bandicoot
+	if (key == GLFW_KEY_T)
+	{
+		theWindow->movez_cb -= theWindow->velocidad_cb;
+		theWindow->rotz_cb = 0.0f;
 	}
+	if (key == GLFW_KEY_G)
+	{
+		theWindow->movez_cb += theWindow->velocidad_cb;
+		theWindow->rotz_cb = 180.0f;
+	}
+	if (key == GLFW_KEY_F)
+	{
+		theWindow->movex_cb -= theWindow->velocidad_cb;
+		theWindow->rotz_cb = 90.0f;
+	}
+	if (key == GLFW_KEY_H)
+	{
+		theWindow->movex_cb +=  theWindow->velocidad_cb;
+		theWindow->rotz_cb = -90.0f;
+	}
+
+
 
 	// Abrir puerta
 	if (key == GLFW_KEY_C && action == GLFW_PRESS)
