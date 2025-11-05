@@ -49,6 +49,13 @@ public:
 	bool* getsKeys() { return keys; }
 	void swapBuffers() { return glfwSwapBuffers(mainWindow); }
 
+
+	// Crash bandicoot
+	GLfloat getmovex_cb() { return movex_cb; }
+	GLfloat getmovez_cb() { return movez_cb; }
+	GLfloat getrotz_cb() { return rotz_cb; }
+
+
 	~Window();
 private:
 	GLFWwindow* mainWindow;
@@ -66,6 +73,12 @@ private:
 
 	GLfloat articulacion1;
 	GLfloat dir1;
+
+	// Crash bandicoot
+	GLfloat movex_cb, movez_cb;
+	GLfloat rotz_cb;
+	GLfloat velocidad_cb = 2.0f;
+	
 
 	// Puerta
 	GLboolean puertaCerrada;
