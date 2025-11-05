@@ -14,12 +14,10 @@ public:
 	GLfloat getXChange();
 	GLfloat getYChange();
 	GLfloat getmuevex() { return muevex; }
-
-	GLboolean getPrendida() { return luzPrendida; }
-	GLboolean getPrendida2() { return luzPrendida2; }
-
-	GLfloat getLucesPuntuales() { return lucesPuntuales; }
-	GLfloat getLucesSpotLight() { return lucesSpot; }
+	
+	// Luces Spot
+	GLboolean getPrendida1() { return hk_lampara_1; }
+	GLboolean getPrendida2() { return hk_lampara_2; }
 
 	// Puerta
 	GLboolean getPuertaCerrada() { return puertaCerrada; }
@@ -98,11 +96,10 @@ private:
 	// Mega caja brawl stars
 	GLboolean bs_megacaja;
 
+	// Luces Spot
+	GLboolean hk_lampara_1;
+	GLboolean hk_lampara_2;
 
-	GLboolean luzPrendida;
-	GLboolean luzPrendida2;
-	GLfloat lucesPuntuales;
-	GLfloat lucesSpot;
 
 	bool mouseFirstMoved;
 	static void ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode);

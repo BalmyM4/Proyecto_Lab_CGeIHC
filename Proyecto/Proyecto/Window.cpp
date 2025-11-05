@@ -40,9 +40,12 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	// brawl stars
 	bs_megacaja = false;
 
-	lucesPuntuales = 0.0f;
-	luzPrendida = true;
-	luzPrendida2 = true;
+
+	// Luces Spot
+	hk_lampara_1 = true;
+	hk_lampara_2 = true;
+
+
 
 	for (size_t i = 0; i < 1024; i++)
 	{
@@ -135,32 +138,15 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
 
-	/*
-	if (key == GLFW_KEY_L)
-	{
-		theWindow->lucesPuntuales = 0.0;
-	}
-	if (key == GLFW_KEY_K)
-	{
-		theWindow->lucesPuntuales = 1.0;
-	}
-	if (key == GLFW_KEY_M)
-	{
-		theWindow->lucesSpot = 0.0;
-	}
-	if (key == GLFW_KEY_N)
-	{
-		theWindow->lucesSpot = 1.0;
-	}
 
-	if( key == GLFW_KEY_P && action == GLFW_PRESS)
+	if( key == GLFW_KEY_N && action == GLFW_PRESS)
 	{
-		theWindow->luzPrendida = !(theWindow->luzPrendida);
+		theWindow->hk_lampara_1 = !(theWindow->hk_lampara_1);
 	}
-	if (key == GLFW_KEY_O && action == GLFW_PRESS)
+	if (key == GLFW_KEY_M && action == GLFW_PRESS)
 	{
-		theWindow->luzPrendida2 = !(theWindow->luzPrendida2);
-	}*/
+		theWindow->hk_lampara_2 = !(theWindow->hk_lampara_2);
+	}
 
 
 	// Movimiento Crash Bandicoot

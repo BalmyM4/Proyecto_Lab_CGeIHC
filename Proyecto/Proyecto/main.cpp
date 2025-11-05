@@ -255,6 +255,7 @@ DirectionalLight mainLight;
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
+SpotLight spotLights2[MAX_SPOT_LIGHTS];
 
 
 // Vertex Shader
@@ -713,7 +714,7 @@ int main()
 	
 	//luz direccional, sólo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-		0.6f, 0.6f,
+		0.3f, 0.3f,
 		0.0f, -1.0f, 0.0f);
 
 
@@ -732,23 +733,40 @@ int main()
 
 	unsigned int spotLightCount = 0; // Contador de luces spot
 
-	//linterna
+	// Linterna
 	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
 		0.0f, 0.0f,
 		0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
-		5.0f);
+		15.0f);
 	spotLightCount++;
 
-	//luz fija
-	spotLights[1] = SpotLight(0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f,
-		5.0f, 10.0f, 0.0f,
-		0.0f, -5.0f, 0.0f,
+	// Lampara hollow knight 1
+	spotLights[1] = SpotLight(1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
 		15.0f);
 	spotLightCount++;
+	glm::vec3 baseLightPosHK_1(-0.732f, 4.2f, 0.0f);
+
+	// Lampara hollow knight 2
+	spotLights[2] = SpotLight(1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		15.0f);
+	spotLightCount++;
+	glm::vec3 baseLightPosHK_2(-0.732f, 4.2f, 0.0f);
+
+	// Segundo arreglo
+	spotLights2[0] = spotLights[0];
+	spotLights2[1] = spotLights[2];
+	spotLights2[2] = spotLights[1];
+
 	
 	// =================================================================== //
 
@@ -835,11 +853,11 @@ int main()
 		lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
+		spotLights2[0].SetFlash(lowerLight, camera.getCameraDirection());
 
 		//información al shader de fuentes de iluminación
 		shaderList[0].SetDirectionalLight(&mainLight);
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
 
 		//Reinicializando variables cada ciclo de reloj
@@ -982,6 +1000,27 @@ int main()
 		//																					//
 		// ================================================================================ //
 
+		// Para prender y apagar las luces de las lamparas -------------------------
+
+		if (mainWindow.getPrendida1() && mainWindow.getPrendida2())
+		{
+			shaderList[0].SetSpotLights(spotLights, spotLightCount);
+		}
+		else if (mainWindow.getPrendida1() && !mainWindow.getPrendida2())
+		{
+			shaderList[0].SetSpotLights(spotLights, spotLightCount - 1);
+		}
+		else if (!mainWindow.getPrendida1() && mainWindow.getPrendida2())
+		{
+			shaderList[0].SetSpotLights(spotLights2, spotLightCount - 1);
+		}
+		else
+		{
+			shaderList[0].SetSpotLights(spotLights, spotLightCount - 2);
+		}
+
+
+
 		// Animación de las luciernagas --------------------------------------------
 
 		Lu_mov += deltaTime * 0.01;
@@ -1027,6 +1066,7 @@ int main()
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(15.0f, -4.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		spotLights[1].SetPos(glm::vec3(model * glm::vec4(baseLightPosHK_1, 1.0f)));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_Lampara.RenderModel();
 
@@ -1130,6 +1170,8 @@ int main()
 		model = glm::translate(model, glm::vec3(-15.0f, -4.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
 		model = glm::rotate(model, 180.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		spotLights[2].SetPos(glm::vec3(model* glm::vec4(baseLightPosHK_2, 1.0f)));
+		spotLights2[1].SetPos(glm::vec3(model* glm::vec4(baseLightPosHK_2, 1.0f)));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_Lampara.RenderModel();
 
@@ -1300,14 +1342,6 @@ int main()
 		megacaja2.RenderModel();
 
 
-
-		//// Grada 2
-		//model = ringCentro;
-		//model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
-		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 47.0f));
-		//model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		//grada.RenderModel();
 
 		// ================================================================================ //
 		//																					//
