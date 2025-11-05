@@ -215,6 +215,8 @@ Model grada;
 Model megacaja1;
 Model megacaja2;
 
+Model elprimo;
+
 // =================================================================== //
 
 // Skybox
@@ -654,6 +656,13 @@ int main()
 	megacaja2 = Model();
 	megacaja2.LoadModel("Models/Brawl_stars/bs_megacaja_abajo.obj");
 
+	elprimo = Model();
+	elprimo.LoadModel("Models/Brawl_stars/bs_primoulti.obj");
+
+	/*elprimo = Model();
+	elprimo.LoadModel("Models/Brawl_stars/Mobile - Brawl Stars - El Primo.fbx");*/
+
+	
 	// =================================================================== //
 	//																	   //
 	//						Definir luces					       		   //
@@ -1108,6 +1117,14 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		grada.RenderModel();
 
+
+		// Primo
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 15.0f, 0.0f));
+		//model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		elprimo.RenderModel();
 
 
 		// ================================================================================ //
