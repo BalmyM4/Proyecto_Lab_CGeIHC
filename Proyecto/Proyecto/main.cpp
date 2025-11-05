@@ -1,10 +1,13 @@
-
+Ôªø
 //para cargar imagen
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <iostream>
 #include <random>
 #include <ctime>
+#include <sstream>
+#include <fstream>
+#include <iomanip> 
 
 #include <stdio.h>
 #include <string.h>
@@ -28,7 +31,7 @@
 #include"Model.h"
 #include "Skybox.h"
 
-//para iluminaciÛn
+//para iluminaci√≥n
 #include "CommonValues.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
@@ -36,9 +39,19 @@
 #include "Material.h"
 const float toRadians = 3.14159265f / 180.0f;
 
+
 // =================================================================== //
 //																	   //
-//					Variables para animaciÛn						   //
+//					Variables para keyframes						   //
+//																	   //
+// =================================================================== //
+
+float reproduciranimacion, habilitaranimacion, guardoFrame, reinicioFrame, ciclo, ciclo2, contador = 0;
+
+
+// =================================================================== //
+//																	   //
+//					Variables para animaci√≥n						   //
 //																	   //
 // =================================================================== //
 
@@ -119,6 +132,10 @@ float rotarPortal = 0.0f;
 float toffsetrotcaja = 1.0f;
 float rotcaja = 0.0f;
 
+// Rotaci√≥n alas aguila
+float ag_rot_ala = 0.0f;
+bool ag_alaAbajo = false;
+
 // =================================================================== //
 
 
@@ -135,7 +152,7 @@ Camera camera;
 //																	   //
 // =================================================================== //
 
-// Texturas b·sicas
+// Texturas b√°sicas
 Texture plainTexture;
 Texture pisoTexture;
 Texture cespedTexture;
@@ -149,7 +166,7 @@ Texture es_fuego;
 // Para las rejas
 Texture hk_rejas;
 
-// Para la explosiÛn de la TNT
+// Para la explosi√≥n de la TNT
 Texture cb_explosion;
 
 
@@ -274,7 +291,7 @@ static const char* fShader = "shaders/shader_light.frag";
 
 
 
-//c·lculo del promedio de las normales para sombreado de Phong
+//c√°lculo del promedio de las normales para sombreado de Phong
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
 	unsigned int vLength, unsigned int normalOffset)
 {
@@ -354,7 +371,7 @@ void CreateObjects()
 		 0.5f,  0.5f,  0.5f,   0.25f, 0.999f,    0.0f, 0.0f, 1.0f,
 		-0.5f,  0.5f,  0.5f,   0.0f, 0.999f,     0.0f, 0.0f, 1.0f,
 
-		// ----- Atr·s (z = -0.5)
+		// ----- Atr√°s (z = -0.5)
 		 0.5f, -0.5f, -0.5f,   0.0f, 0.666f,   0.0f, 0.0f, -1.0f,
 		-0.5f, -0.5f, -0.5f,   0.25f, 0.666f,  0.0f, 0.0f, -1.0f,
 		-0.5f,  0.5f, -0.5f,   0.25f, 0.999f,    0.0f, 0.0f, -1.0f,
@@ -443,10 +460,10 @@ void CreateObjects()
 		-0.5f,  0.5f,  0.0f,   0.0f,  1.0f,   0.0f, 0.0f, 1.0f,  // arriba izq
 
 		// ----- Plano ZY (x = 0)
-		 0.0f, -0.5f, -0.5f,   0.0f,  0.5f,   1.0f, 0.0f, 0.0f,  // abajo atr·s
+		 0.0f, -0.5f, -0.5f,   0.0f,  0.5f,   1.0f, 0.0f, 0.0f,  // abajo atr√°s
 		 0.0f, -0.5f,  0.5f,   0.25f, 0.5f,   1.0f, 0.0f, 0.0f,  // abajo frente
 		 0.0f,  0.5f,  0.5f,   0.25f, 1.0f,   1.0f, 0.0f, 0.0f,  // arriba frente
-		 0.0f,  0.5f, -0.5f,   0.0f,  1.0f,   1.0f, 0.0f, 0.0f   // arriba atr·s
+		 0.0f,  0.5f, -0.5f,   0.0f,  1.0f,   1.0f, 0.0f, 0.0f   // arriba atr√°s
 	};
 
 	unsigned int planoXZ_Indices[] = {
@@ -486,11 +503,11 @@ void CreateObjects()
 
 	Mesh* obj6 = new Mesh();
 	obj6->CreateMesh(scoreVertices, scoreIndices, 32, 6);
-	meshList.push_back(obj6); // todos los n˙meros
+	meshList.push_back(obj6); // todos los n√∫meros
 
 	Mesh* obj7 = new Mesh();
 	obj7->CreateMesh(numeroVertices, numeroIndices, 32, 6);
-	meshList.push_back(obj7); // solo un n˙mero
+	meshList.push_back(obj7); // solo un n√∫mero
 	
 	Mesh* obj8 = new Mesh();
 	obj8->CreateMesh(verticesCartel, cartelIndices, 32, 6);
@@ -514,6 +531,203 @@ void CreateShaders()
 }
 
 
+// =================================================================== //
+//																	   //
+//								KEY FRAMES							   //
+//																	   //
+// =================================================================== //
+
+//funci√≥n para teclado de keyframes 
+void inputKeyframes(bool* keys);
+
+bool animacion = false;
+
+//NEW// Keyframes
+float posXaguila = 0.0, posYaguila = 150.0, posZaguila = 0.0;
+float movAguila_x = 0.0f, movAguila_y = 0.0f, movAguila_z;
+float giroAguila = 0;
+
+#define MAX_FRAMES 100 
+int i_max_steps = 100; 
+int i_curr_steps = 0;
+typedef struct _frame
+{
+	//Variables para GUARDAR Key Frames
+	float movAguila_x;		//Variable para PosicionX
+	float movAguila_y;		//Variable para PosicionY
+	float movAguila_z;		//Variable para PosicionZ
+	float movAguila_xInc;		//Variable para IncrementoX
+	float movAguila_yInc;		//Variable para IncrementoY
+	float movAguila_zInc;		//Variable para IncrementoZ
+	float giroAguila;		//Variable para giroAguila
+	float giroAguilaInc;		//Variable para IncrementogiroAguila
+}FRAME;
+
+FRAME KeyFrame[MAX_FRAMES];
+int FrameIndex = 0;
+bool play = false;
+int playIndex = 0;
+
+void AgregarKeyframeEnArchivo(const char* fileLocation, float x, float y, float z, float giro)
+{
+	std::ofstream fileStream(fileLocation, std::ios::app);
+
+	if (!fileStream.is_open()) {
+		printf("Error: No se pudo abrir el archivo %s para agregar un keyframe.\n", fileLocation);
+		return;
+	}
+
+	// Escribe los valores
+	fileStream << std::fixed << std::setprecision(1)
+		<< x << " " << y << " " << z << " " << giro << "\n";
+
+	fileStream.close();
+	printf("Keyframe agregado al archivo: (%.1f, %.1f, %.1f, %.1f)\n", x, y, z, giro);
+}
+
+void saveFrame(void) //tecla L
+{
+	printf("frameindex %d\n", FrameIndex);
+
+	KeyFrame[FrameIndex].movAguila_x = movAguila_x;
+	KeyFrame[FrameIndex].movAguila_y = movAguila_y;
+	KeyFrame[FrameIndex].movAguila_z = movAguila_z;
+	KeyFrame[FrameIndex].giroAguila = giroAguila;
+
+	// Guardar en el archivo de texto
+	AgregarKeyframeEnArchivo("keyframes_aguila.txt", movAguila_x, movAguila_y, movAguila_z, giroAguila);
+
+	FrameIndex++;
+}
+
+void resetElements(void) //Tecla 0
+{
+	movAguila_x = KeyFrame[0].movAguila_x;
+	movAguila_y = KeyFrame[0].movAguila_y;
+	movAguila_z = KeyFrame[0].movAguila_z;
+	giroAguila = KeyFrame[0].giroAguila;
+}
+
+void interpolation(void)
+{
+	KeyFrame[playIndex].movAguila_xInc = (KeyFrame[playIndex + 1].movAguila_x - KeyFrame[playIndex].movAguila_x) / i_max_steps;
+	KeyFrame[playIndex].movAguila_yInc = (KeyFrame[playIndex + 1].movAguila_y - KeyFrame[playIndex].movAguila_y) / i_max_steps;
+	KeyFrame[playIndex].movAguila_zInc = (KeyFrame[playIndex + 1].movAguila_z - KeyFrame[playIndex].movAguila_z) / i_max_steps;
+	KeyFrame[playIndex].giroAguilaInc = (KeyFrame[playIndex + 1].giroAguila - KeyFrame[playIndex].giroAguila) / i_max_steps;
+}
+/*
+void animate(void)
+{
+	//Movimiento del objeto con barra espaciadora
+	if (play)
+	{
+		if (i_curr_steps >= i_max_steps) //fin de animaci√≥n entre frames?
+		{
+			playIndex++;
+			printf("playindex : %d\n", playIndex);
+			if (playIndex > FrameIndex - 2)	//Fin de toda la animaci√≥n con √∫ltimo frame?
+			{
+				printf("Frame index= %d\n", FrameIndex);
+				printf("termino la animacion\n");
+				playIndex = 0;
+				//play = false;
+			}
+			else Interpolaci√≥n del pr√≥ximo cuadro
+			{
+
+				i_curr_steps = 0; //Resetea contador
+				//Interpolar
+				interpolation();
+			}
+		}
+		else
+		{
+			//Dibujar Animaci√≥n
+			movAguila_x += KeyFrame[playIndex].movAguila_xInc;
+			movAguila_y += KeyFrame[playIndex].movAguila_yInc;
+			movAguila_z += KeyFrame[playIndex].movAguila_zInc;
+			giroAguila += KeyFrame[playIndex].giroAguilaInc;
+			i_curr_steps++;
+		}
+
+	}
+}*/
+
+void animate(void)
+{
+	if (play)
+	{
+		if (i_curr_steps >= i_max_steps) // fin de animaci√≥n entre frames
+		{
+			playIndex++;
+			if (playIndex > FrameIndex - 2)	// lleg√≥ al √∫ltimo frame
+			{
+				playIndex = 0; // reinicia desde el primer keyframe
+			}
+
+			i_curr_steps = 0; // resetea contador
+			interpolation();  // calcula incrementos del nuevo tramo
+		}
+		else
+		{
+			// interpolar movimiento
+			movAguila_x += KeyFrame[playIndex].movAguila_xInc;
+			movAguila_y += KeyFrame[playIndex].movAguila_yInc;
+			movAguila_z += KeyFrame[playIndex].movAguila_zInc;
+			giroAguila += KeyFrame[playIndex].giroAguilaInc;
+			i_curr_steps++;
+		}
+	}
+}
+
+void CargarKeyframesDesdeArchivo(const char* fileLocation)
+{
+	Shader shader;
+	std::string data = shader.ReadFile(fileLocation);
+
+	if (data.empty()) {
+		printf("No se pudieron cargar los keyframes desde %s\n", fileLocation);
+		return;
+	}
+
+	std::istringstream stream(data);
+	std::string line;
+	int frameCount = 0;
+
+	// Leer l√≠nea por l√≠nea
+	while (std::getline(stream, line))
+	{
+		// Saltar encabezado
+		if (line.empty() || line[0] == '#') continue;
+		if (line.find("movAvion") != std::string::npos) continue;
+
+		std::istringstream linestream(line);
+		float x, y, z, giro;
+
+		if (linestream >> x >> y >> z >> giro)
+		{
+			KeyFrame[frameCount].movAguila_x = x;
+			KeyFrame[frameCount].movAguila_y = y;
+			KeyFrame[frameCount].movAguila_z = z;
+			KeyFrame[frameCount].giroAguila = giro;
+			frameCount++;
+		}
+	}
+
+	FrameIndex = frameCount;
+	printf("Se cargaron %d keyframes desde %s\n", frameCount, fileLocation);
+
+	if (FrameIndex > 1) {
+		resetElements();
+		interpolation();
+		play = true;
+		playIndex = 0;
+		i_curr_steps = 0;
+	}
+}
+
+// =================================================================== //
+
 
 
 int main()
@@ -527,7 +741,7 @@ int main()
 	CreateShaders();
 
 	// Camera
-	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.5f, 0.5f);
+	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 5.0f, 0.5f);
 
 
 	// =================================================================== //
@@ -536,7 +750,7 @@ int main()
 	//																	   //
 	// =================================================================== //
 
-	// Texturas b·sicas
+	// Texturas b√°sicas
 	plainTexture = Texture("Textures/plain.png");
 	plainTexture.LoadTextureA();
 	pisoTexture = Texture("Textures/Escenario/4_Piso.png");
@@ -563,7 +777,7 @@ int main()
 	skyboxFaces2.push_back("Textures/Skybox/cupertin-lake-night_bk.tga");
 	skyboxFaces2.push_back("Textures/Skybox/cupertin-lake-night_ft.tga");
 
-	//CreaciÛn del skybox
+	//Creaci√≥n del skybox
 	skybox = Skybox(skyboxFaces, skyboxFaces2);
 
 	// Materiales
@@ -582,7 +796,7 @@ int main()
 	hk_rejas = Texture("Textures/Hollow_knight/hk_rejas.png");
 	hk_rejas.LoadTextureA();
 
-	// Textura de la explosiÛn de la TNT
+	// Textura de la explosi√≥n de la TNT
 	cb_explosion = Texture("Textures/Crash_bandicoot/cb_explosion.png");
 	cb_explosion.LoadTextureA();
 
@@ -735,7 +949,7 @@ int main()
 	// =================================================================== //
 
 	
-	//luz direccional, sÛlo 1 y siempre debe de existir
+	//luz direccional, s√≥lo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.3f, 0.3f,
 		0.0f, -1.0f, 0.0f);
@@ -745,7 +959,7 @@ int main()
 
 	unsigned int pointLightCount = 0; // Contador de luces puntuales
 
-	//DeclaraciÛn de primer luz puntual
+	//Declaraci√≥n de primer luz puntual
 	pointLights[0] = PointLight(1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f,
 		0.0f, 2.5f, 1.5f,
@@ -792,8 +1006,43 @@ int main()
 
 	
 	// =================================================================== //
+	//																	   //
+	//							Key Frames					       		   //
+	//																	   //
+	// =================================================================== //
 
-	//DuraciÛn ciclo dia/noche
+	CargarKeyframesDesdeArchivo("keyframes_aguila.txt");
+
+	printf("\n=== TECLAS PARA USO DE KEYFRAMES Y MOVIMIENTO ===\n");
+	printf("1.- Barra espaciadora: Reproducir animaci√≥n\n");
+	printf("2.- Tecla 0: Habilitar nuevamente la reproducci√≥n de la animaci√≥n\n");
+	printf("3.- Tecla L: Guardar frame actual\n");
+	printf("4.- Tecla P: Habilitar guardar un nuevo frame\n\n");
+
+	printf("=== MOVIMIENTO MANUAL DEL HELIC√ìPTERO ===\n");
+	printf("EJE X:\n");
+	printf("   Tecla 1: Mover en X positivo (+X)\n");
+	printf("   Tecla 2: Mover en X negativo (-X)\n");
+	printf("   Tecla 3: Desbloquear eje X para volver a mover\n\n");
+
+	printf("EJE Y:\n");
+	printf("   Tecla 4: Mover en Y positivo (+Y)\n");
+	printf("   Tecla 5: Mover en Y negativo (-Y)\n");
+	printf("   Tecla 6: Desbloquear eje Y para volver a mover\n\n");
+
+	printf("EJE Z:\n");
+	printf("   Tecla 7: Mover en Z positivo (+Z)\n");
+	printf("   Tecla 8: Mover en Z negativo (-Z)\n");
+	printf("   Tecla 9: Desbloquear eje Z para volver a mover\n\n");
+
+	printf("ROTACION EN EJE Y:\n");
+	printf("   Tecla Q: Rotar a la izquierda (‚àíY)\n");
+	printf("   Tecla E: Rotar a la derecha (+Y)\n");
+	printf("   Tecla R: Habilitar nuevamente la rotacion\n\n");
+
+	// =================================================================== //
+
+	//Duraci√≥n ciclo dia/noche
 	float ciclo = 10.0f;
 	float t;
 	float a;
@@ -803,7 +1052,7 @@ int main()
 		uniformSpecularIntensity = 0, uniformShininess = 0, uniformTextureOffset=0;
 	GLuint uniformColor = 0;
 
-	// Matriz de proyecciÛn
+	// Matriz de proyecci√≥n
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	
 
@@ -819,9 +1068,18 @@ int main()
 	glm::mat4 crashAux(1.0);
 	glm::mat4 crashExtrAux(1.0);
 
+	// Para la piramide
+	glm::mat4 aguilaAux(1.0);
+	glm::vec3 aguilaPos(0.0f, 0.0f, 0.0f);
+
+
+	// Color blanco por defecto
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	// Offset de textura
 	glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 
+	// Para el fuego
 	float xtorch, ztorch;
 
 	// Para los wumpas
@@ -852,6 +1110,11 @@ int main()
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 
+		//-------Para Keyframes
+		inputKeyframes(mainWindow.getsKeys());
+		animate();
+
+
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -864,7 +1127,7 @@ int main()
 		uniformColor = shaderList[0].getColorLocation();
 		uniformTextureOffset = shaderList[0].getOffsetLocation(); // para la textura con movimiento
 
-		//informaciÛn en el shader de intensidad especular y brillo
+		//informaci√≥n en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0].GetShininessLocation();
 
@@ -872,13 +1135,13 @@ int main()
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
-		// luz ligada a la c·mara de tipo flash
+		// luz ligada a la c√°mara de tipo flash
 		lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 		spotLights2[0].SetFlash(lowerLight, camera.getCameraDirection());
 
-		//informaciÛn al shader de fuentes de iluminaciÛn
+		//informaci√≥n al shader de fuentes de iluminaci√≥n
 		shaderList[0].SetDirectionalLight(&mainLight);
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 
@@ -1019,7 +1282,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Roca.RenderModel();
 
-		// Roca pequeÒa ---------------------------------------------------------
+		// Roca peque√±a ---------------------------------------------------------
 		model = glm::mat4(1.0);
 
 		// Posicionamiento global
@@ -1057,7 +1320,7 @@ int main()
 
 
 
-		// AnimaciÛn de las luciernagas --------------------------------------------
+		// Animaci√≥n de las luciernagas --------------------------------------------
 
 		Lu_mov += deltaTime * 0.01;
 
@@ -1385,7 +1648,7 @@ int main()
 		//																					//
 		// ================================================================================ //
 
-		// AnimaciÛn de la puerta
+		// Animaci√≥n de la puerta
 		if (mainWindow.getPuertaAbriendose())
 		{
 			if (mainWindow.getPuertaCerrada())
@@ -1416,7 +1679,7 @@ int main()
 			}
 		}
 
-		// AnimaciÛn del cartel de la puerta (textura animada)
+		// Animaci√≥n del cartel de la puerta (textura animada)
 		tiempoAcumulado += deltaTime;
 
 		if (tiempoAcumulado >= 11.0f)
@@ -1621,7 +1884,7 @@ int main()
 				HK_movimiento = 0.0f;
 				mainWindow.setHK_Dash();
 
-				// cambia la direcciÛn al terminar
+				// cambia la direcci√≥n al terminar
 				hk_direccion = !hk_direccion;
 				hk_pos = hk_direccion ? 0.0f : 1.0f;
 			}
@@ -1656,7 +1919,7 @@ int main()
 
 		if (!std::isfinite(hk_x) || !std::isfinite(hk_z)) {
 			hk_x = hk_z = 0.0f;
-			std::cout << "[WARN] HK posiciÛn inv·lida reseteada.\n";
+			std::cout << "[WARN] HK posici√≥n inv√°lida reseteada.\n";
 		}
 
 
@@ -1667,12 +1930,12 @@ int main()
 		// ================================================================================ //
 
 
-		// AnimaciÛn de rotaciÛn
+		// Animaci√≥n de rotaci√≥n
 		rotWumpa += 5.0f * deltaTime;
 		if (rotWumpa > 360.0f)
 			rotWumpa -= 360.0f;
 
-		// AnimaciÛn de traslaciÛn
+		// Animaci√≥n de traslaci√≥n
 		wumpaTime += 0.1f * deltaTime;
 		if (wumpaTime > 480.0f)
 			wumpaTime -= 480.0f;
@@ -1745,7 +2008,7 @@ int main()
 			cb_Wumpa.RenderModel();
 		}
 
-		// Tercer trÌo (espejo del primero)
+		// Tercer tr√≠o (espejo del primero)
 		for (int i = 0; i < 3; i++) {
 
 			localTime = wumpaTime - i * 5.0f;
@@ -1778,7 +2041,7 @@ int main()
 			cb_Wumpa.RenderModel();
 		}
 
-		// Cuarto trÌo (espejo del segundo)
+		// Cuarto tr√≠o (espejo del segundo)
 		for (int i = 0; i < 3; i++) {
 
 			localTime = wumpaTime - i * 5.0f;
@@ -1836,15 +2099,72 @@ int main()
 		//																					//
 		// ================================================================================ //
 
+		if (!ag_alaAbajo)
+		{
+			ag_rot_ala += 3.0 * deltaTime;
+			if (ag_rot_ala >= 60.0f)
+			{
+				ag_rot_ala = 60.0f;
+				ag_alaAbajo = true;
+			}
+				
+		}	
+		else if (ag_alaAbajo)
+		{
+			ag_rot_ala -= 3.0 * deltaTime;
+			if (ag_rot_ala <= -60.0f)
+			{
+				ag_rot_ala = -60.0f;
+				ag_alaAbajo = false;
+			}
+		}
+
 		// Piramide --------------------------------------------------------
 		model = glm::mat4(1.0f);
 
 		// Posicionamiento global
 		model = ringCentro;
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		model = glm::translate(model, glm::vec3(-350.0f, 0.0f, -350.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		es_piramide.RenderModel();
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// Aguila -----------------------------------------------------------
+
+
+		// Traslaci√≥n
+		aguilaPos = glm::vec3(posXaguila + movAguila_x, posYaguila + movAguila_y, posZaguila + movAguila_z);
+		model = glm::translate(model, aguilaPos);
+
+		// Escalado
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+
+		// Rotaci√≥n
+		model = glm::rotate(model, giroAguila * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		aguilaAux = model;
+
+		// Render
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_aguila.RenderModel();
+
+		// Ala derecha -------------------------------------------------------
+		model = aguilaAux;
+		model = glm::translate(model, glm::vec3(10.0f, 25.0f, -20.0f));
+		model = glm::rotate(model, ag_rot_ala * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_aguila_ala_der.RenderModel();
+
+		// Ala izquierda ------------------------------------------------------
+		model = aguilaAux;
+		model = glm::translate(model, glm::vec3(-10.0f, 25.0f, -20.0f));
+		model = glm::rotate(model, -1 * ag_rot_ala * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_aguila_ala_izq.RenderModel();
+
+		glDisable(GL_BLEND);
 
 
 		// ================================================================================ //
@@ -1900,7 +2220,7 @@ int main()
 		es_Antorcha.RenderModel();
 		
 
-		// AnimaciÛn del fuego ------------------------------------------------
+		// Animaci√≥n del fuego ------------------------------------------------
 		tiempoAcumuladoFuego += deltaTime;
 
 		if (tiempoAcumuladoFuego >= 5.0f)
@@ -1986,7 +2306,7 @@ int main()
 		//																					//
 		// ================================================================================ //
 
-		// Atr·s
+		// Atr√°s
 		for (int i = 0; i < 27; i++)
 		{
 			model = ringCentro;
@@ -2073,7 +2393,7 @@ int main()
 
 		posTNT = glm::vec3(-100.0f, 0.0f, 100.0f);
 
-		// AnimaciÛn de la TNT
+		// Animaci√≥n de la TNT
 		if (!mainWindow.getTNT_Normal())
 		{
 			if (condandoTnt)
@@ -2142,7 +2462,7 @@ int main()
 				toffsettntu = 0.0f;
 				toffsettntv = 1.0f;
 
-				// AnimaciÛn portal
+				// Animaci√≥n portal
 				rotarPortal += 1.0f * deltaTime;
 				if (rotarPortal >= 360.0f)
 					rotarPortal = 0.0f;
@@ -2257,4 +2577,203 @@ int main()
 	}
 
 	return 0;
+}
+
+void inputKeyframes(bool* keys)
+{
+	if (keys[GLFW_KEY_SPACE])
+	{
+		if (reproduciranimacion < 1)
+		{
+			if (play == false && (FrameIndex > 1))
+			{
+				resetElements();
+				//First Interpolation				
+				interpolation();
+				play = true;
+				playIndex = 0;
+				i_curr_steps = 0;
+				reproduciranimacion++;
+				printf("\n presiona 0 para habilitar reproducir de nuevo la animaci√≥n'\n");
+				habilitaranimacion = 0;
+			}
+			else
+			{
+				play = false;
+
+			}
+		}
+	}
+	if (keys[GLFW_KEY_0])
+	{
+		if (habilitaranimacion < 1 && reproduciranimacion>0)
+		{
+			printf("Ya puedes reproducir de nuevo la animaci√≥n con la tecla de barra espaciadora'\n");
+			reproduciranimacion = 0;
+
+		}
+	}
+
+	if (keys[GLFW_KEY_L])
+	{
+		if (guardoFrame < 1)
+		{
+			saveFrame();
+			printf("movAguila_x es: %f\n", movAguila_x);
+			printf("movAguila_y es: %f\n", movAguila_y);
+			printf("movAguila_z es: %f\n", movAguila_z);
+			printf("presiona P para habilitar guardar otro frame'\n");
+			guardoFrame++;
+			reinicioFrame = 0;
+		}
+	}
+	if (keys[GLFW_KEY_P])
+	{
+		if (reinicioFrame < 1)
+		{
+			guardoFrame = 0;
+			reinicioFrame = 1;
+			printf("Ya puedes guardar otro frame presionando la tecla L'\n");
+		}
+	}
+
+	// Para Movimiento X (tecla 1 y 2 mueve, tecla 2 habilita)
+	if (keys[GLFW_KEY_1])
+	{
+		if (ciclo < 1)
+		{
+			//printf("movAguila_x es: %f\n", movAguila_x);
+			movAguila_x += 10.0f;
+			printf("\n movAguila_x es: %f\n", movAguila_x);
+			ciclo++;
+			ciclo2 = 0;
+			printf("\n Presiona la tecla 2 para poder habilitar la variable\n");
+		}
+	}
+	if (keys[GLFW_KEY_2])
+	{
+		if (ciclo < 1)
+		{
+			//printf("movAguila_x es: %f\n", movAguila_x);
+			movAguila_x -= 10.0f;
+			printf("\n movAguila_x es: %f\n", movAguila_x);
+			ciclo++;
+			ciclo2 = 0;
+			printf("\n Presiona la tecla 2 para poder habilitar la variable\n");
+		}
+
+	}
+	if (keys[GLFW_KEY_3])
+	{
+		if (ciclo2 < 1)
+		{
+			ciclo = 0;
+			ciclo2++;
+			printf("\n Ya puedes modificar tu variable presionando la tecla 1\n");
+		}
+	}
+
+	// ================= MOVIMIENTO EN Y =================
+	static bool cy1 = false, cy2 = false;
+	if (keys[GLFW_KEY_4]) // Mover +Y
+	{
+		if (!cy1)
+		{
+			movAguila_y += 10.0f;
+			printf("\nmovAguila_y: %.2f (+Y)\n", movAguila_y);
+			cy1 = true; cy2 = false;
+			printf("Presiona 6 para desbloquear el eje Y\n");
+		}
+	}
+	if (keys[GLFW_KEY_5]) // Mover -Y
+	{
+		if (!cy1)
+		{
+			movAguila_y -= 10.0f;
+			printf("\nmovAguila_y: %.2f (-Y)\n", movAguila_y);
+			cy1 = true; cy2 = false;
+			printf("Presiona 6 para desbloquear el eje Y\n");
+		}
+	}
+	if (keys[GLFW_KEY_6]) // Desbloquear eje Y
+	{
+		if (!cy2)
+		{
+			cy1 = false; cy2 = true;
+			printf("Eje Y desbloqueado, puedes volver a mover con 4 (+Y) o 5 (-Y)\n");
+		}
+	}
+
+	// ================= MOVIMIENTO EN Z =================
+	static bool cz1 = false, cz2 = false;
+	if (keys[GLFW_KEY_7]) // Mover +Z
+	{
+		if (!cz1)
+		{
+			movAguila_z += 10.0f;
+			printf("\nmovAguila_z: %.2f (+Z)\n", movAguila_z);
+			cz1 = true; cz2 = false;
+			printf("Presiona 9 para desbloquear el eje Z\n");
+		}
+	}
+	if (keys[GLFW_KEY_8]) // Mover -Z
+	{
+		if (!cz1)
+		{
+			movAguila_z -= 10.0f;
+			printf("\nmovAguila_z: %.2f (-Z)\n", movAguila_z);
+			cz1 = true; cz2 = false;
+			printf("Presiona 9 para desbloquear el eje Z\n");
+		}
+	}
+	if (keys[GLFW_KEY_9]) // Desbloquear eje Z
+	{
+		if (!cz2)
+		{
+			cz1 = false; cz2 = true;
+			printf("Eje Z desbloqueado, puedes volver a mover con 7 (+Z) o 8 (-Z)\n");
+		}
+	}
+
+
+	// ================= ROTACI√ìN EN EJE Y =================
+	static bool giroBloqueado = false;
+	float pasoRotacion = 20.0f; // grados por paso
+
+	// Rotar a la izquierda (Q)
+	if (keys[GLFW_KEY_Q])
+	{
+		if (!giroBloqueado)
+		{
+			giroAguila -= pasoRotacion;
+			if (giroAguila < 0.0f) giroAguila += 360.0f;
+			printf("\nGiro: %.2f grados (rotacion -Y)\n", giroAguila);
+			giroBloqueado = true;
+			printf("Rotacion bloqueada. Presiona R para volver a habilitar.\n");
+		}
+	}
+
+	// Rotar a la derecha (E)
+	if (keys[GLFW_KEY_E])
+	{
+		if (!giroBloqueado)
+		{
+			giroAguila += pasoRotacion;
+			if (giroAguila > 360.0f) giroAguila -= 360.0f;
+			printf("\nGiro: %.2f grados (rotacion +Y)\n", giroAguila);
+			giroBloqueado = true;
+			printf("Rotacion bloqueada. Presiona R para volver a habilitar.\n");
+		}
+	}
+
+	// Rehabilitar rotaci√≥n (R)
+	if (keys[GLFW_KEY_R])
+	{
+		if (giroBloqueado)
+		{
+			giroBloqueado = false;
+			printf("Rotacion habilitada nuevamente. Puedes usar Q o E.\n");
+		}
+	}
+
 }
