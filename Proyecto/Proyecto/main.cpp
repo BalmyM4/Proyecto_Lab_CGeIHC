@@ -1033,10 +1033,14 @@ int main()
 		model = glm::mat4(1.0);
 
 		// Posicionamiento global
-		model = glm::translate(model, glm::vec3(0.0f + mainWindow.getmovex_cb(), 6.2f, 0.0f + mainWindow.getmovez_cb()));
+		mainWindow.procesarMovimiento(camera);
+
+		model = glm::translate(model, glm::vec3(mainWindow.getmovex_cb(), 6.2f, mainWindow.getmovez_cb()));
 		model = glm::rotate(model, mainWindow.getrotz_cb() * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 
-		posicionmodel = model[3];
+
+		posicionmodel = glm::vec3(model[3]) + glm::vec3(0.0f, 10.0f, -5.0f);
+
 
 		crashAux = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1045,6 +1049,7 @@ int main()
 		// Pierna derecha 0 ---------------------------------------------------
 		model = crashAux;
 		model = glm::translate(model, glm::vec3(0.1f, 0.0f, 0.0f));
+		model = glm::rotate(model, -mainWindow.getAngulo() * toRadians, glm::vec3(1, 0, 0));
 		crashExtrAux = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cb_pierna_der_0.RenderModel();
@@ -1052,12 +1057,14 @@ int main()
 		// Pierna derecha 1 ---------------------------------------------------
 		model = crashExtrAux;
 		model = glm::translate(model, glm::vec3(0.5f, -2.5f, 0.0f));
+		model = glm::rotate(model, -mainWindow.getAngulo2() * toRadians, glm::vec3(1, 0, 0));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cb_pierna_der_1.RenderModel();
 
 		// Pierna izquierda 0 ---------------------------------------------------
 		model = crashAux;
 		model = glm::translate(model, glm::vec3(-0.1f, 0.0f, 0.0f));
+		model = glm::rotate(model, mainWindow.getAngulo() * toRadians, glm::vec3(1, 0, 0));
 		crashExtrAux = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cb_pierna_izq_0.RenderModel();
@@ -1065,12 +1072,14 @@ int main()
 		// Pierna izquierda 1 ---------------------------------------------------
 		model = crashExtrAux;
 		model = glm::translate(model, glm::vec3(-0.5f, -2.5f, 0.0f));
+		model = glm::rotate(model, -mainWindow.getAngulo2() * toRadians, glm::vec3(1, 0, 0));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cb_pierna_izq_1.RenderModel();
 
 		// Brazo derecho 0 ---------------------------------------------------
 		model = crashAux;
 		model = glm::translate(model, glm::vec3(2.2f, 5.08f, 0.97f));
+		model = glm::rotate(model, mainWindow.getAngulo() * toRadians, glm::vec3(1, 0, 0));
 		crashExtrAux = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cb_brazo_der_0.RenderModel();
@@ -1078,12 +1087,14 @@ int main()
 		// Brazo derecho 1 ---------------------------------------------------
 		model = crashExtrAux;
 		model = glm::translate(model, glm::vec3(1.5f, -3.0f, 0.0f));
+		model = glm::rotate(model, -mainWindow.getAngulo3() * toRadians, glm::vec3(1, 0, 0));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cb_brazo_der_1.RenderModel();
 
 		// Brazo izquierdo 0 ---------------------------------------------------
 		model = crashAux;
 		model = glm::translate(model, glm::vec3(-2.5f, 4.8f, 1.1f));
+		model = glm::rotate(model, -mainWindow.getAngulo() * toRadians, glm::vec3(1, 0, 0));
 		crashExtrAux = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cb_brazo_izq_0.RenderModel();
@@ -1091,6 +1102,7 @@ int main()
 		// Brazo izquierdo 1 ---------------------------------------------------
 		model = crashExtrAux;
 		model = glm::translate(model, glm::vec3(-1.5f, -3.0f, -0.1f));
+		model = glm::rotate(model, -mainWindow.getAngulo3() * toRadians, glm::vec3(1, 0, 0));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cb_brazo_izq_1.RenderModel();
 
@@ -2008,7 +2020,7 @@ int main()
 
 		// ================================================================================ //
 		//																					//
-		//							Wumpas Crash Bandicoot									//
+		//								Dr Cortex Bandicoot									//
 		//																					//
 		// ================================================================================ //
 

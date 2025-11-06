@@ -2,6 +2,10 @@
 #include<stdio.h>
 #include<glew.h>
 #include<glfw3.h>
+#include <glm.hpp>
+#include <gtc\matrix_transform.hpp>
+#include <gtc\type_ptr.hpp>
+#include "Camera.h"
 
 class Window
 {
@@ -52,6 +56,10 @@ public:
 	GLfloat getmovex_cb() { return movex_cb; }
 	GLfloat getmovez_cb() { return movez_cb; }
 	GLfloat getrotz_cb() { return rotz_cb; }
+	GLfloat getAngulo() { return anguloMovimiento; }
+	GLfloat getAngulo2() { return anguloMovimiento2; }
+	GLfloat getAngulo3() { return anguloMovimiento3; }
+	void procesarMovimiento(Camera& camera);
 
 
 	~Window();
@@ -75,8 +83,14 @@ private:
 	// Crash bandicoot
 	GLfloat movex_cb, movez_cb;
 	GLfloat rotz_cb;
-	GLfloat velocidad_cb = 2.0f;
-	
+	GLfloat velocidad_cb = 0.5f;
+	GLfloat anguloMovimiento = 0.0f;
+	GLfloat dirAnguloMovimiento = 1.0f;
+	GLfloat anguloMovimiento2 = 0.0f;
+	GLfloat dirAnguloMovimiento2 = 1.0f;
+	GLfloat anguloMovimiento3 = 0.0f;
+	GLfloat dirAnguloMovimiento3 = 1.0f;
+
 
 	// Puerta
 	GLboolean puertaCerrada;
@@ -104,6 +118,7 @@ private:
 	bool mouseFirstMoved;
 	static void ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode);
 	static void ManejaMouse(GLFWwindow* window, double xPos, double yPos);
+	static void actualizarAnguloMovimiento(float& anguloMovimiento, float& dirAnguloMovimiento, float velocidadAngular, float topeInf, float topeSup);
 
 };
 
