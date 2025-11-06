@@ -35,6 +35,9 @@ public:
 	void setHK_Parado() { hk_parado = !hk_parado; }
 	void setHK_Dash() { hk_dash = !hk_dash; }
 
+	GLboolean getBS_Ulti() { return bs_ulti; }
+	void setBS_Ulti() { bs_ulti = !bs_ulti; }
+
 
 	// TNT de Crash Bandicoot
 	GLboolean getTNT_Normal() { return tnt_normal; }
@@ -100,6 +103,7 @@ private:
 	// Hollow Knight
 	GLboolean hk_parado;
 	GLboolean hk_dash;
+	GLboolean bs_ulti;
 
 
 	// Tnt de Crash Bandicoot
