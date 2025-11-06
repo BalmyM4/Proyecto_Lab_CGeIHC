@@ -226,7 +226,10 @@ Model grada;
 // Brawl stars
 Model megacaja1;
 Model megacaja2;
+Model cactus;
 
+// Shely
+Model shely;
 // El primo
 Model elprimo;
 
@@ -703,6 +706,15 @@ int main()
 
 	megacaja2 = Model();
 	megacaja2.LoadModel("Models/Brawl_stars/bs_megacaja_abajo.obj");
+
+	//Cactus
+	cactus = Model();
+	cactus.LoadModel("Models/Brawl_stars/bs_cactus.obj");
+
+	//Shely
+	shely = Model();
+	shely.LoadModel("Models/Brawl_stars/bs_shely.obj");
+
 
 	// El primo
 	elprimo = Model();
@@ -1334,6 +1346,20 @@ int main()
 
 		// ================================================================================ //
 		//																					//
+		//									Shely										//
+		//																					//
+		// ================================================================================ //
+
+		// Shely
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(-100.0f, 0.0, 15.0));
+		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shely.RenderModel();
+
+		// ================================================================================ //
+		//																					//
 		//									brawl stars										//
 		//																					//
 		// ================================================================================ //
@@ -1384,6 +1410,74 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		megacaja2.RenderModel();
 
+		// cactus 1 esquina 1
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(35.0f, 0.0, 35.0f));
+		/*model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, rotcaja * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));*/
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+		// cactus 2 esquina 1
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::translate(model, glm::vec3(18.0f, 0.0, 18.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		/*model = glm::rotate(model, rotcaja * toRadians, glm::vec3(0.0f, 0.0f, 1.0f)); */
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+
+		// cactus 1 esquina 2
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(-35.0f, 0.0, -35.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+		// cactus 2 esquina 2
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::translate(model, glm::vec3(-18.0f, 0.0, -18.0f));
+		model = glm::rotate(model, 270 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+
+		// cactus 1 esquina 3
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(35.0f, 0.0, -35.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+		// cactus 2 esquina 3
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::translate(model, glm::vec3(18.0f, 0.0, -18.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+
+		// cactus 1 esquina 4
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(-35.0f, 0.0, 35.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+		// cactus 2 esquina 4
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::translate(model, glm::vec3(-18.0f, 0.0, 18.0f));
+		model = glm::rotate(model, 270 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
 
 
 		// ================================================================================ //
