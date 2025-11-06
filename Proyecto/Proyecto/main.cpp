@@ -866,7 +866,14 @@ int main()
 		//Recibir eventos del usuario
 		glfwPollEvents();
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
-		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange(), posicionmodel);
+
+		
+		// Solo controlar el mouse si NO estamos teletransportados
+		if (!camera.isTeleportingActive())
+		{
+			camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange(), posicionmodel);
+		}
+		//camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange(), posicionmodel);
 
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
