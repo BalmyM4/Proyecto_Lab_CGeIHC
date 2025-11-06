@@ -15,52 +15,148 @@ Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLf
 	moveSpeed = startMoveSpeed;
 	turnSpeed = startTurnSpeed;
 
+    // Se definen 5 spots de cámara predefinidos que se activan con teclas:
+	previousPosition = position;
+	previousFront = front;
+	previousYaw = yaw;
+	previousPitch = pitch;
+	isTeleporting = false;
+	currentSpotIndex = -1; // -1 significa ningún spot activo
+
+
+	cameraSpots = {
+		{glm::vec3(0.0f, 200.0f, -150.0f), 90.001f, -90.0f, "Vista Aerea"},     // Tecla 5
+		{glm::vec3(75.0f, 35.0f, -150.0f), 180.0f, -20.0f, "Vista Ring"},     // Tecla 6  
+		{glm::vec3(-50.0f, 3.0f, 0.0f), 90.0f, -5.0f, "Vista Lateral"},      // Tecla 7
+		{glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, "Vista Primera Persona"}, // Tecla 8
+		{glm::vec3(30.0f, 20.0f, 30.0f), -135.0f, -30.0f, "Vista Diagonal"}   // Tecla 9
+	};
+
+
 	update();
 }
 
 void Camera::keyControl(bool* keys, GLfloat deltaTime)
 {
-	GLfloat velocity = moveSpeed * deltaTime;
+    GLfloat velocity = moveSpeed * deltaTime;
 
-	if (keys[GLFW_KEY_W])
-	{
-		position += front * velocity;
-	}
+    // Al mantener presionadas teclas numéricas (5-9),
+    // la cámara se teletransporta a vistas predefinidas. Al soltar la tecla,
+    // regresa automáticamente a su posición anterior.
+    for (int i = 0; i < cameraSpots.size(); i++)
+    {
+        int key = GLFW_KEY_1 + i+4; 
+        if (keys[key])
+        {
+            if (!isTeleporting || currentSpotIndex != i)
+            {
+                // Guardar estado actual antes de teletransportarse
+                previousPosition = position;
+                previousFront = front;
+                previousYaw = yaw;
+                previousPitch = pitch;
+                isTeleporting = true;
+                currentSpotIndex = i;
+                
+                // Mover al spot correspondiente
+                CameraSpot spot = cameraSpots[i];
+                position = spot.position;
+                yaw = spot.yaw;
+                pitch = spot.pitch;
+                
+                
+                update();
+                
+                
+                printf("Spot activado: %s\n", spot.name);
+            }
+            return; 
+        }
+    }
+    
+    // === RESTAURACIÓN AL SOLTAR TODAS LAS TECLAS DE SPOT ===
+    bool anySpotKeyPressed = false;
+    for (int i = 0; i < cameraSpots.size(); i++)
+    {
+        if (keys[GLFW_KEY_1 + i])
+        {
+            anySpotKeyPressed = true;
+            break;
+        }
+    }
+    
+    if (!anySpotKeyPressed && isTeleporting)
+    {
+        // Restaurar estado anterior cuando se sueltan todas las teclas de spot
+        position = previousPosition;
+        front = previousFront;
+        yaw = previousYaw;
+        pitch = previousPitch;
+        isTeleporting = false;
+        currentSpotIndex = -1;
+        
+        update();
+    }
 
-	if (keys[GLFW_KEY_S])
-	{
-		position -= front * velocity;
-	}
+    // === CONTROLES NORMALES (solo cuando no estamos teletransportados) ===
+    if (!isTeleporting)
+    {
+        if (keys[GLFW_KEY_W])
+        {
+            position += front * velocity;
+        }
 
-	if (keys[GLFW_KEY_A])
-	{
-		position -= right * velocity;
-	}
+        if (keys[GLFW_KEY_S])
+        {
+            position -= front * velocity;
+        }
 
-	if (keys[GLFW_KEY_D])
-	{
-		position += right * velocity;
-	}
-	//Cámara libre
-	if (keys[GLFW_KEY_1])
-	{
-		thirdperson = GL_TRUE;
-	}
-	//Tercera persona
-	if (keys[GLFW_KEY_3])
-	{
-		thirdperson = GL_FALSE;
-	}
+        if (keys[GLFW_KEY_A])
+        {
+            position -= right * velocity;
+        }
+
+        if (keys[GLFW_KEY_D])
+        {
+            position += right * velocity;
+        }
+    }
+    
+    
+    // Cámara libre
+    if (keys[GLFW_KEY_1])
+    {
+        thirdperson = GL_TRUE;
+    }
+    // Tercera persona
+    if (keys[GLFW_KEY_3])
+    {
+        thirdperson = GL_FALSE;
+    }
 }
 
 void Camera::mouseControl(GLfloat xChange, GLfloat yChange, glm::vec3 objetivo)
 {
+
+    // Se agregó una verificación para evitar que el mouse
+    // mueva la cámara mientras se mantiene presionada una tecla de
+    // teletransporte. Esto previene comportamientos indeseados durante
+    // las vistas predefinidas.
+    if (isTeleporting)
+    {
+        return; 
+    }
+    
+
 
 	xChange *= turnSpeed;
 	yChange *= turnSpeed;
 
 	yaw += xChange;
 	pitch += yChange;
+
+
+
 
 	if (!thirdperson)
 	{
