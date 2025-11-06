@@ -149,29 +149,6 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	}
 
 
-	// Movimiento Crash Bandicoot
-	if (key == GLFW_KEY_T)
-	{
-		theWindow->movez_cb -= theWindow->velocidad_cb;
-		theWindow->rotz_cb = 0.0f;
-	}
-	if (key == GLFW_KEY_G)
-	{
-		theWindow->movez_cb += theWindow->velocidad_cb;
-		theWindow->rotz_cb = 180.0f;
-	}
-	if (key == GLFW_KEY_F)
-	{
-		theWindow->movex_cb -= theWindow->velocidad_cb;
-		theWindow->rotz_cb = 90.0f;
-	}
-	if (key == GLFW_KEY_H)
-	{
-		theWindow->movex_cb +=  theWindow->velocidad_cb;
-		theWindow->rotz_cb = -90.0f;
-	}
-
-
 
 	// Abrir puerta
 	if (key == GLFW_KEY_C && action == GLFW_PRESS)
@@ -221,6 +198,125 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		}
 	}
 }
+
+
+void Window::actualizarAnguloMovimiento(float& anguloMovimiento, float& dirAnguloMovimiento, float velocidadAngular, float topeInf, float topeSup)
+{
+	anguloMovimiento += velocidadAngular * dirAnguloMovimiento;
+
+	if (anguloMovimiento >= topeSup)
+	{
+		anguloMovimiento = topeSup;
+		dirAnguloMovimiento *= -1.0f;
+	}
+	else if (anguloMovimiento <= topeInf)
+	{
+		anguloMovimiento = topeInf;
+		dirAnguloMovimiento *= -1.0f;
+	}
+}
+
+void Window::procesarMovimiento(Camera& camera)
+{
+	glm::vec3 dir = camera.getCameraDirection();
+	glm::vec3 right = glm::normalize(glm::cross(dir, glm::vec3(0.0f, 1.0f, 0.0f)));
+
+	glm::vec3 move(0.0f);
+	float velocidad = velocidad_cb;
+
+	float topeSup = 60.0f;
+	float topeInf = -60.0f;
+	float velocidadAngular = 1.0f;
+
+	float topeSup2 = 60.0f;
+	float topeInf2 = 0.0f;
+	float velocidadAngular2 = 1.0f;
+
+	float topeSup3 = 60.0f;
+	float topeInf3 = 0.0f;
+	float velocidadAngular3 = 1.0f;
+
+	bool moviendo = false;
+
+
+	if (keys[GLFW_KEY_T])  // Adelante
+	{
+		move += dir * velocidad;
+		moviendo = true;
+		anguloMovimiento += velocidadAngular * dirAnguloMovimiento;
+		actualizarAnguloMovimiento(anguloMovimiento, dirAnguloMovimiento, velocidadAngular, topeInf, topeSup);
+		actualizarAnguloMovimiento(anguloMovimiento2, dirAnguloMovimiento2, velocidadAngular2, topeInf2, topeSup2);
+		actualizarAnguloMovimiento(anguloMovimiento3, dirAnguloMovimiento3, velocidadAngular3, topeInf3, topeSup3);
+
+	}
+	if (keys[GLFW_KEY_G])  // Atrás
+	{
+		move -= dir * velocidad;
+		moviendo = true;
+		actualizarAnguloMovimiento(anguloMovimiento, dirAnguloMovimiento, velocidadAngular, topeInf, topeSup);
+		actualizarAnguloMovimiento(anguloMovimiento2, dirAnguloMovimiento2, velocidadAngular2, topeInf2, topeSup2);
+		actualizarAnguloMovimiento(anguloMovimiento3, dirAnguloMovimiento3, velocidadAngular3, topeInf3, topeSup3);
+	}
+		
+	if (keys[GLFW_KEY_H])  // Derecha
+	{
+		move += right * velocidad;
+		moviendo = true;
+		actualizarAnguloMovimiento(anguloMovimiento, dirAnguloMovimiento, velocidadAngular, topeInf, topeSup);
+		actualizarAnguloMovimiento(anguloMovimiento2, dirAnguloMovimiento2, velocidadAngular2, topeInf2, topeSup2);
+		actualizarAnguloMovimiento(anguloMovimiento3, dirAnguloMovimiento3, velocidadAngular3, topeInf3, topeSup3);
+	}
+		
+	if (keys[GLFW_KEY_F])  // Izquierda
+	{
+		move -= right * velocidad;
+		moviendo = true;
+		actualizarAnguloMovimiento(anguloMovimiento, dirAnguloMovimiento, velocidadAngular, topeInf, topeSup);
+		actualizarAnguloMovimiento(anguloMovimiento2, dirAnguloMovimiento2, velocidadAngular2, topeInf2, topeSup2);
+		actualizarAnguloMovimiento(anguloMovimiento3, dirAnguloMovimiento3, velocidadAngular3, topeInf3, topeSup3);
+	}
+		
+	// Si no hay movimiento, regresar los ángulos al valor neutro
+	if (!moviendo)
+	{
+		float velocidadRegreso = 2.0f;  // qué tan rápido vuelve
+		float epsilon = 2.0f;           // zona muerta: si está dentro, se fija a 0
+
+		// Articulaciones 0
+		if (fabs(anguloMovimiento) <= epsilon)
+			anguloMovimiento = 0.0f;
+		else if (anguloMovimiento > 0.0f)
+			anguloMovimiento -= velocidadRegreso;
+		else if (anguloMovimiento < 0.0f)
+			anguloMovimiento += velocidadRegreso;
+
+		// Piernas 1
+		if (fabs(anguloMovimiento2) <= epsilon)
+			anguloMovimiento2 = 0.0f;
+		else if (anguloMovimiento2 > 0.0f)
+			anguloMovimiento2 -= velocidadRegreso;
+		else if (anguloMovimiento2 < 0.0f)
+			anguloMovimiento2 += velocidadRegreso;
+
+		// Brazos 1
+		if (fabs(anguloMovimiento3 - 60.0f) <= epsilon)
+			anguloMovimiento3 = 60.0f;
+		else if (anguloMovimiento3 > 60.0f)
+			anguloMovimiento3 -= velocidadRegreso;
+		else if (anguloMovimiento3 < 60.0f)
+			anguloMovimiento3 += velocidadRegreso;
+	}
+
+	// Actualizar posición
+	movex_cb += move.x;
+	movez_cb += move.z;
+
+
+	// Calcular rotación del personaje según dirección del movimiento
+	if (glm::length(glm::vec2(move.x, move.z)) > 0.001f)
+		rotz_cb = glm::degrees(atan2(-move.x, -move.z));
+}
+
 
 void Window::ManejaMouse(GLFWwindow* window, double xPos, double yPos)
 {
