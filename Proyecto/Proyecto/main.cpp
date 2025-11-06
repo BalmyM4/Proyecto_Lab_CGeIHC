@@ -226,6 +226,10 @@ Model grada;
 // Brawl stars
 Model megacaja1;
 Model megacaja2;
+Model cactus;
+
+// Shely
+Model shely;
 
 // El primo
 Model elprimo;
@@ -412,7 +416,7 @@ void CreateObjects()
 		-0.5f, 0.0f, -0.5f,		0.0f, 1.0f,		0.0f, -1.0f, 0.0f,
 
 	};
-	
+
 	GLfloat verticesCartel[] = {
 		//	x      y      z			u		v			nx	  ny    nz
 			-2.5f, -1.0f, 0.0f,		0.0f,	0.875f,		0.0f, 0.0f, -1.0f,
@@ -463,15 +467,15 @@ void CreateObjects()
 	};
 
 
-	Mesh *obj1 = new Mesh();
+	Mesh* obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(obj1);
 
-	Mesh *obj2 = new Mesh();
+	Mesh* obj2 = new Mesh();
 	obj2->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(obj2);
 
-	Mesh *obj3 = new Mesh();
+	Mesh* obj3 = new Mesh();
 	obj3->CreateMesh(floorVertices, floorIndices, 32, 6);
 	meshList.push_back(obj3);
 
@@ -491,7 +495,7 @@ void CreateObjects()
 	Mesh* obj7 = new Mesh();
 	obj7->CreateMesh(numeroVertices, numeroIndices, 32, 6);
 	meshList.push_back(obj7); // solo un número
-	
+
 	Mesh* obj8 = new Mesh();
 	obj8->CreateMesh(verticesCartel, cartelIndices, 32, 6);
 	meshList.push_back(obj8);
@@ -508,7 +512,7 @@ void CreateObjects()
 
 void CreateShaders()
 {
-	Shader *shader1 = new Shader();
+	Shader* shader1 = new Shader();
 	shader1->CreateFromFiles(vShader, fShader);
 	shaderList.push_back(*shader1);
 }
@@ -519,7 +523,7 @@ void CreateShaders()
 int main()
 {
 	// Ventana principal
-	mainWindow = Window(1280, 1024); 
+	mainWindow = Window(1280, 1024);
 	mainWindow.Initialise();
 
 	// Crear objetos y shaders
@@ -592,7 +596,7 @@ int main()
 	//						Importar Modelos				       		   //
 	//																	   //
 	// =================================================================== //
-	
+
 	// Puerta reja
 	Puerta_reja_arco = Model();
 	Puerta_reja_arco.LoadModel("Models/Hollow_knight/hk_Puerta_reja_arco.obj");
@@ -704,6 +708,16 @@ int main()
 	megacaja2 = Model();
 	megacaja2.LoadModel("Models/Brawl_stars/bs_megacaja_abajo.obj");
 
+
+	//Cactus
+	cactus = Model();
+	cactus.LoadModel("Models/Brawl_stars/bs_cactus.obj");
+
+	//Shely
+	shely = Model();
+	shely.LoadModel("Models/Brawl_stars/bs_shely.obj");
+
+
 	// El primo
 	elprimo = Model();
 	elprimo.LoadModel("Models/Brawl_stars/bs_primoulti.obj");
@@ -727,14 +741,14 @@ int main()
 	es_aguila_ala_der = Model();
 	es_aguila_ala_der.LoadModel("Models/Escenario/es_aguila_ala_der.obj");
 
-	
+
 	// =================================================================== //
 	//																	   //
 	//						Definir luces					       		   //
 	//																	   //
 	// =================================================================== //
 
-	
+
 	//luz direccional, sólo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.3f, 0.3f,
@@ -790,7 +804,7 @@ int main()
 	spotLights2[1] = spotLights[2];
 	spotLights2[2] = spotLights[1];
 
-	
+
 	// =================================================================== //
 
 	//Duración ciclo dia/noche
@@ -800,15 +814,15 @@ int main()
 
 	// Variables
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
-		uniformSpecularIntensity = 0, uniformShininess = 0, uniformTextureOffset=0;
+		uniformSpecularIntensity = 0, uniformShininess = 0, uniformTextureOffset = 0;
 	GLuint uniformColor = 0;
 
 	// Matriz de proyección
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
-	
+
 
 	// Para la lampara
-	glm::vec3 lowerLight(0.0f,0.0f,0.0f);
+	glm::vec3 lowerLight(0.0f, 0.0f, 0.0f);
 
 	// Variables auxiliares
 	glm::mat4 model(1.0);
@@ -983,7 +997,7 @@ int main()
 		cb_brazo_izq_1.RenderModel();
 
 
-		
+
 		// ================================================================================ //
 		//																					//
 		//									Ring											//
@@ -1206,8 +1220,8 @@ int main()
 		model = glm::translate(model, glm::vec3(-15.0f, -4.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
 		model = glm::rotate(model, 180.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		spotLights[2].SetPos(glm::vec3(model* glm::vec4(baseLightPosHK_2, 1.0f)));
-		spotLights2[1].SetPos(glm::vec3(model* glm::vec4(baseLightPosHK_2, 1.0f)));
+		spotLights[2].SetPos(glm::vec3(model * glm::vec4(baseLightPosHK_2, 1.0f)));
+		spotLights2[1].SetPos(glm::vec3(model * glm::vec4(baseLightPosHK_2, 1.0f)));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_Lampara.RenderModel();
 
@@ -1300,7 +1314,7 @@ int main()
 		//									Gradas											//
 		//																					//
 		// ================================================================================ //
-	
+
 		// Grada 1
 		model = ringCentro;
 		model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
@@ -1327,12 +1341,26 @@ int main()
 
 		// ================================================================================ //
 		//																					//
+		//									Shely										//
+		//																					//
+		// ================================================================================ //
+
+		// Shely
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(-100.0f, 0.0, 15.0));
+		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shely.RenderModel();
+
+		// ================================================================================ //
+		//																					//
 		//									brawl stars										//
 		//																					//
 		// ================================================================================ //
-		
 
-		if (mainWindow.getMegacaja() ) {
+
+		if (mainWindow.getMegacaja()) {
 			if (rotcaja < 60.0f) {
 				rotcaja += toffsetrotcaja * deltaTime;
 			}
@@ -1342,8 +1370,8 @@ int main()
 				rotcaja -= toffsetrotcaja * deltaTime;
 			}
 		}
-		
-		
+
+
 		// Megacaja 1 --------------------------------------------------------------------
 		model = ringCentro;
 		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
@@ -1377,6 +1405,75 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		megacaja2.RenderModel();
 
+
+		// cactus 1 esquina 1
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(35.0f, 0.0, 35.0f));
+		/*model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, rotcaja * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));*/
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+		// cactus 2 esquina 1
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::translate(model, glm::vec3(18.0f, 0.0, 18.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		/*model = glm::rotate(model, rotcaja * toRadians, glm::vec3(0.0f, 0.0f, 1.0f)); */
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+
+		// cactus 1 esquina 2
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(-35.0f, 0.0, -35.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+		// cactus 2 esquina 2
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::translate(model, glm::vec3(-18.0f, 0.0, -18.0f));
+		model = glm::rotate(model, 270 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+
+		// cactus 1 esquina 3
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(35.0f, 0.0, -35.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+		// cactus 2 esquina 3
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::translate(model, glm::vec3(18.0f, 0.0, -18.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+
+		// cactus 1 esquina 4
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(-35.0f, 0.0, 35.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+		// cactus 2 esquina 4
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::translate(model, glm::vec3(-18.0f, 0.0, 18.0f));
+		model = glm::rotate(model, 270 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
 
 
 		// ================================================================================ //
@@ -1853,7 +1950,7 @@ int main()
 		//																					//
 		// ================================================================================ //
 
-		
+
 		// Para el posicionamiento de las antorchas y fuegos
 		xtorch = 40.0f;
 		ztorch = 40.0f;
@@ -1898,7 +1995,7 @@ int main()
 		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		es_Antorcha.RenderModel();
-		
+
 
 		// Animación del fuego ------------------------------------------------
 		tiempoAcumuladoFuego += deltaTime;
@@ -1925,7 +2022,7 @@ int main()
 		model = ringCentro;
 		model = glm::translate(model, glm::vec3(-1 * xtorch, 13.5f, ztorch));
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 2.0f));
-		
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		toffset = glm::vec2(toffsetfuegou, toffsetfuegov);
@@ -2246,10 +2343,10 @@ int main()
 
 		// ================================================================================ //
 
-		
+
 
 		glDisable(GL_BLEND);
-		
+
 
 		glUseProgram(0);
 
