@@ -209,6 +209,9 @@ Model hk_arm_left1_iselda;
 // Antorcha
 Model es_Antorcha;
 
+//Pinos
+Model pinos;
+
 // Hollow Knight
 Model hk_hollow_knight;
 Model hk_dash;
@@ -676,6 +679,10 @@ int main()
 	// Antorcha
 	es_Antorcha = Model();
 	es_Antorcha.LoadModel("Models/Escenario/es_antorcha.obj");
+
+	// Pinos
+	pinos = Model();
+	pinos.LoadModel("Models/Escenario/es_Pino.obj");
 
 	// Hollow Knight
 	hk_hollow_knight = Model();
@@ -1954,6 +1961,104 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		es_piramide.RenderModel();
 
+		// ================================================================================ //
+		//																					//
+		//									Exterior										//
+		//																					//
+		// ================================================================================ //
+
+		// Pinos --------------------------------------------------------
+		
+
+		// Pinos 1
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-50.0f, 0.0f, -220.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 2
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(50.0f, 0.0f, -220.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 3
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(150.0f, 0.0f, -220.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 4
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-220.0f, 0.0f, -50.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 5
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-220.0f, 0.0f, 50.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 6
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-220.0f, 0.0f, 150.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 7
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(220.0f, 0.0f, -50.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 8
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(220.0f, 0.0f, 50.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 9
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(220.0f, 0.0f, 150.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 10
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-50.0f, 0.0f, 240.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 11
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(50.0f, 0.0f, 240.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 12
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(150.0f, 0.0f, 240.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
 
 		// ================================================================================ //
 		//																					//
