@@ -27,7 +27,7 @@ void AgregarKeyframeEnArchivo(const char* fileLocation, float x, float y, float 
 	printf("Keyframe agregado al archivo: (%.1f, %.1f, %.1f, %.1f)\n", x, y, z, giro);
 }
 
-void saveFrame(float& mov_x, float& mov_y, float& mov_z, float& giro) //tecla L
+void saveFrame(FRAME* KeyFrame, int& FrameIndex, float& mov_x, float& mov_y, float& mov_z, float& giro) //tecla L
 {
 	printf("frameindex %d\n", FrameIndex);
 
@@ -42,7 +42,7 @@ void saveFrame(float& mov_x, float& mov_y, float& mov_z, float& giro) //tecla L
 	FrameIndex++;
 }
 
-void resetElements(float& mov_x, float& mov_y, float& mov_z, float& giro) //Tecla 0
+void resetElements(FRAME* KeyFrame, float& mov_x, float& mov_y, float& mov_z, float& giro) //Tecla 0
 {
 	mov_x = KeyFrame[0].mov_x;
 	mov_y = KeyFrame[0].mov_y;
@@ -50,7 +50,7 @@ void resetElements(float& mov_x, float& mov_y, float& mov_z, float& giro) //Tecl
 	giro = KeyFrame[0].giro;
 }
 
-void interpolation(void)
+void interpolation(FRAME* KeyFrame, int playIndex, int i_max_steps)
 {
 	KeyFrame[playIndex].mov_xInc = (KeyFrame[playIndex + 1].mov_x - KeyFrame[playIndex].mov_x) / i_max_steps;
 	KeyFrame[playIndex].mov_yInc = (KeyFrame[playIndex + 1].mov_y - KeyFrame[playIndex].mov_y) / i_max_steps;
@@ -96,7 +96,7 @@ void animate(void)
 	}
 }*/
 
-void animate(float& mov_x, float& mov_y, float& mov_z, float& giro)
+void animate(FRAME* KeyFrame, int& playIndex, int& i_curr_steps, int i_max_steps, int FrameIndex, float& mov_x, float& mov_y, float& mov_z, float& giro)
 {
 	if (play)
 	{
@@ -109,7 +109,7 @@ void animate(float& mov_x, float& mov_y, float& mov_z, float& giro)
 			}
 
 			i_curr_steps = 0; // resetea contador
-			interpolation();  // calcula incrementos del nuevo tramo
+			interpolation(KeyFrame, playIndex, i_max_steps);  // calcula incrementos del nuevo tramo
 		}
 		else
 		{
@@ -123,7 +123,7 @@ void animate(float& mov_x, float& mov_y, float& mov_z, float& giro)
 	}
 }
 
-void CargarKeyframesDesdeArchivo(const char* fileLocation, float& mov_x, float& mov_y, float& mov_z, float& giro)
+void CargarKeyframesDesdeArchivo(const char* fileLocation, float& mov_x, float& mov_y, float& mov_z, float& giro, FRAME* KeyFrame, int& FrameIndex)
 {
 	Shader shader;
 	std::string data = shader.ReadFile(fileLocation);
@@ -161,15 +161,15 @@ void CargarKeyframesDesdeArchivo(const char* fileLocation, float& mov_x, float& 
 	printf("Se cargaron %d keyframes desde %s\n", frameCount, fileLocation);
 
 	if (FrameIndex > 1) {
-		resetElements(mov_x, mov_y, mov_z, giro);
-		interpolation();
+		resetElements(KeyFrame, mov_x, mov_y, mov_z, giro);
+		interpolation(KeyFrame, playIndex, i_max_steps);
 		play = true;
 		playIndex = 0;
 		i_curr_steps = 0;
 	}
 }
 
-void inputKeyframes(bool* keys, float& mov_x, float& mov_y, float& mov_z, float& giro)
+void inputKeyframes(FRAME* KeyFrame, bool* keys, float& mov_x, float& mov_y, float& mov_z, float& giro)
 {
 	if (keys[GLFW_KEY_SPACE])
 	{
@@ -177,9 +177,9 @@ void inputKeyframes(bool* keys, float& mov_x, float& mov_y, float& mov_z, float&
 		{
 			if (play == false && (FrameIndex > 1))
 			{
-				resetElements(mov_x, mov_y, mov_z, giro);
+				resetElements(KeyFrame, mov_x, mov_y, mov_z, giro);
 				//First Interpolation				
-				interpolation();
+				interpolation(KeyFrame, playIndex, i_max_steps);
 				play = true;
 				playIndex = 0;
 				i_curr_steps = 0;
@@ -208,7 +208,7 @@ void inputKeyframes(bool* keys, float& mov_x, float& mov_y, float& mov_z, float&
 	{
 		if (guardoFrame < 1)
 		{
-			saveFrame(mov_x, mov_y, mov_z, giro);
+			saveFrame(KeyFrame, FrameIndex, mov_x, mov_y, mov_z, giro);
 			printf("mov_x es: %f\n", mov_x);
 			printf("mov_y es: %f\n", mov_y);
 			printf("mov_z es: %f\n", mov_z);

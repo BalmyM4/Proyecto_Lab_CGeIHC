@@ -530,6 +530,11 @@ void CreateShaders()
 //																	   //
 // =================================================================== //
 
+FRAME KeyFrameAguila[MAX_FRAMES];
+int FrameIndexAguila = 0;
+int playIndexAguila = 0;
+int i_max_stepsAguila = 100;
+int i_curr_stepsAguila = 0;
 
 //NEW// Keyframes
 float posXaguila = 0.0f, posYaguila = 150.0f, posZaguila = 0.0f;
@@ -820,7 +825,7 @@ int main()
 	//																	   //
 	// =================================================================== //
 
-	CargarKeyframesDesdeArchivo("keyframes_aguila.txt", movAguila_x, movAguila_y, movAguila_z, giroAguila);
+	CargarKeyframesDesdeArchivo("keyframes_aguila.txt" , movAguila_x, movAguila_y, movAguila_z, giroAguila, KeyFrameAguila, FrameIndexAguila);
 
 	printf("\n=== TECLAS PARA USO DE KEYFRAMES Y MOVIMIENTO ===\n");
 	printf("1.- Barra espaciadora: Reproducir animación\n");
@@ -920,8 +925,8 @@ int main()
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 
 		//-------Para Keyframes
-		inputKeyframes(mainWindow.getsKeys(), movAguila_x, movAguila_y, movAguila_z, giroAguila);
-		animate(movAguila_x, movAguila_y, movAguila_z, giroAguila);
+		inputKeyframes(KeyFrameAguila, mainWindow.getsKeys(), movAguila_x, movAguila_y, movAguila_z, giroAguila);
+		animate(KeyFrameAguila, playIndexAguila, i_curr_stepsAguila, i_max_stepsAguila, FrameIndexAguila, movAguila_x, movAguila_y, movAguila_z, giroAguila);
 
 
 		// Clear the window
