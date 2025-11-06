@@ -1,4 +1,4 @@
-#include "Camera.h"
+Ôªø#include "Camera.h"
 
 Camera::Camera() {}
 
@@ -15,13 +15,13 @@ Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLf
 	moveSpeed = startMoveSpeed;
 	turnSpeed = startTurnSpeed;
 
-    // Se definen 5 spots de c·mara predefinidos que se activan con teclas:
+    // Se definen 5 spots de c√°mara predefinidos que se activan con teclas:
 	previousPosition = position;
 	previousFront = front;
 	previousYaw = yaw;
 	previousPitch = pitch;
 	isTeleporting = false;
-	currentSpotIndex = -1; // -1 significa ning˙n spot activo
+	currentSpotIndex = -1; // -1 significa ning√∫n spot activo
 
 
 	cameraSpots = {
@@ -40,9 +40,9 @@ void Camera::keyControl(bool* keys, GLfloat deltaTime)
 {
     GLfloat velocity = moveSpeed * deltaTime;
 
-    // Al mantener presionadas teclas numÈricas (5-9),
-    // la c·mara se teletransporta a vistas predefinidas. Al soltar la tecla,
-    // regresa autom·ticamente a su posiciÛn anterior.
+    // Al mantener presionadas teclas num√©ricas (5-9),
+    // la c√°mara se teletransporta a vistas predefinidas. Al soltar la tecla,
+    // regresa autom√°ticamente a su posici√≥n anterior.
     for (int i = 0; i < cameraSpots.size(); i++)
     {
         int key = GLFW_KEY_1 + i+4; 
@@ -74,7 +74,7 @@ void Camera::keyControl(bool* keys, GLfloat deltaTime)
         }
     }
     
-    // === RESTAURACI”N AL SOLTAR TODAS LAS TECLAS DE SPOT ===
+    // === RESTAURACI√ìN AL SOLTAR TODAS LAS TECLAS DE SPOT ===
     bool anySpotKeyPressed = false;
     for (int i = 0; i < cameraSpots.size(); i++)
     {
@@ -123,7 +123,7 @@ void Camera::keyControl(bool* keys, GLfloat deltaTime)
     }
     
     
-    // C·mara libre
+    // C√°mara libre
     if (keys[GLFW_KEY_1])
     {
         thirdperson = GL_TRUE;
@@ -138,8 +138,8 @@ void Camera::keyControl(bool* keys, GLfloat deltaTime)
 void Camera::mouseControl(GLfloat xChange, GLfloat yChange, glm::vec3 objetivo)
 {
 
-    // Se agregÛ una verificaciÛn para evitar que el mouse
-    // mueva la c·mara mientras se mantiene presionada una tecla de
+    // Se agreg√≥ una verificaci√≥n para evitar que el mouse
+    // mueva la c√°mara mientras se mantiene presionada una tecla de
     // teletransporte. Esto previene comportamientos indeseados durante
     // las vistas predefinidas.
     if (isTeleporting)
@@ -152,14 +152,15 @@ void Camera::mouseControl(GLfloat xChange, GLfloat yChange, glm::vec3 objetivo)
 	xChange *= turnSpeed;
 	yChange *= turnSpeed;
 
-	yaw += xChange;
-	pitch += yChange;
 
-
+    yaw += xChange; 
+    
 
 
 	if (!thirdperson)
 	{
+        pitch -= yChange;
+
 		if (pitch > 49.0f)
 		{
 			pitch = 49.0f;
@@ -173,6 +174,8 @@ void Camera::mouseControl(GLfloat xChange, GLfloat yChange, glm::vec3 objetivo)
 	}
 	else
 	{
+        pitch += yChange;
+
 		if (pitch > 89.0f)
 		{
 			pitch = 89.0f;
@@ -220,10 +223,9 @@ void Camera::update()
 
 void Camera::updatethird(glm::vec3 objetivo)
 {
-
-	offset.x = r * cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+	offset.x = r * cos(glm::radians(pitch)) * sin(glm::radians(-yaw));
 	offset.y = r * sin(glm::radians(pitch));
-	offset.z = r * cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+	offset.z = r * cos(glm::radians(pitch)) * cos(glm::radians(-yaw));
 	position = offset + objetivo + focus;
 	glm::vec3 worldFocus = objetivo + focus;
 	front = glm::normalize(worldFocus - position);
