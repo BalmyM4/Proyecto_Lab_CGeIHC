@@ -2162,7 +2162,6 @@ int main()
 
 		// Pinos --------------------------------------------------------
 		
-
 		// Pinos 1
 		model = ringCentro;
 		model = glm::translate(model, glm::vec3(-50.0f, 0.0f, -220.0f));
@@ -2249,6 +2248,96 @@ int main()
 		// Pinos 12
 		model = ringCentro;
 		model = glm::translate(model, glm::vec3(150.0f, 0.0f, 240.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 1
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-100.0f, 0.0f, -440.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 2
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(100.0f, 0.0f, -440.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 3
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(200.0f, 0.0f, -440.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 4
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-440.0f, 0.0f, -100.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 5
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-440.0f, 0.0f, 100.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 6
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-440.0f, 0.0f, 250.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 7
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(440.0f, 0.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 8
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(440.0f, 0.0f, 100.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 9
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(440.0f, 0.0f, 300.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 10
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-100.0f, 0.0f, 340.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 11
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(100.0f, 0.0f, 340.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 12
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(250.0f, 0.0f, 340.0f));
 		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		pinos.RenderModel();
