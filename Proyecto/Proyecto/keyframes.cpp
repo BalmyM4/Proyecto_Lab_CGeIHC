@@ -37,7 +37,7 @@ void saveFrame(FRAME* KeyFrame, int& FrameIndex, float& mov_x, float& mov_y, flo
 	KeyFrame[FrameIndex].giro = giro;
 
 	// Guardar en el archivo de texto
-	AgregarKeyframeEnArchivo("keyframes_.txt", mov_x, mov_y, mov_z, giro);
+	AgregarKeyframeEnArchivo("keyframes_aguila.txt", mov_x, mov_y, mov_z, giro);
 
 	FrameIndex++;
 }

@@ -120,6 +120,10 @@ float rotarPortal = 0.0f;
 float toffsetrotcaja = 1.0f;
 float rotcaja = 0.0f;
 
+// Rotación alas aguila
+float ag_rot_ala = 0.0f;
+bool ag_alaAbajo = false;
+
 // =================================================================== //
 
 
@@ -520,8 +524,24 @@ void CreateShaders()
 	shaderList.push_back(*shader1);
 }
 
+// =================================================================== //
+//																	   //
+//								KEY FRAMES							   //
+//																	   //
+// =================================================================== //
 
+FRAME KeyFrameAguila[MAX_FRAMES];
+int FrameIndexAguila = 0;
+int playIndexAguila = 0;
+int i_max_stepsAguila = 100;
+int i_curr_stepsAguila = 0;
 
+//NEW// Keyframes
+float posXaguila = 0.0f, posYaguila = 150.0f, posZaguila = 0.0f;
+float movAguila_x = 0.0f, movAguila_y = 0.0f, movAguila_z = 0.0f;
+float giroAguila = 0.0f;
+
+// =================================================================== //
 
 int main()
 {
@@ -812,6 +832,43 @@ int main()
 
 	
 	// =================================================================== //
+	//																	   //
+	//							Key Frames					       		   //
+	//																	   //
+	// =================================================================== //
+
+	CargarKeyframesDesdeArchivo("keyframes_aguila.txt", movAguila_x, movAguila_y, movAguila_z, giroAguila, KeyFrameAguila, FrameIndexAguila);
+
+	printf("\n=== TECLAS PARA USO DE KEYFRAMES Y MOVIMIENTO ===\n");
+	printf("1.- Barra espaciadora: Reproducir animación\n");
+	printf("2.- Tecla 0: Habilitar nuevamente la reproducción de la animación\n");
+	printf("3.- Tecla L: Guardar frame actual\n");
+	printf("4.- Tecla P: Habilitar guardar un nuevo frame\n\n");
+
+	printf("=== MOVIMIENTO MANUAL DEL HELICÓPTERO ===\n");
+	printf("EJE X:\n");
+	printf("   Tecla 1: Mover en X positivo (+X)\n");
+	printf("   Tecla 2: Mover en X negativo (-X)\n");
+	printf("   Tecla 3: Desbloquear eje X para volver a mover\n\n");
+
+	printf("EJE Y:\n");
+	printf("   Tecla 4: Mover en Y positivo (+Y)\n");
+	printf("   Tecla 5: Mover en Y negativo (-Y)\n");
+	printf("   Tecla 6: Desbloquear eje Y para volver a mover\n\n");
+
+	printf("EJE Z:\n");
+	printf("   Tecla 7: Mover en Z positivo (+Z)\n");
+	printf("   Tecla 8: Mover en Z negativo (-Z)\n");
+	printf("   Tecla 9: Desbloquear eje Z para volver a mover\n\n");
+
+	printf("ROTACION EN EJE Y:\n");
+	printf("   Tecla Q: Rotar a la izquierda (−Y)\n");
+	printf("   Tecla E: Rotar a la derecha (+Y)\n");
+	printf("   Tecla R: Habilitar nuevamente la rotacion\n\n");
+
+	// =================================================================== //
+
+
 
 	//Duraci�n ciclo dia/noche
 	float ciclo = 10.0f;
@@ -839,9 +896,17 @@ int main()
 	glm::mat4 crashAux(1.0);
 	glm::mat4 crashExtrAux(1.0);
 
+	// Para la piramide
+	glm::mat4 aguilaAux(1.0);
+	glm::vec3 aguilaPos(0.0f, 0.0f, 0.0f);
+
+	// Color blanco por defecto
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	// Offset de textura
 	glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 
+	// Para el fuego
 	float xtorch, ztorch;
 
 	// Para los wumpas
@@ -856,6 +921,8 @@ int main()
 	glm::vec3 posicioncam;
 	glm::vec3 posicionmodel = glm::vec3(0.0f);
 	int bandera1 = 0;
+
+
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
 	{
@@ -871,10 +938,11 @@ int main()
 
 		skybox.setFactor(a);
 		//skybox.setFactor(0.0f);
+		
 		//Recibir eventos del usuario
 		glfwPollEvents();
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
-		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+	
 
 		// =================================================================== //
 		//																	   //
@@ -1962,6 +2030,27 @@ int main()
 		//																					//
 		// ================================================================================ //
 
+		if (!ag_alaAbajo)
+		{
+			ag_rot_ala += 3.0 * deltaTime;
+			if (ag_rot_ala >= 60.0f)
+			{
+				ag_rot_ala = 60.0f;
+				ag_alaAbajo = true;
+			}
+
+		}
+		else if (ag_alaAbajo)
+		{
+			ag_rot_ala -= 3.0 * deltaTime;
+			if (ag_rot_ala <= -60.0f)
+			{
+				ag_rot_ala = -60.0f;
+				ag_alaAbajo = false;
+			}
+		}
+
+
 		// Piramide --------------------------------------------------------
 		model = glm::mat4(1.0f);
 
@@ -1971,6 +2060,41 @@ int main()
 		model = glm::translate(model, glm::vec3(-350.0f, 0.0f, -350.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		es_piramide.RenderModel();
+
+		// Aguila -----------------------------------------------------------
+
+		// Traslación
+		aguilaPos = glm::vec3(posXaguila + movAguila_x, posYaguila + movAguila_y, posZaguila + movAguila_z);
+		model = glm::translate(model, aguilaPos);
+
+		// Escalado
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+
+		// Rotación
+		model = glm::rotate(model, giroAguila * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		aguilaAux = model;
+
+		// Render
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_aguila.RenderModel();
+
+		// Ala derecha -------------------------------------------------------
+		model = aguilaAux;
+		model = glm::translate(model, glm::vec3(10.0f, 25.0f, -20.0f));
+		model = glm::rotate(model, ag_rot_ala * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_aguila_ala_der.RenderModel();
+
+		// Ala izquierda ------------------------------------------------------
+		model = aguilaAux;
+		model = glm::translate(model, glm::vec3(-10.0f, 25.0f, -20.0f));
+		model = glm::rotate(model, -1 * ag_rot_ala * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_aguila_ala_izq.RenderModel();
+
+		glDisable(GL_BLEND);
+
 
 		// ================================================================================ //
 		//																					//
