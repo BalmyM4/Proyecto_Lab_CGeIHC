@@ -5,24 +5,27 @@ D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.h(16,36): warning C4244: 'r
 D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.h(17,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
   (compilando archivo de origen "main.cpp")
   
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(313,24): warning C4267: 'inicializando': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(976,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(978,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(982,34): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1232,23): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1307,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1308,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1333,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1334,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1412,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1413,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1438,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1439,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1676,22): warning C4305: '+=': truncamiento de 'double' a 'float'
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1762,26): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1771,30): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1778,30): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(2093,22): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(2103,22): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(956,12): warning C4101: 'posicioncam': variable local sin referencia
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(318,24): warning C4267: 'inicializando': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(993,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(995,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(999,38): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1249,23): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1324,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1325,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1350,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1351,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1429,33): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1430,47): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1455,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1456,29): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1727,22): warning C4305: '+=': truncamiento de 'double' a 'float'
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1813,26): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1822,30): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(1829,30): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(2144,22): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(2154,22): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(924,8): warning C4101: 'intensity': variable local sin referencia
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(925,8): warning C4101: 'angulosol': variable local sin referencia
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(926,12): warning C4101: 'directionsol': variable local sin referencia
+D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\main.cpp(973,12): warning C4101: 'posicioncam': variable local sin referencia
   Proyecto.vcxproj -> D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\x64\Debug\Proyecto.exe
