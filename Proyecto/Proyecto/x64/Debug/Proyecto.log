@@ -1,15 +1,2 @@
-﻿  Window.cpp
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.h(16,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
-  (compilando archivo de origen "Window.cpp")
-  
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.h(17,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
-  (compilando archivo de origen "Window.cpp")
-  
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.cpp(327,22): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.cpp(328,22): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.cpp(332,28): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.cpp(333,40): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.cpp(335,21): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.cpp(336,21): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\Proyecto\Window.cpp(108,1): warning C4715: 'Window::Initialise': no todas las rutas de acceso de control devuelven un valor
+﻿  Camera.cpp
   Proyecto.vcxproj -> D:\UNAM\Proyecto_Lab_CGeIHC\Proyecto\x64\Debug\Proyecto.exe

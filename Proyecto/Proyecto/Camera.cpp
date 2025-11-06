@@ -166,9 +166,9 @@ void Camera::mouseControl(GLfloat xChange, GLfloat yChange, glm::vec3 objetivo)
 			pitch = 49.0f;
 		}
 
-		if (pitch < 0.0f)
+		if (pitch < -49.0f)
 		{
-			pitch = 0.0f;
+			pitch = -49.0f;
 		}
 		updatethird(objetivo);
 	}
