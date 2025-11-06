@@ -1,3 +1,14 @@
 Proyecto/.vs/Proyecto/v17/ipch/AutoPCH/3bd3257e6e8e775a/MAIN.ipch
 Proyecto/.vs/Proyecto/v17/ipch/AutoPCH/91d298baeba97599/MAIN.ipch
 /Proyecto/.vs
+# Build
+Debug/
+Release/
+x64/
+*.obj
+*.log
+*.pdb
+*.idb
+*.ilk
+*.exe
+*.tlog
