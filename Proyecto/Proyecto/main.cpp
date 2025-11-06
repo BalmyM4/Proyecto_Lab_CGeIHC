@@ -249,6 +249,8 @@ Model cb_dr_cortex;
 
 // Piramide
 Model es_piramide;
+Model es_minecraft_temple;
+Model es_temple;
 
 // Aguila
 Model es_aguila;
@@ -796,6 +798,11 @@ int main()
 	// Piramide
 	es_piramide = Model();
 	es_piramide.LoadModel("Models/Escenario/es_pyramid.obj");
+	es_minecraft_temple = Model();
+	es_minecraft_temple.LoadModel("Models/Escenario/es_minecraft_temple.obj");
+	es_temple = Model();
+	es_temple.LoadModel("Models/Escenario/es_temple.obj");
+	
 
 	// Aguila
 	es_aguila = Model();
@@ -808,6 +815,8 @@ int main()
 	//Puesto
 	es_puesto = Model();
 	es_puesto.LoadModel("Models/Escenario/es_Puesto.obj");
+
+
 	// =================================================================== //
 	//																	   //
 	//						Definir luces					       		   //
@@ -1488,7 +1497,7 @@ int main()
 		model = ringCentro;
 		model = glm::scale(model, glm::vec3(3.5f, 2.7f, 3.5f));
 		model = glm::translate(model, glm::vec3(30.0f, -0.1f, 15.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		//model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		es_puesto.RenderModel();
 
@@ -1539,7 +1548,7 @@ int main()
 
 		// ================================================================================ //
 		//																					//
-		//									Shely										//
+		//									Shely											//
 		//																					//
 		// ================================================================================ //
 
@@ -1828,9 +1837,9 @@ int main()
 
 		// Posicionamiento global
 		model = ringCentro;
-		model = glm::translate(model, glm::vec3(80.0f, 0.0f, 80.0f));
+		model = glm::translate(model, glm::vec3(90.0f, 0.0f, 53.0f));
 		model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
-		model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, 100.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		iseldaPos = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_mesa_iselda.RenderModel();
@@ -2194,6 +2203,27 @@ int main()
 		es_aguila_ala_izq.RenderModel();
 
 		glDisable(GL_BLEND);
+
+
+		// Minecraft temple --------------------------------------------------------
+		model = glm::mat4(1.0f);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-300.0f, 0.0f, 350.0f));
+		model = glm::scale(model, glm::vec3(8.0f, 8.0f, 8.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_minecraft_temple.RenderModel();
+
+		// Minecraft temple --------------------------------------------------------
+		model = glm::mat4(1.0f);
+
+		// Posicionamiento global
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(350.0f, 0.0f, -350.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		es_temple.RenderModel();
 
 
 		// ================================================================================ //
