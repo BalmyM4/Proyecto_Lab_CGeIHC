@@ -157,6 +157,9 @@ Texture hk_rejas;
 // Para la explosi�n de la TNT
 Texture cb_explosion;
 
+// Para los arboles
+Texture es_arbol;
+
 
 // =================================================================== //
 //																	   //
@@ -473,6 +476,30 @@ void CreateObjects()
 		-0.5f, 0.0f,  0.5f,   0.5f, 0.5f,   0.0f, 1.0f, 0.0f  // esquina superior izq
 	};
 
+	unsigned int arbolesIndices[] = {
+		// Plano XY
+		0, 1, 2,
+		0, 2, 3,
+
+		// Plano ZY
+		4, 5, 6,
+		4, 6, 7
+	};
+	GLfloat arbolesVertices[] = {
+		// ----- Plano XY (z = 0)
+		-0.5f, -0.5f,  0.0f,   0.0f, 0.0f,   0.0f, 0.0f, 1.0f,  // abajo izq
+		 0.5f, -0.5f,  0.0f,   1.0f, 0.0f,   0.0f, 0.0f, 1.0f,  // abajo der
+		 0.5f,  0.5f,  0.0f,   1.0f, 1.0f,   0.0f, 0.0f, 1.0f,  // arriba der
+		-0.5f,  0.5f,  0.0f,   0.0f, 1.0f,   0.0f, 0.0f, 1.0f,  // arriba izq
+
+		// ----- Plano ZY (x = 0)
+		 0.0f, -0.5f, -0.5f,   0.0f, 0.0f,   1.0f, 0.0f, 0.0f,  // abajo atr�s
+		 0.0f, -0.5f,  0.5f,   1.0f, 0.0f,   1.0f, 0.0f, 0.0f,  // abajo frente
+		 0.0f,  0.5f,  0.5f,   1.0f, 1.0f,   1.0f, 0.0f, 0.0f,  // arriba frente
+		 0.0f,  0.5f, -0.5f,   0.0f, 1.0f,   1.0f, 0.0f, 0.0f   // arriba atr�s
+	};
+
+
 
 	Mesh *obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 32, 12);
@@ -514,6 +541,10 @@ void CreateObjects()
 	Mesh* obj10 = new Mesh();
 	obj10->CreateMesh(planoXZ_Vertices, planoXZ_Indices, 32, 6);
 	meshList.push_back(obj10);
+
+	Mesh* obj11 = new Mesh();
+	obj11->CreateMesh(arbolesVertices, arbolesIndices, 64, 12);
+	meshList.push_back(obj11);
 }
 
 
@@ -612,6 +643,10 @@ int main()
 	// Textura de la explosi�n de la TNT
 	cb_explosion = Texture("Textures/Crash_bandicoot/cb_explosion.png");
 	cb_explosion.LoadTextureA();
+
+	// Textura de los arboles
+	es_arbol = Texture("Textures/Escenario/es_arbol.png");
+	es_arbol.LoadTextureA();
 
 
 	// =================================================================== //
@@ -921,6 +956,17 @@ int main()
 	glm::vec3 posicioncam;
 	glm::vec3 posicionmodel = glm::vec3(0.0f);
 	int bandera1 = 0;
+
+	// Para los arboles
+	float distancia = 700.0f;  // distancia desde el origen
+	float separacion = 50.0f; // distancia entre árboles
+	int cantidad = 30;        // árboles por lado
+
+	// ESCALAS (puedes ponerlas fijas)
+	float escalaX = 60.0f;
+	float escalaY = 80.0f;
+	float escalaZ = 60.0f;
+
 
 
 	////Loop mientras no se cierra la ventana
@@ -2605,8 +2651,105 @@ int main()
 
 
 		// ================================================================================ //
+		//																					//
+		//										Arboles										//
+		//																					//
+		// ================================================================================ //
 
 		
+		// --- ATRÁS (z negativa) ---
+		for (int i = 0; i < cantidad; i++)
+		{
+			glm::mat4 model = ringCentro;
+			float x = -((cantidad - 1) * separacion / 2.0f) + i * separacion;
+			float z = -distancia;
+			glm::vec3 pos = glm::vec3(x, 40.0f, z);
+
+			model = glm::translate(model, pos);
+			model = glm::scale(model, glm::vec3(escalaX, escalaY, escalaZ));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
+			glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			es_arbol.UseTexture();
+			meshList[10]->RenderMesh();
+			glDisable(GL_BLEND);
+		}
+
+		// --- FRENTE (z positiva) ---
+		for (int i = 0; i < cantidad; i++)
+		{
+			glm::mat4 model = ringCentro;
+			float x = -((cantidad - 1) * separacion / 2.0f) + i * separacion;
+			float z = distancia;
+			glm::vec3 pos = glm::vec3(x, 40.0f, z);
+
+			model = glm::translate(model, pos);
+			model = glm::scale(model, glm::vec3(escalaX, escalaY, escalaZ));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
+			glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			es_arbol.UseTexture();
+			meshList[10]->RenderMesh();
+			glDisable(GL_BLEND);
+		}
+
+		// --- DERECHA (x positiva) ---
+		for (int i = 0; i < cantidad; i++)
+		{
+			glm::mat4 model = ringCentro;
+			float x = distancia;
+			float z = -((cantidad - 1) * separacion / 2.0f) + i * separacion;
+			glm::vec3 pos = glm::vec3(x, 40.0f, z);
+
+			model = glm::translate(model, pos);
+			model = glm::scale(model, glm::vec3(escalaX, escalaY, escalaZ));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
+			glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			es_arbol.UseTexture();
+			meshList[10]->RenderMesh();
+			glDisable(GL_BLEND);
+		}
+
+		// --- IZQUIERDA (x negativa) ---
+		for (int i = 0; i < cantidad; i++)
+		{
+			glm::mat4 model = ringCentro;
+			float x = -distancia;
+			float z = -((cantidad - 1) * separacion / 2.0f) + i * separacion;
+			glm::vec3 pos = glm::vec3(x, 40.0f, z);
+
+			model = glm::translate(model, pos);
+			model = glm::scale(model, glm::vec3(escalaX, escalaY, escalaZ));
+			model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
+			glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			es_arbol.UseTexture();
+			meshList[10]->RenderMesh();
+			glDisable(GL_BLEND);
+		}
+
+
+
+
+		// ================================================================================ //
+
+
+
 
 		glDisable(GL_BLEND);
 		
