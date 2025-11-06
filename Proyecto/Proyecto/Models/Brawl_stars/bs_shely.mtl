@@ -1,0 +1,12 @@
+# Blender 4.5.3 LTS MTL File: 'None'
+# www.blender.org
+
+newmtl character_mat
+Ns 249.567810
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 3
+map_Kd -o 0 -1 0 shelly_v2_01.png
+map_d -o 0 -1 0 shelly_v2_01.png
