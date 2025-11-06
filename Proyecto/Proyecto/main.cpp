@@ -30,6 +30,7 @@
 #include "Sphere.h"
 #include"Model.h"
 #include "Skybox.h"
+#include "keyframes_aguila.h"
 
 //para iluminación
 #include "CommonValues.h"
@@ -39,14 +40,6 @@
 #include "Material.h"
 const float toRadians = 3.14159265f / 180.0f;
 
-
-// =================================================================== //
-//																	   //
-//					Variables para keyframes						   //
-//																	   //
-// =================================================================== //
-
-float reproduciranimacion, habilitaranimacion, guardoFrame, reinicioFrame, ciclo, ciclo2, contador = 0;
 
 
 // =================================================================== //
@@ -537,196 +530,17 @@ void CreateShaders()
 //																	   //
 // =================================================================== //
 
-//función para teclado de keyframes 
-void inputKeyframes(bool* keys);
-
-bool animacion = false;
+FRAME KeyFrameAguila[MAX_FRAMES];
+int FrameIndexAguila = 0;
+int playIndexAguila = 0;
+int i_max_stepsAguila = 100;
+int i_curr_stepsAguila = 0;
 
 //NEW// Keyframes
-float posXaguila = 0.0, posYaguila = 150.0, posZaguila = 0.0;
-float movAguila_x = 0.0f, movAguila_y = 0.0f, movAguila_z;
-float giroAguila = 0;
+float posXaguila = 0.0f, posYaguila = 150.0f, posZaguila = 0.0f;
+float movAguila_x = 0.0f, movAguila_y = 0.0f, movAguila_z = 0.0f;
+float giroAguila = 0.0f;
 
-#define MAX_FRAMES 100 
-int i_max_steps = 100; 
-int i_curr_steps = 0;
-typedef struct _frame
-{
-	//Variables para GUARDAR Key Frames
-	float movAguila_x;		//Variable para PosicionX
-	float movAguila_y;		//Variable para PosicionY
-	float movAguila_z;		//Variable para PosicionZ
-	float movAguila_xInc;		//Variable para IncrementoX
-	float movAguila_yInc;		//Variable para IncrementoY
-	float movAguila_zInc;		//Variable para IncrementoZ
-	float giroAguila;		//Variable para giroAguila
-	float giroAguilaInc;		//Variable para IncrementogiroAguila
-}FRAME;
-
-FRAME KeyFrame[MAX_FRAMES];
-int FrameIndex = 0;
-bool play = false;
-int playIndex = 0;
-
-void AgregarKeyframeEnArchivo(const char* fileLocation, float x, float y, float z, float giro)
-{
-	std::ofstream fileStream(fileLocation, std::ios::app);
-
-	if (!fileStream.is_open()) {
-		printf("Error: No se pudo abrir el archivo %s para agregar un keyframe.\n", fileLocation);
-		return;
-	}
-
-	// Escribe los valores
-	fileStream << std::fixed << std::setprecision(1)
-		<< x << " " << y << " " << z << " " << giro << "\n";
-
-	fileStream.close();
-	printf("Keyframe agregado al archivo: (%.1f, %.1f, %.1f, %.1f)\n", x, y, z, giro);
-}
-
-void saveFrame(void) //tecla L
-{
-	printf("frameindex %d\n", FrameIndex);
-
-	KeyFrame[FrameIndex].movAguila_x = movAguila_x;
-	KeyFrame[FrameIndex].movAguila_y = movAguila_y;
-	KeyFrame[FrameIndex].movAguila_z = movAguila_z;
-	KeyFrame[FrameIndex].giroAguila = giroAguila;
-
-	// Guardar en el archivo de texto
-	AgregarKeyframeEnArchivo("keyframes_aguila.txt", movAguila_x, movAguila_y, movAguila_z, giroAguila);
-
-	FrameIndex++;
-}
-
-void resetElements(void) //Tecla 0
-{
-	movAguila_x = KeyFrame[0].movAguila_x;
-	movAguila_y = KeyFrame[0].movAguila_y;
-	movAguila_z = KeyFrame[0].movAguila_z;
-	giroAguila = KeyFrame[0].giroAguila;
-}
-
-void interpolation(void)
-{
-	KeyFrame[playIndex].movAguila_xInc = (KeyFrame[playIndex + 1].movAguila_x - KeyFrame[playIndex].movAguila_x) / i_max_steps;
-	KeyFrame[playIndex].movAguila_yInc = (KeyFrame[playIndex + 1].movAguila_y - KeyFrame[playIndex].movAguila_y) / i_max_steps;
-	KeyFrame[playIndex].movAguila_zInc = (KeyFrame[playIndex + 1].movAguila_z - KeyFrame[playIndex].movAguila_z) / i_max_steps;
-	KeyFrame[playIndex].giroAguilaInc = (KeyFrame[playIndex + 1].giroAguila - KeyFrame[playIndex].giroAguila) / i_max_steps;
-}
-/*
-void animate(void)
-{
-	//Movimiento del objeto con barra espaciadora
-	if (play)
-	{
-		if (i_curr_steps >= i_max_steps) //fin de animación entre frames?
-		{
-			playIndex++;
-			printf("playindex : %d\n", playIndex);
-			if (playIndex > FrameIndex - 2)	//Fin de toda la animación con último frame?
-			{
-				printf("Frame index= %d\n", FrameIndex);
-				printf("termino la animacion\n");
-				playIndex = 0;
-				//play = false;
-			}
-			else Interpolación del próximo cuadro
-			{
-
-				i_curr_steps = 0; //Resetea contador
-				//Interpolar
-				interpolation();
-			}
-		}
-		else
-		{
-			//Dibujar Animación
-			movAguila_x += KeyFrame[playIndex].movAguila_xInc;
-			movAguila_y += KeyFrame[playIndex].movAguila_yInc;
-			movAguila_z += KeyFrame[playIndex].movAguila_zInc;
-			giroAguila += KeyFrame[playIndex].giroAguilaInc;
-			i_curr_steps++;
-		}
-
-	}
-}*/
-
-void animate(void)
-{
-	if (play)
-	{
-		if (i_curr_steps >= i_max_steps) // fin de animación entre frames
-		{
-			playIndex++;
-			if (playIndex > FrameIndex - 2)	// llegó al último frame
-			{
-				playIndex = 0; // reinicia desde el primer keyframe
-			}
-
-			i_curr_steps = 0; // resetea contador
-			interpolation();  // calcula incrementos del nuevo tramo
-		}
-		else
-		{
-			// interpolar movimiento
-			movAguila_x += KeyFrame[playIndex].movAguila_xInc;
-			movAguila_y += KeyFrame[playIndex].movAguila_yInc;
-			movAguila_z += KeyFrame[playIndex].movAguila_zInc;
-			giroAguila += KeyFrame[playIndex].giroAguilaInc;
-			i_curr_steps++;
-		}
-	}
-}
-
-void CargarKeyframesDesdeArchivo(const char* fileLocation)
-{
-	Shader shader;
-	std::string data = shader.ReadFile(fileLocation);
-
-	if (data.empty()) {
-		printf("No se pudieron cargar los keyframes desde %s\n", fileLocation);
-		return;
-	}
-
-	std::istringstream stream(data);
-	std::string line;
-	int frameCount = 0;
-
-	// Leer línea por línea
-	while (std::getline(stream, line))
-	{
-		// Saltar encabezado
-		if (line.empty() || line[0] == '#') continue;
-		if (line.find("movAvion") != std::string::npos) continue;
-
-		std::istringstream linestream(line);
-		float x, y, z, giro;
-
-		if (linestream >> x >> y >> z >> giro)
-		{
-			KeyFrame[frameCount].movAguila_x = x;
-			KeyFrame[frameCount].movAguila_y = y;
-			KeyFrame[frameCount].movAguila_z = z;
-			KeyFrame[frameCount].giroAguila = giro;
-			frameCount++;
-		}
-	}
-
-	FrameIndex = frameCount;
-	printf("Se cargaron %d keyframes desde %s\n", frameCount, fileLocation);
-
-	if (FrameIndex > 1) {
-		resetElements();
-		interpolation();
-		play = true;
-		playIndex = 0;
-		i_curr_steps = 0;
-	}
-}
-
-// =================================================================== //
 
 
 
@@ -1011,7 +825,7 @@ int main()
 	//																	   //
 	// =================================================================== //
 
-	CargarKeyframesDesdeArchivo("keyframes_aguila.txt");
+	CargarKeyframesDesdeArchivo("keyframes_aguila.txt" , movAguila_x, movAguila_y, movAguila_z, giroAguila, KeyFrameAguila, FrameIndexAguila);
 
 	printf("\n=== TECLAS PARA USO DE KEYFRAMES Y MOVIMIENTO ===\n");
 	printf("1.- Barra espaciadora: Reproducir animación\n");
@@ -1111,8 +925,8 @@ int main()
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 
 		//-------Para Keyframes
-		inputKeyframes(mainWindow.getsKeys());
-		animate();
+		inputKeyframes(KeyFrameAguila, mainWindow.getsKeys(), movAguila_x, movAguila_y, movAguila_z, giroAguila);
+		animate(KeyFrameAguila, playIndexAguila, i_curr_stepsAguila, i_max_stepsAguila, FrameIndexAguila, movAguila_x, movAguila_y, movAguila_z, giroAguila);
 
 
 		// Clear the window
@@ -2579,201 +2393,3 @@ int main()
 	return 0;
 }
 
-void inputKeyframes(bool* keys)
-{
-	if (keys[GLFW_KEY_SPACE])
-	{
-		if (reproduciranimacion < 1)
-		{
-			if (play == false && (FrameIndex > 1))
-			{
-				resetElements();
-				//First Interpolation				
-				interpolation();
-				play = true;
-				playIndex = 0;
-				i_curr_steps = 0;
-				reproduciranimacion++;
-				printf("\n presiona 0 para habilitar reproducir de nuevo la animación'\n");
-				habilitaranimacion = 0;
-			}
-			else
-			{
-				play = false;
-
-			}
-		}
-	}
-	if (keys[GLFW_KEY_0])
-	{
-		if (habilitaranimacion < 1 && reproduciranimacion>0)
-		{
-			printf("Ya puedes reproducir de nuevo la animación con la tecla de barra espaciadora'\n");
-			reproduciranimacion = 0;
-
-		}
-	}
-
-	if (keys[GLFW_KEY_L])
-	{
-		if (guardoFrame < 1)
-		{
-			saveFrame();
-			printf("movAguila_x es: %f\n", movAguila_x);
-			printf("movAguila_y es: %f\n", movAguila_y);
-			printf("movAguila_z es: %f\n", movAguila_z);
-			printf("presiona P para habilitar guardar otro frame'\n");
-			guardoFrame++;
-			reinicioFrame = 0;
-		}
-	}
-	if (keys[GLFW_KEY_P])
-	{
-		if (reinicioFrame < 1)
-		{
-			guardoFrame = 0;
-			reinicioFrame = 1;
-			printf("Ya puedes guardar otro frame presionando la tecla L'\n");
-		}
-	}
-
-	// Para Movimiento X (tecla 1 y 2 mueve, tecla 2 habilita)
-	if (keys[GLFW_KEY_1])
-	{
-		if (ciclo < 1)
-		{
-			//printf("movAguila_x es: %f\n", movAguila_x);
-			movAguila_x += 10.0f;
-			printf("\n movAguila_x es: %f\n", movAguila_x);
-			ciclo++;
-			ciclo2 = 0;
-			printf("\n Presiona la tecla 2 para poder habilitar la variable\n");
-		}
-	}
-	if (keys[GLFW_KEY_2])
-	{
-		if (ciclo < 1)
-		{
-			//printf("movAguila_x es: %f\n", movAguila_x);
-			movAguila_x -= 10.0f;
-			printf("\n movAguila_x es: %f\n", movAguila_x);
-			ciclo++;
-			ciclo2 = 0;
-			printf("\n Presiona la tecla 2 para poder habilitar la variable\n");
-		}
-
-	}
-	if (keys[GLFW_KEY_3])
-	{
-		if (ciclo2 < 1)
-		{
-			ciclo = 0;
-			ciclo2++;
-			printf("\n Ya puedes modificar tu variable presionando la tecla 1\n");
-		}
-	}
-
-	// ================= MOVIMIENTO EN Y =================
-	static bool cy1 = false, cy2 = false;
-	if (keys[GLFW_KEY_4]) // Mover +Y
-	{
-		if (!cy1)
-		{
-			movAguila_y += 10.0f;
-			printf("\nmovAguila_y: %.2f (+Y)\n", movAguila_y);
-			cy1 = true; cy2 = false;
-			printf("Presiona 6 para desbloquear el eje Y\n");
-		}
-	}
-	if (keys[GLFW_KEY_5]) // Mover -Y
-	{
-		if (!cy1)
-		{
-			movAguila_y -= 10.0f;
-			printf("\nmovAguila_y: %.2f (-Y)\n", movAguila_y);
-			cy1 = true; cy2 = false;
-			printf("Presiona 6 para desbloquear el eje Y\n");
-		}
-	}
-	if (keys[GLFW_KEY_6]) // Desbloquear eje Y
-	{
-		if (!cy2)
-		{
-			cy1 = false; cy2 = true;
-			printf("Eje Y desbloqueado, puedes volver a mover con 4 (+Y) o 5 (-Y)\n");
-		}
-	}
-
-	// ================= MOVIMIENTO EN Z =================
-	static bool cz1 = false, cz2 = false;
-	if (keys[GLFW_KEY_7]) // Mover +Z
-	{
-		if (!cz1)
-		{
-			movAguila_z += 10.0f;
-			printf("\nmovAguila_z: %.2f (+Z)\n", movAguila_z);
-			cz1 = true; cz2 = false;
-			printf("Presiona 9 para desbloquear el eje Z\n");
-		}
-	}
-	if (keys[GLFW_KEY_8]) // Mover -Z
-	{
-		if (!cz1)
-		{
-			movAguila_z -= 10.0f;
-			printf("\nmovAguila_z: %.2f (-Z)\n", movAguila_z);
-			cz1 = true; cz2 = false;
-			printf("Presiona 9 para desbloquear el eje Z\n");
-		}
-	}
-	if (keys[GLFW_KEY_9]) // Desbloquear eje Z
-	{
-		if (!cz2)
-		{
-			cz1 = false; cz2 = true;
-			printf("Eje Z desbloqueado, puedes volver a mover con 7 (+Z) o 8 (-Z)\n");
-		}
-	}
-
-
-	// ================= ROTACIÓN EN EJE Y =================
-	static bool giroBloqueado = false;
-	float pasoRotacion = 20.0f; // grados por paso
-
-	// Rotar a la izquierda (Q)
-	if (keys[GLFW_KEY_Q])
-	{
-		if (!giroBloqueado)
-		{
-			giroAguila -= pasoRotacion;
-			if (giroAguila < 0.0f) giroAguila += 360.0f;
-			printf("\nGiro: %.2f grados (rotacion -Y)\n", giroAguila);
-			giroBloqueado = true;
-			printf("Rotacion bloqueada. Presiona R para volver a habilitar.\n");
-		}
-	}
-
-	// Rotar a la derecha (E)
-	if (keys[GLFW_KEY_E])
-	{
-		if (!giroBloqueado)
-		{
-			giroAguila += pasoRotacion;
-			if (giroAguila > 360.0f) giroAguila -= 360.0f;
-			printf("\nGiro: %.2f grados (rotacion +Y)\n", giroAguila);
-			giroBloqueado = true;
-			printf("Rotacion bloqueada. Presiona R para volver a habilitar.\n");
-		}
-	}
-
-	// Rehabilitar rotación (R)
-	if (keys[GLFW_KEY_R])
-	{
-		if (giroBloqueado)
-		{
-			giroBloqueado = false;
-			printf("Rotacion habilitada nuevamente. Puedes usar Q o E.\n");
-		}
-	}
-
-}
