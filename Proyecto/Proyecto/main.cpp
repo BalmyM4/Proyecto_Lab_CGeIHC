@@ -54,7 +54,25 @@ GLfloat hk_x = 0.0f;
 GLfloat hk_z = 0.0f;
 GLfloat hk_pos = 0.0f;
 GLboolean hk_direccion = true;
-float step;
+float step; 
+float triggerDashRatio = 0.8f;
+bool dashTriggered = false; 
+
+// El primo
+GLfloat bs_movimiento = 0.0f;
+GLfloat bs_x = 0.0f;
+GLfloat bs_z = 0.0f;
+GLfloat bs_y = 0.0f;
+GLfloat bs_pos = 0.0f;
+GLboolean bs_direccion = true;
+float bs_step;
+float t_bs;
+float alturaMax = 10.0f;
+
+// VS
+float timerUlti = 0.0f; 
+float intervaloUlti = 80.0f;
+
 
 // Cartel
 float toffsetcartelu = 0.0f;
@@ -241,8 +259,10 @@ Model cactus;
 
 // Shely
 Model shely;
+
 // El primo
 Model elprimo;
+Model elprimo_ulti;
 
 // Dr Cortex
 Model cb_dr_cortex;
@@ -786,7 +806,9 @@ int main()
 
 	// El primo
 	elprimo = Model();
-	elprimo.LoadModel("Models/Brawl_stars/bs_primoulti.obj");
+	elprimo.LoadModel("Models/Brawl_stars/bs_primo.obj");
+	elprimo_ulti = Model();
+	elprimo_ulti.LoadModel("Models/Brawl_stars/bs_primoulti.obj");
 
 	/*elprimo = Model();
 	elprimo.LoadModel("Models/Brawl_stars/Mobile - Brawl Stars - El Primo.fbx");*/
@@ -1531,19 +1553,7 @@ int main()
 		grada.RenderModel();
 
 
-		// ================================================================================ //
-		//																					//
-		//									Primo											//
-		//																					//
-		// ================================================================================ //
-
-		// Primo
-		model = ringCentro;
-		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-		model = glm::translate(model, glm::vec3(0.0f, 15.0f, 0.0f));
-		//model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		elprimo.RenderModel();
+		
 
 
 		// ================================================================================ //
@@ -1884,6 +1894,112 @@ int main()
 		hk_arm_left1_iselda.RenderModel();
 
 
+		// ================================================================================ //
+		//																					//
+		//									Pelea											//
+		//																					//
+		// ================================================================================ //
+
+		// temporizador del ataque automático
+		timerUlti += 0.1 * deltaTime;
+
+		if (timerUlti >= intervaloUlti)
+		{
+			mainWindow.setBS_Ulti(); 
+
+			timerUlti = 0.0f;
+		}
+
+
+		// ================================================================================ //
+		//																					//
+		//									Primo											//
+		//																					//
+		// ================================================================================ //
+
+		// Primo ------------------------------------------------------------------
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(20.0f, 12.0f, -20.0f));
+
+		if (mainWindow.getBS_Ulti())
+		{
+
+			if (bs_movimiento <= 40.0f)
+			{
+				bs_movimiento += 0.5f * deltaTime;
+
+				bs_step = 0.5f * deltaTime;
+				if (!std::isfinite(bs_step)) 
+					bs_step = 0.0f;
+
+				if (bs_direccion)
+				{
+					bs_x -= bs_step;
+					bs_z += bs_step;
+				}
+				else
+				{
+					bs_x += bs_step;
+					bs_z -= bs_step;
+				}
+
+				t_bs = bs_movimiento / 40.0f;   
+				alturaMax = 50.0f; 
+				bs_y = -4.0f * alturaMax * (t_bs - 0.5f) * (t_bs - 0.5f) + alturaMax;
+
+				if (!dashTriggered && t_bs >= triggerDashRatio)
+				{
+					mainWindow.setHK_Dash(); 
+					dashTriggered = true;   
+				}
+			}
+			else
+			{
+				bs_movimiento = 0.0f;
+				bs_y = 0.0f; 
+				dashTriggered = false;
+				mainWindow.setBS_Ulti();
+
+				// cambia la direcci�n al terminar
+				bs_direccion = !bs_direccion;
+				bs_pos = bs_direccion ? 0.0f : 1.0f;
+			}
+
+			model = glm::translate(model, glm::vec3(bs_x, bs_y, bs_z));
+			model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
+
+			if (bs_direccion)
+				model = glm::rotate(model, 160.0f * toRadians, glm::vec3(0, 1, 0));
+			else
+				model = glm::rotate(model, -30.0f * toRadians, glm::vec3(0, 1, 0));
+
+			model = glm::scale(model, glm::vec3(1.6f, 1.6f, 1.6f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			elprimo_ulti.RenderModel();
+		}
+		else
+		{
+			if (bs_pos == 1.0f)
+			{
+				model = glm::translate(model, glm::vec3(bs_x, 0.0f, bs_z));
+				model = glm::rotate(model, -30.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			}
+			else if (bs_pos == 0.0f)
+			{
+				model = glm::translate(model, glm::vec3(bs_x, 0.0f, bs_z));
+				model = glm::rotate(model, 160.0f  * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			}
+
+			model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			elprimo.RenderModel();
+		}
+
+		if (!std::isfinite(bs_x) || !std::isfinite(bs_z)) {
+			bs_x = bs_z = 0.0f;
+			std::cout << "[WARN] bs posici�n inv�lida reseteada.\n";
+		}
+		
 
 		// ================================================================================ //
 		//																					//
