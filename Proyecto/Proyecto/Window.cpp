@@ -31,6 +31,7 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	// Hollow Knight
 	hk_parado = true;
 	hk_dash = false;
+	bs_ulti = false;
 
 	// TNT de Crash Bandicoot
 	tnt_normal = true;
@@ -159,14 +160,18 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		}
 	}
 
+	/*
 	// Dash de Hollow Knight
 	if (key == GLFW_KEY_X && action == GLFW_PRESS)
 	{
-		if (!theWindow->hk_dash)
+
+		if (!theWindow->bs_ulti)
 		{
-			theWindow->hk_dash = true;
+			theWindow->bs_ulti = true;
 		}
-	}
+
+
+	}*/
 
 	// Explotar TNT de Crash Bandicoot
 	if (key == GLFW_KEY_Z && action == GLFW_PRESS)
