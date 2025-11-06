@@ -1,13 +1,10 @@
-Ôªø
+
 //para cargar imagen
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <iostream>
 #include <random>
 #include <ctime>
-#include <sstream>
-#include <fstream>
-#include <iomanip> 
 
 #include <stdio.h>
 #include <string.h>
@@ -30,9 +27,8 @@
 #include "Sphere.h"
 #include"Model.h"
 #include "Skybox.h"
-#include "keyframes_aguila.h"
 
-//para iluminaci√≥n
+//para iluminaciÛn
 #include "CommonValues.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
@@ -40,11 +36,9 @@
 #include "Material.h"
 const float toRadians = 3.14159265f / 180.0f;
 
-
-
 // =================================================================== //
 //																	   //
-//					Variables para animaci√≥n						   //
+//					Variables para animaciÛn						   //
 //																	   //
 // =================================================================== //
 
@@ -125,10 +119,6 @@ float rotarPortal = 0.0f;
 float toffsetrotcaja = 1.0f;
 float rotcaja = 0.0f;
 
-// Rotaci√≥n alas aguila
-float ag_rot_ala = 0.0f;
-bool ag_alaAbajo = false;
-
 // =================================================================== //
 
 
@@ -145,7 +135,7 @@ Camera camera;
 //																	   //
 // =================================================================== //
 
-// Texturas b√°sicas
+// Texturas b·sicas
 Texture plainTexture;
 Texture pisoTexture;
 Texture cespedTexture;
@@ -159,7 +149,7 @@ Texture es_fuego;
 // Para las rejas
 Texture hk_rejas;
 
-// Para la explosi√≥n de la TNT
+// Para la explosiÛn de la TNT
 Texture cb_explosion;
 
 
@@ -219,6 +209,9 @@ Model hk_arm_left1_iselda;
 // Antorcha
 Model es_Antorcha;
 
+//Pinos
+Model pinos;
+
 // Hollow Knight
 Model hk_hollow_knight;
 Model hk_dash;
@@ -236,7 +229,10 @@ Model grada;
 // Brawl stars
 Model megacaja1;
 Model megacaja2;
+Model cactus;
 
+// Shely
+Model shely;
 // El primo
 Model elprimo;
 
@@ -284,7 +280,7 @@ static const char* fShader = "shaders/shader_light.frag";
 
 
 
-//c√°lculo del promedio de las normales para sombreado de Phong
+//c·lculo del promedio de las normales para sombreado de Phong
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
 	unsigned int vLength, unsigned int normalOffset)
 {
@@ -364,7 +360,7 @@ void CreateObjects()
 		 0.5f,  0.5f,  0.5f,   0.25f, 0.999f,    0.0f, 0.0f, 1.0f,
 		-0.5f,  0.5f,  0.5f,   0.0f, 0.999f,     0.0f, 0.0f, 1.0f,
 
-		// ----- Atr√°s (z = -0.5)
+		// ----- Atr·s (z = -0.5)
 		 0.5f, -0.5f, -0.5f,   0.0f, 0.666f,   0.0f, 0.0f, -1.0f,
 		-0.5f, -0.5f, -0.5f,   0.25f, 0.666f,  0.0f, 0.0f, -1.0f,
 		-0.5f,  0.5f, -0.5f,   0.25f, 0.999f,    0.0f, 0.0f, -1.0f,
@@ -453,10 +449,10 @@ void CreateObjects()
 		-0.5f,  0.5f,  0.0f,   0.0f,  1.0f,   0.0f, 0.0f, 1.0f,  // arriba izq
 
 		// ----- Plano ZY (x = 0)
-		 0.0f, -0.5f, -0.5f,   0.0f,  0.5f,   1.0f, 0.0f, 0.0f,  // abajo atr√°s
+		 0.0f, -0.5f, -0.5f,   0.0f,  0.5f,   1.0f, 0.0f, 0.0f,  // abajo atr·s
 		 0.0f, -0.5f,  0.5f,   0.25f, 0.5f,   1.0f, 0.0f, 0.0f,  // abajo frente
 		 0.0f,  0.5f,  0.5f,   0.25f, 1.0f,   1.0f, 0.0f, 0.0f,  // arriba frente
-		 0.0f,  0.5f, -0.5f,   0.0f,  1.0f,   1.0f, 0.0f, 0.0f   // arriba atr√°s
+		 0.0f,  0.5f, -0.5f,   0.0f,  1.0f,   1.0f, 0.0f, 0.0f   // arriba atr·s
 	};
 
 	unsigned int planoXZ_Indices[] = {
@@ -496,11 +492,11 @@ void CreateObjects()
 
 	Mesh* obj6 = new Mesh();
 	obj6->CreateMesh(scoreVertices, scoreIndices, 32, 6);
-	meshList.push_back(obj6); // todos los n√∫meros
+	meshList.push_back(obj6); // todos los n˙meros
 
 	Mesh* obj7 = new Mesh();
 	obj7->CreateMesh(numeroVertices, numeroIndices, 32, 6);
-	meshList.push_back(obj7); // solo un n√∫mero
+	meshList.push_back(obj7); // solo un n˙mero
 	
 	Mesh* obj8 = new Mesh();
 	obj8->CreateMesh(verticesCartel, cartelIndices, 32, 6);
@@ -524,24 +520,6 @@ void CreateShaders()
 }
 
 
-// =================================================================== //
-//																	   //
-//								KEY FRAMES							   //
-//																	   //
-// =================================================================== //
-
-FRAME KeyFrameAguila[MAX_FRAMES];
-int FrameIndexAguila = 0;
-int playIndexAguila = 0;
-int i_max_stepsAguila = 100;
-int i_curr_stepsAguila = 0;
-
-//NEW// Keyframes
-float posXaguila = 0.0f, posYaguila = 150.0f, posZaguila = 0.0f;
-float movAguila_x = 0.0f, movAguila_y = 0.0f, movAguila_z = 0.0f;
-float giroAguila = 0.0f;
-
-
 
 
 int main()
@@ -555,7 +533,7 @@ int main()
 	CreateShaders();
 
 	// Camera
-	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 5.0f, 0.5f);
+	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.5f, 0.8f);
 
 
 	// =================================================================== //
@@ -564,7 +542,7 @@ int main()
 	//																	   //
 	// =================================================================== //
 
-	// Texturas b√°sicas
+	// Texturas b·sicas
 	plainTexture = Texture("Textures/plain.png");
 	plainTexture.LoadTextureA();
 	pisoTexture = Texture("Textures/Escenario/4_Piso.png");
@@ -591,7 +569,7 @@ int main()
 	skyboxFaces2.push_back("Textures/Skybox/cupertin-lake-night_bk.tga");
 	skyboxFaces2.push_back("Textures/Skybox/cupertin-lake-night_ft.tga");
 
-	//Creaci√≥n del skybox
+	//CreaciÛn del skybox
 	skybox = Skybox(skyboxFaces, skyboxFaces2);
 
 	// Materiales
@@ -610,7 +588,7 @@ int main()
 	hk_rejas = Texture("Textures/Hollow_knight/hk_rejas.png");
 	hk_rejas.LoadTextureA();
 
-	// Textura de la explosi√≥n de la TNT
+	// Textura de la explosiÛn de la TNT
 	cb_explosion = Texture("Textures/Crash_bandicoot/cb_explosion.png");
 	cb_explosion.LoadTextureA();
 
@@ -702,6 +680,10 @@ int main()
 	es_Antorcha = Model();
 	es_Antorcha.LoadModel("Models/Escenario/es_antorcha.obj");
 
+	// Pinos
+	pinos = Model();
+	pinos.LoadModel("Models/Escenario/es_Pino.obj");
+
 	// Hollow Knight
 	hk_hollow_knight = Model();
 	hk_hollow_knight.LoadModel("Models/Hollow_knight/hk_hollow_knight.obj");
@@ -731,6 +713,15 @@ int main()
 
 	megacaja2 = Model();
 	megacaja2.LoadModel("Models/Brawl_stars/bs_megacaja_abajo.obj");
+
+	//Cactus
+	cactus = Model();
+	cactus.LoadModel("Models/Brawl_stars/bs_cactus.obj");
+
+	//Shely
+	shely = Model();
+	shely.LoadModel("Models/Brawl_stars/bs_shely.obj");
+
 
 	// El primo
 	elprimo = Model();
@@ -763,7 +754,7 @@ int main()
 	// =================================================================== //
 
 	
-	//luz direccional, s√≥lo 1 y siempre debe de existir
+	//luz direccional, sÛlo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.3f, 0.3f,
 		0.0f, -1.0f, 0.0f);
@@ -773,7 +764,7 @@ int main()
 
 	unsigned int pointLightCount = 0; // Contador de luces puntuales
 
-	//Declaraci√≥n de primer luz puntual
+	//DeclaraciÛn de primer luz puntual
 	pointLights[0] = PointLight(1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f,
 		0.0f, 2.5f, 1.5f,
@@ -820,43 +811,8 @@ int main()
 
 	
 	// =================================================================== //
-	//																	   //
-	//							Key Frames					       		   //
-	//																	   //
-	// =================================================================== //
 
-	CargarKeyframesDesdeArchivo("keyframes_aguila.txt" , movAguila_x, movAguila_y, movAguila_z, giroAguila, KeyFrameAguila, FrameIndexAguila);
-
-	printf("\n=== TECLAS PARA USO DE KEYFRAMES Y MOVIMIENTO ===\n");
-	printf("1.- Barra espaciadora: Reproducir animaci√≥n\n");
-	printf("2.- Tecla 0: Habilitar nuevamente la reproducci√≥n de la animaci√≥n\n");
-	printf("3.- Tecla L: Guardar frame actual\n");
-	printf("4.- Tecla P: Habilitar guardar un nuevo frame\n\n");
-
-	printf("=== MOVIMIENTO MANUAL DEL HELIC√ìPTERO ===\n");
-	printf("EJE X:\n");
-	printf("   Tecla 1: Mover en X positivo (+X)\n");
-	printf("   Tecla 2: Mover en X negativo (-X)\n");
-	printf("   Tecla 3: Desbloquear eje X para volver a mover\n\n");
-
-	printf("EJE Y:\n");
-	printf("   Tecla 4: Mover en Y positivo (+Y)\n");
-	printf("   Tecla 5: Mover en Y negativo (-Y)\n");
-	printf("   Tecla 6: Desbloquear eje Y para volver a mover\n\n");
-
-	printf("EJE Z:\n");
-	printf("   Tecla 7: Mover en Z positivo (+Z)\n");
-	printf("   Tecla 8: Mover en Z negativo (-Z)\n");
-	printf("   Tecla 9: Desbloquear eje Z para volver a mover\n\n");
-
-	printf("ROTACION EN EJE Y:\n");
-	printf("   Tecla Q: Rotar a la izquierda (‚àíY)\n");
-	printf("   Tecla E: Rotar a la derecha (+Y)\n");
-	printf("   Tecla R: Habilitar nuevamente la rotacion\n\n");
-
-	// =================================================================== //
-
-	//Duraci√≥n ciclo dia/noche
+	//DuraciÛn ciclo dia/noche
 	float ciclo = 10.0f;
 	float t;
 	float a;
@@ -866,7 +822,7 @@ int main()
 		uniformSpecularIntensity = 0, uniformShininess = 0, uniformTextureOffset=0;
 	GLuint uniformColor = 0;
 
-	// Matriz de proyecci√≥n
+	// Matriz de proyecciÛn
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	
 
@@ -882,18 +838,9 @@ int main()
 	glm::mat4 crashAux(1.0);
 	glm::mat4 crashExtrAux(1.0);
 
-	// Para la piramide
-	glm::mat4 aguilaAux(1.0);
-	glm::vec3 aguilaPos(0.0f, 0.0f, 0.0f);
-
-
-	// Color blanco por defecto
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
-
-	// Offset de textura
 	glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 
-	// Para el fuego
 	float xtorch, ztorch;
 
 	// Para los wumpas
@@ -904,6 +851,10 @@ int main()
 	// Para la tnt
 	glm::vec3 posTNT;
 
+	//Para la c·mara en tercera persona
+	glm::vec3 posicioncam;
+	glm::vec3 posicionmodel = glm::vec3(0.0f);
+	int bandera1 = 0;
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
 	{
@@ -922,12 +873,14 @@ int main()
 		//Recibir eventos del usuario
 		glfwPollEvents();
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
-		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 
-		//-------Para Keyframes
-		inputKeyframes(KeyFrameAguila, mainWindow.getsKeys(), movAguila_x, movAguila_y, movAguila_z, giroAguila);
-		animate(KeyFrameAguila, playIndexAguila, i_curr_stepsAguila, i_max_stepsAguila, FrameIndexAguila, movAguila_x, movAguila_y, movAguila_z, giroAguila);
-
+		
+		// Solo controlar el mouse si NO estamos teletransportados
+		if (!camera.isTeleportingActive())
+		{
+			camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange(), posicionmodel);
+		}
+		//camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange(), posicionmodel);
 
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -941,7 +894,7 @@ int main()
 		uniformColor = shaderList[0].getColorLocation();
 		uniformTextureOffset = shaderList[0].getOffsetLocation(); // para la textura con movimiento
 
-		//informaci√≥n en el shader de intensidad especular y brillo
+		//informaciÛn en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0].GetShininessLocation();
 
@@ -949,13 +902,13 @@ int main()
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
-		// luz ligada a la c√°mara de tipo flash
+		// luz ligada a la c·mara de tipo flash
 		lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 		spotLights2[0].SetFlash(lowerLight, camera.getCameraDirection());
 
-		//informaci√≥n al shader de fuentes de iluminaci√≥n
+		//informaciÛn al shader de fuentes de iluminaciÛn
 		shaderList[0].SetDirectionalLight(&mainLight);
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 
@@ -1003,6 +956,9 @@ int main()
 		// Posicionamiento global
 		model = glm::translate(model, glm::vec3(0.0f + mainWindow.getmovex_cb(), 6.2f, 0.0f + mainWindow.getmovez_cb()));
 		model = glm::rotate(model, mainWindow.getrotz_cb() * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		posicionmodel = model[3];
+
 		crashAux = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cb_cuerpo.RenderModel();
@@ -1096,7 +1052,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Roca.RenderModel();
 
-		// Roca peque√±a ---------------------------------------------------------
+		// Roca pequeÒa ---------------------------------------------------------
 		model = glm::mat4(1.0);
 
 		// Posicionamiento global
@@ -1134,7 +1090,7 @@ int main()
 
 
 
-		// Animaci√≥n de las luciernagas --------------------------------------------
+		// AnimaciÛn de las luciernagas --------------------------------------------
 
 		Lu_mov += deltaTime * 0.01;
 
@@ -1404,6 +1360,20 @@ int main()
 
 		// ================================================================================ //
 		//																					//
+		//									Shely										//
+		//																					//
+		// ================================================================================ //
+
+		// Shely
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(-100.0f, 0.0, 15.0));
+		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shely.RenderModel();
+
+		// ================================================================================ //
+		//																					//
 		//									brawl stars										//
 		//																					//
 		// ================================================================================ //
@@ -1454,6 +1424,74 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		megacaja2.RenderModel();
 
+		// cactus 1 esquina 1
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(35.0f, 0.0, 35.0f));
+		/*model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, rotcaja * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));*/
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+		// cactus 2 esquina 1
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::translate(model, glm::vec3(18.0f, 0.0, 18.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		/*model = glm::rotate(model, rotcaja * toRadians, glm::vec3(0.0f, 0.0f, 1.0f)); */
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+
+		// cactus 1 esquina 2
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(-35.0f, 0.0, -35.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+		// cactus 2 esquina 2
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::translate(model, glm::vec3(-18.0f, 0.0, -18.0f));
+		model = glm::rotate(model, 270 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+
+		// cactus 1 esquina 3
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(35.0f, 0.0, -35.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+		// cactus 2 esquina 3
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::translate(model, glm::vec3(18.0f, 0.0, -18.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+
+		// cactus 1 esquina 4
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+		model = glm::translate(model, glm::vec3(-35.0f, 0.0, 35.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
+
+		// cactus 2 esquina 4
+		model = ringCentro;
+		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::translate(model, glm::vec3(-18.0f, 0.0, 18.0f));
+		model = glm::rotate(model, 270 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cactus.RenderModel();
 
 
 		// ================================================================================ //
@@ -1462,7 +1500,7 @@ int main()
 		//																					//
 		// ================================================================================ //
 
-		// Animaci√≥n de la puerta
+		// AnimaciÛn de la puerta
 		if (mainWindow.getPuertaAbriendose())
 		{
 			if (mainWindow.getPuertaCerrada())
@@ -1493,7 +1531,7 @@ int main()
 			}
 		}
 
-		// Animaci√≥n del cartel de la puerta (textura animada)
+		// AnimaciÛn del cartel de la puerta (textura animada)
 		tiempoAcumulado += deltaTime;
 
 		if (tiempoAcumulado >= 11.0f)
@@ -1698,7 +1736,7 @@ int main()
 				HK_movimiento = 0.0f;
 				mainWindow.setHK_Dash();
 
-				// cambia la direcci√≥n al terminar
+				// cambia la direcciÛn al terminar
 				hk_direccion = !hk_direccion;
 				hk_pos = hk_direccion ? 0.0f : 1.0f;
 			}
@@ -1733,7 +1771,7 @@ int main()
 
 		if (!std::isfinite(hk_x) || !std::isfinite(hk_z)) {
 			hk_x = hk_z = 0.0f;
-			std::cout << "[WARN] HK posici√≥n inv√°lida reseteada.\n";
+			std::cout << "[WARN] HK posiciÛn inv·lida reseteada.\n";
 		}
 
 
@@ -1744,12 +1782,12 @@ int main()
 		// ================================================================================ //
 
 
-		// Animaci√≥n de rotaci√≥n
+		// AnimaciÛn de rotaciÛn
 		rotWumpa += 5.0f * deltaTime;
 		if (rotWumpa > 360.0f)
 			rotWumpa -= 360.0f;
 
-		// Animaci√≥n de traslaci√≥n
+		// AnimaciÛn de traslaciÛn
 		wumpaTime += 0.1f * deltaTime;
 		if (wumpaTime > 480.0f)
 			wumpaTime -= 480.0f;
@@ -1822,7 +1860,7 @@ int main()
 			cb_Wumpa.RenderModel();
 		}
 
-		// Tercer tr√≠o (espejo del primero)
+		// Tercer trÌo (espejo del primero)
 		for (int i = 0; i < 3; i++) {
 
 			localTime = wumpaTime - i * 5.0f;
@@ -1855,7 +1893,7 @@ int main()
 			cb_Wumpa.RenderModel();
 		}
 
-		// Cuarto tr√≠o (espejo del segundo)
+		// Cuarto trÌo (espejo del segundo)
 		for (int i = 0; i < 3; i++) {
 
 			localTime = wumpaTime - i * 5.0f;
@@ -1913,73 +1951,114 @@ int main()
 		//																					//
 		// ================================================================================ //
 
-		if (!ag_alaAbajo)
-		{
-			ag_rot_ala += 3.0 * deltaTime;
-			if (ag_rot_ala >= 60.0f)
-			{
-				ag_rot_ala = 60.0f;
-				ag_alaAbajo = true;
-			}
-				
-		}	
-		else if (ag_alaAbajo)
-		{
-			ag_rot_ala -= 3.0 * deltaTime;
-			if (ag_rot_ala <= -60.0f)
-			{
-				ag_rot_ala = -60.0f;
-				ag_alaAbajo = false;
-			}
-		}
-
 		// Piramide --------------------------------------------------------
 		model = glm::mat4(1.0f);
 
 		// Posicionamiento global
 		model = ringCentro;
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		model = glm::translate(model, glm::vec3(-350.0f, 0.0f, -350.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		es_piramide.RenderModel();
 
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		// ================================================================================ //
+		//																					//
+		//									Exterior										//
+		//																					//
+		// ================================================================================ //
 
-		// Aguila -----------------------------------------------------------
+		// Pinos --------------------------------------------------------
+		
 
-
-		// Traslaci√≥n
-		aguilaPos = glm::vec3(posXaguila + movAguila_x, posYaguila + movAguila_y, posZaguila + movAguila_z);
-		model = glm::translate(model, aguilaPos);
-
-		// Escalado
-		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
-
-		// Rotaci√≥n
-		model = glm::rotate(model, giroAguila * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-
-		aguilaAux = model;
-
-		// Render
+		// Pinos 1
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-50.0f, 0.0f, -220.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		es_aguila.RenderModel();
+		pinos.RenderModel();
 
-		// Ala derecha -------------------------------------------------------
-		model = aguilaAux;
-		model = glm::translate(model, glm::vec3(10.0f, 25.0f, -20.0f));
-		model = glm::rotate(model, ag_rot_ala * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		// Pinos 2
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(50.0f, 0.0f, -220.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		es_aguila_ala_der.RenderModel();
+		pinos.RenderModel();
 
-		// Ala izquierda ------------------------------------------------------
-		model = aguilaAux;
-		model = glm::translate(model, glm::vec3(-10.0f, 25.0f, -20.0f));
-		model = glm::rotate(model, -1 * ag_rot_ala * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		// Pinos 3
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(150.0f, 0.0f, -220.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		es_aguila_ala_izq.RenderModel();
+		pinos.RenderModel();
 
-		glDisable(GL_BLEND);
+		// Pinos 4
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-220.0f, 0.0f, -50.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
 
+		// Pinos 5
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-220.0f, 0.0f, 50.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 6
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-220.0f, 0.0f, 150.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 7
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(220.0f, 0.0f, -50.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 8
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(220.0f, 0.0f, 50.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 9
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(220.0f, 0.0f, 150.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 10
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-50.0f, 0.0f, 240.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 11
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(50.0f, 0.0f, 240.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
+
+		// Pinos 12
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(150.0f, 0.0f, 240.0f));
+		model = glm::scale(model, glm::vec3(80.0f, 80.0f, 80.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pinos.RenderModel();
 
 		// ================================================================================ //
 		//																					//
@@ -2034,7 +2113,7 @@ int main()
 		es_Antorcha.RenderModel();
 		
 
-		// Animaci√≥n del fuego ------------------------------------------------
+		// AnimaciÛn del fuego ------------------------------------------------
 		tiempoAcumuladoFuego += deltaTime;
 
 		if (tiempoAcumuladoFuego >= 5.0f)
@@ -2120,7 +2199,7 @@ int main()
 		//																					//
 		// ================================================================================ //
 
-		// Atr√°s
+		// Atr·s
 		for (int i = 0; i < 27; i++)
 		{
 			model = ringCentro;
@@ -2207,7 +2286,7 @@ int main()
 
 		posTNT = glm::vec3(-100.0f, 0.0f, 100.0f);
 
-		// Animaci√≥n de la TNT
+		// AnimaciÛn de la TNT
 		if (!mainWindow.getTNT_Normal())
 		{
 			if (condandoTnt)
@@ -2276,7 +2355,7 @@ int main()
 				toffsettntu = 0.0f;
 				toffsettntv = 1.0f;
 
-				// Animaci√≥n portal
+				// AnimaciÛn portal
 				rotarPortal += 1.0f * deltaTime;
 				if (rotarPortal >= 360.0f)
 					rotarPortal = 0.0f;
@@ -2392,4 +2471,3 @@ int main()
 
 	return 0;
 }
-
