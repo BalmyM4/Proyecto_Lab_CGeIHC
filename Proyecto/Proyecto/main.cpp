@@ -30,7 +30,7 @@
 #include "Sphere.h"
 #include"Model.h"
 #include "Skybox.h"
-#include "keyframes_aguila.h"
+#include "keyframes.h"
 
 //para iluminación
 #include "CommonValues.h"
@@ -924,7 +924,12 @@ int main()
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 
-		//-------Para Keyframes
+		// =================================================================== //
+		//																	   //
+		//							Key Frames					       		   //
+		//																	   //
+		// =================================================================== //
+
 		inputKeyframes(KeyFrameAguila, mainWindow.getsKeys(), movAguila_x, movAguila_y, movAguila_z, giroAguila);
 		animate(KeyFrameAguila, playIndexAguila, i_curr_stepsAguila, i_max_stepsAguila, FrameIndexAguila, movAguila_x, movAguila_y, movAguila_z, giroAguila);
 
@@ -1946,7 +1951,6 @@ int main()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		// Aguila -----------------------------------------------------------
-
 
 		// Traslación
 		aguilaPos = glm::vec3(posXaguila + movAguila_x, posYaguila + movAguila_y, posZaguila + movAguila_z);
