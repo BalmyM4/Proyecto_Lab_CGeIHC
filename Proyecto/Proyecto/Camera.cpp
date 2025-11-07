@@ -27,9 +27,9 @@ Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLf
 	cameraSpots = {
 		{glm::vec3(0.0f, 200.0f, -150.0f), 90.001f, -90.0f, "Vista Aerea"},     // Tecla 5
 		{glm::vec3(75.0f, 35.0f, -150.0f), 180.0f, -20.0f, "Vista Ring"},     // Tecla 6  
-		{glm::vec3(-50.0f, 3.0f, 0.0f), 90.0f, -5.0f, "Vista Lateral"},      // Tecla 7
-		{glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, "Vista Primera Persona"}, // Tecla 8
-		{glm::vec3(30.0f, 20.0f, 30.0f), -135.0f, -30.0f, "Vista Diagonal"}   // Tecla 9
+		{glm::vec3(20.0f, 6.0f, -35.0f), -130.0f, 10.0f, "Vista Banca"},      // Tecla 7
+		{glm::vec3(20.0f, 9.0f, -105.0f), 5.0f, -5.0f, "Vista antorcha y "}, // Tecla 8
+		{glm::vec3(0.0f, 5.0f, 40.0f), -90.0f, 20.0f, "Vista Entrada"}   // Tecla 9
 	};
 
 
