@@ -13,6 +13,10 @@ public:
 	void UseLight(GLfloat ambientIntensityLocation, GLfloat ambientcolorLocation,
 		GLfloat diffuseIntensityLocation, GLfloat directionLocation);
 
+	void setDlight(GLfloat time);
+
+	GLfloat getintensity() { return ambientIntensity; };
+
 	~DirectionalLight();
 
 private:

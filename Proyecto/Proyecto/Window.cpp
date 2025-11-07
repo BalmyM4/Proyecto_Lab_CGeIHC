@@ -244,7 +244,7 @@ void Window::procesarMovimiento(Camera& camera)
 	bool moviendo = false;
 
 
-	if (keys[GLFW_KEY_T])  // Adelante
+	if (keys[GLFW_KEY_W])  // Adelante
 	{
 		move += dir * velocidad;
 		moviendo = true;
@@ -254,7 +254,7 @@ void Window::procesarMovimiento(Camera& camera)
 		actualizarAnguloMovimiento(anguloMovimiento3, dirAnguloMovimiento3, velocidadAngular3, topeInf3, topeSup3);
 
 	}
-	if (keys[GLFW_KEY_G])  // Atrás
+	if (keys[GLFW_KEY_S])  // Atrás
 	{
 		move -= dir * velocidad;
 		moviendo = true;
@@ -263,7 +263,7 @@ void Window::procesarMovimiento(Camera& camera)
 		actualizarAnguloMovimiento(anguloMovimiento3, dirAnguloMovimiento3, velocidadAngular3, topeInf3, topeSup3);
 	}
 		
-	if (keys[GLFW_KEY_H])  // Derecha
+	if (keys[GLFW_KEY_D])  // Derecha
 	{
 		move += right * velocidad;
 		moviendo = true;
@@ -272,7 +272,7 @@ void Window::procesarMovimiento(Camera& camera)
 		actualizarAnguloMovimiento(anguloMovimiento3, dirAnguloMovimiento3, velocidadAngular3, topeInf3, topeSup3);
 	}
 		
-	if (keys[GLFW_KEY_F])  // Izquierda
+	if (keys[GLFW_KEY_A])  // Izquierda
 	{
 		move -= right * velocidad;
 		moviendo = true;
