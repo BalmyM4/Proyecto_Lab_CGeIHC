@@ -12,6 +12,31 @@ DirectionalLight::DirectionalLight(GLfloat red, GLfloat green, GLfloat blue,
 	direction = glm::vec3(xDir, yDir, zDir);
 }
 
+void DirectionalLight::setDlight(GLfloat time) 
+{
+	float angulosol = time * 2.0f * 3.14159265f - 0.5f * 3.14159265f;
+	direction = glm::vec3(cos(angulosol), sin(angulosol), 0.0f);
+	
+	if (direction.y < 0.05)
+	{
+		ambientIntensity = 0.05;
+	}	
+	else
+	{
+		ambientIntensity = direction.y;
+
+		if(direction.y > 0.7)
+			diffuseIntensity = 0.7f;
+		else
+			diffuseIntensity = glm::max(0.0f, direction.y);
+	}
+
+	
+	//ambientIntensity = 0.8f;
+	
+	//diffuseIntensity = glm::max(0.0f, direction.y);
+}
+
 void DirectionalLight::UseLight(GLfloat ambientIntensityLocation, GLfloat ambientcolorLocation,
 	GLfloat diffuseIntensityLocation, GLfloat directionLocation)
 {

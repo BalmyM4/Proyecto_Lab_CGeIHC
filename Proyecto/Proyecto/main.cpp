@@ -857,27 +857,35 @@ int main()
 	unsigned int pointLightCount = 0; // Contador de luces puntuales
 
 	//Declaraci�n de primer luz puntual
-	pointLights[0] = PointLight(1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f,
+	pointLights[0] = PointLight(1.0, 0.576, 0.161,
+		0.6f, 0.8f,
 		0.0f, 2.5f, 1.5f,
-		0.3f, 0.2f, 0.1f);
+		1.0f, 0.004f, 0.0007f);
 	pointLightCount++;
 
+	pointLights[1] = PointLight(1.0, 0.576, 0.161,
+		0.6f, 0.8f,
+		0.0f, 2.5f, 1.5f,
+		1.0f, 0.004f, 0.0007f);
+	pointLightCount++;
+
+	pointLights[2] = PointLight(1.0, 0.576, 0.161,
+		0.6f, 0.8f,
+		0.0f, 2.5f, 1.5f,
+		1.0f, 0.004f, 0.0007f);
+	pointLightCount++;
+
+	pointLights[3] = PointLight(1.0, 0.576, 0.161,
+		0.6f, 0.8f,
+		0.0f, 2.5f, 1.5f,
+		1.0f, 0.004f, 0.0007f);
+	pointLightCount++;
 	// Luces spot ---------------------------------------------------------
 
 	unsigned int spotLightCount = 0; // Contador de luces spot
 
-	// Linterna
-	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
-		0.0f, 0.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		15.0f);
-	spotLightCount++;
-
 	// Lampara hollow knight 1
-	spotLights[1] = SpotLight(1.0f, 1.0f, 1.0f,
+	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
 		1.0f, 1.0f,
 		0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 0.0f,
@@ -887,7 +895,7 @@ int main()
 	glm::vec3 baseLightPosHK_1(-0.732f, 4.2f, 0.0f);
 
 	// Lampara hollow knight 2
-	spotLights[2] = SpotLight(1.0f, 1.0f, 1.0f,
+	spotLights[1] = SpotLight(1.0f, 1.0f, 1.0f,
 		1.0f, 1.0f,
 		0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 0.0f,
@@ -897,9 +905,8 @@ int main()
 	glm::vec3 baseLightPosHK_2(-0.732f, 4.2f, 0.0f);
 
 	// Segundo arreglo
-	spotLights2[0] = spotLights[0];
-	spotLights2[1] = spotLights[2];
-	spotLights2[2] = spotLights[1];
+	spotLights2[0] = spotLights[1];
+	spotLights2[1] = spotLights[0];
 
 	
 	// =================================================================== //
@@ -941,11 +948,8 @@ int main()
 
 
 
-		//Variables ciclo dia/noche
-	float ciclo = 10.0f;
-	float intensity;
-	float angulosol;
-	glm::vec3 directionsol;
+	//Variables ciclo dia/noche
+	float ciclo = 30.0f;
 	float ctime;
 	float nfactor;
 
@@ -1018,11 +1022,13 @@ int main()
 		lastTime = now;
 
 		//dia/noche
-		ctime = fmod(glfwGetTime(), ciclo) / ciclo;
-		nfactor = 0.5f * (1.0f - cos(2.0f * 3.14159265f * ctime));
+		ctime = fmod(now, ciclo) / ciclo;
 
-		skybox.setFactor(nfactor);
-		//skybox.setFactor(0.0f);
+		nfactor = 0.5f * (1.0f - cos(ctime * 2.0f * 3.14159265f));
+
+		mainLight.setDlight(ctime);
+
+		skybox.setFactor(1.0f - nfactor);
 		
 		//Recibir eventos del usuario
 		glfwPollEvents();
@@ -1066,15 +1072,13 @@ int main()
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
-		// luz ligada a la c�mara de tipo flash
-		lowerLight = camera.getCameraPosition();
-		lowerLight.y -= 0.3f;
-		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
-		spotLights2[0].SetFlash(lowerLight, camera.getCameraDirection());
-
 		//informaci�n al shader de fuentes de iluminaci�n
 		shaderList[0].SetDirectionalLight(&mainLight);
-		shaderList[0].SetPointLights(pointLights, pointLightCount);
+
+		if( mainLight.getintensity() < 0.28)
+			shaderList[0].SetPointLights(pointLights, pointLightCount);
+		else
+			shaderList[0].SetPointLights(pointLights, pointLightCount - 4);
 
 
 		//Reinicializando variables cada ciclo de reloj
@@ -1118,7 +1122,8 @@ int main()
 		model = glm::mat4(1.0);
 
 		// Posicionamiento global
-		mainWindow.procesarMovimiento(camera);
+		if( !camera.getthirdperson() )
+			mainWindow.procesarMovimiento(camera);
 
 		model = glm::translate(model, glm::vec3(mainWindow.getmovex_cb(), 6.2f, mainWindow.getmovez_cb()));
 		model = glm::rotate(model, mainWindow.getrotz_cb() * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -1311,7 +1316,7 @@ int main()
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(15.0f, -4.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
-		spotLights[1].SetPos(glm::vec3(model * glm::vec4(baseLightPosHK_1, 1.0f)));
+		spotLights[0].SetPos(glm::vec3(model * glm::vec4(baseLightPosHK_1, 1.0f)));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_Lampara.RenderModel();
 
@@ -1415,8 +1420,8 @@ int main()
 		model = glm::translate(model, glm::vec3(-15.0f, -4.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
 		model = glm::rotate(model, 180.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		spotLights[2].SetPos(glm::vec3(model* glm::vec4(baseLightPosHK_2, 1.0f)));
-		spotLights2[1].SetPos(glm::vec3(model* glm::vec4(baseLightPosHK_2, 1.0f)));
+		spotLights[1].SetPos(glm::vec3(model* glm::vec4(baseLightPosHK_2, 1.0f)));
+		spotLights2[0].SetPos(glm::vec3(model* glm::vec4(baseLightPosHK_2, 1.0f)));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		hk_Lampara.RenderModel();
 
@@ -2607,6 +2612,7 @@ int main()
 		// Fuego 1 ------------------------------------------------------------
 		model = ringCentro;
 		model = glm::translate(model, glm::vec3(-1 * xtorch, 13.5f, ztorch));
+		pointLights[0].SetPos(model[3]);
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 2.0f));
 		
 		glEnable(GL_BLEND);
@@ -2620,6 +2626,7 @@ int main()
 		// Fuego 2 ------------------------------------------------------------
 		model = ringCentro;
 		model = glm::translate(model, glm::vec3(xtorch, 13.5f, ztorch));
+		pointLights[1].SetPos(model[3]);
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 2.0f));
 
 		glEnable(GL_BLEND);
@@ -2633,6 +2640,7 @@ int main()
 		// Fuego 3 ------------------------------------------------------------
 		model = ringCentro;
 		model = glm::translate(model, glm::vec3(-1 * xtorch, 13.5f, -1 * ztorch));
+		pointLights[2].SetPos(model[3]);
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 2.0f));
 
 		glEnable(GL_BLEND);
@@ -2646,6 +2654,7 @@ int main()
 		// Fuego 4 ------------------------------------------------------------
 		model = ringCentro;
 		model = glm::translate(model, glm::vec3(xtorch, 13.5f, -1 * ztorch));
+		pointLights[3].SetPos(model[3]);
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 2.0f));
 
 		glEnable(GL_BLEND);
