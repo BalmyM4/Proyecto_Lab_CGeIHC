@@ -99,7 +99,7 @@ void Camera::keyControl(bool* keys, GLfloat deltaTime)
     }
 
     // === CONTROLES NORMALES (solo cuando no estamos teletransportados) ===
-    if (!isTeleporting)
+    if (!isTeleporting && thirdperson)
     {
         if (keys[GLFW_KEY_W])
         {

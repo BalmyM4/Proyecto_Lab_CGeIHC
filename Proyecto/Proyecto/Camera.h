@@ -59,6 +59,7 @@ private:
 	glm::vec3 up;
 	glm::vec3 right;
 	glm::vec3 worldUp;
+	//radio al que se encuentra la cámara del objetivo
 	float r;
 	float focus;
 	GLfloat yaw;
