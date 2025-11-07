@@ -628,6 +628,7 @@ int main()
 	cespedTexture.LoadTextureA();
 
 
+	/*
 	// Skybox Textures (Day)
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
@@ -645,6 +646,25 @@ int main()
 	skyboxFaces2.push_back("Textures/Skybox/cupertin-lake-night_up.tga");
 	skyboxFaces2.push_back("Textures/Skybox/cupertin-lake-night_bk.tga");
 	skyboxFaces2.push_back("Textures/Skybox/cupertin-lake-night_ft.tga");
+	*/
+	
+	// Skybox Textures (Day)
+	std::vector<std::string> skyboxFaces;
+	skyboxFaces.push_back("Textures/Skybox/px.png");
+	skyboxFaces.push_back("Textures/Skybox/nx.png");
+	skyboxFaces.push_back("Textures/Skybox/ny.png");
+	skyboxFaces.push_back("Textures/Skybox/py.png");
+	skyboxFaces.push_back("Textures/Skybox/pz.png");
+	skyboxFaces.push_back("Textures/Skybox/nz.png");
+	// Skybox Textures (Night)
+	std::vector<std::string> skyboxFaces2;
+	skyboxFaces2.push_back("Textures/Skybox/px_night.png");
+	skyboxFaces2.push_back("Textures/Skybox/nx_night.png");
+	skyboxFaces2.push_back("Textures/Skybox/ny_night.png");
+	skyboxFaces2.push_back("Textures/Skybox/py_night.png");
+	skyboxFaces2.push_back("Textures/Skybox/pz_night.png");
+	skyboxFaces2.push_back("Textures/Skybox/nz_night.png");
+	
 
 	//Creaci�n del skybox
 	skybox = Skybox(skyboxFaces, skyboxFaces2);
