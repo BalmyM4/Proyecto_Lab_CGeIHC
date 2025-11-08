@@ -249,6 +249,13 @@ Model cb_Wumpa;
 Model cb_tnt;
 Model rm_portal;
 
+//decorative boxes
+Model cb_qbox;
+Model cb_akubox;
+Model cb_hbox;
+Model cb_wbox;
+Model cb_nitrobox;
+
 // Gradas
 Model grada;
 
@@ -798,6 +805,18 @@ int main()
 	// tnt de Crash Bandicoot
 	cb_tnt = Model();
 	cb_tnt.LoadModel("Models/Crash_bandicoot/cb_tnt.obj");
+
+	//Cajas decorativas
+	cb_qbox = Model();
+	cb_qbox.LoadModel("Models/Crash_bandicoot/cb_qbox.obj");
+	cb_akubox = Model();
+	cb_akubox.LoadModel("Models/Crash_bandicoot/cb_akubox.obj");
+	cb_hbox = Model();
+	cb_hbox.LoadModel("Models/Crash_bandicoot/cb_hbox.obj");
+	cb_wbox = Model();
+	cb_wbox.LoadModel("Models/Crash_bandicoot/cb_wbox.obj");
+	cb_nitrobox = Model();
+	cb_nitrobox.LoadModel("Models/Crash_bandicoot/cb_nitrobox.obj");
 
 	// portal de rick y morty
 	rm_portal = Model();
@@ -2273,6 +2292,39 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cb_dr_cortex.RenderModel();
 
+		// Cajas decorativas
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(115.0f, 0.5f, -70.8f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_qbox.RenderModel();
+
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(115.0f, 6.5f, -70.8f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_akubox.RenderModel();
+
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(115.0f, 0.5f, -62.8f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_nitrobox.RenderModel();
+
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(115.0f, 0.5f, -54.8f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_hbox.RenderModel();
+
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(115.0f, 6.5f, -54.8f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_wbox.RenderModel();
 
 		// ================================================================================ //
 		//																					//
