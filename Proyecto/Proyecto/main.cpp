@@ -610,7 +610,7 @@ int main()
 	CreateShaders();
 
 	// Camera
-	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.5f, 0.8f);
+	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.9f, 0.8f);
 
 
 	// =================================================================== //
@@ -1142,7 +1142,7 @@ int main()
 		model = glm::mat4(1.0);
 
 		// Posicionamiento global
-		if( !camera.getthirdperson() )
+		if( !camera.getthirdperson() && !camera.isTeleportingActive() && camera.getaerial())
 			mainWindow.procesarMovimiento(camera);
 
 		model = glm::translate(model, glm::vec3(mainWindow.getmovex_cb(), 6.2f, mainWindow.getmovez_cb()));
