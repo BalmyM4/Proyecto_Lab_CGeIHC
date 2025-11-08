@@ -46,8 +46,8 @@ public:
 	// Permite verificar si la cámara está en modo teletransporte
 	// Se usa para bloquear el movimiento del mouse durante el teletransporte
 	bool isTeleportingActive() { return isTeleporting; }
-	
 	GLboolean getthirdperson() { return thirdperson; };
+	GLboolean getaerial() { return aerial; };
 	GLfloat getyaw() { return yaw; };
 
 	~Camera();
@@ -68,7 +68,7 @@ private:
 	GLfloat moveSpeed;
 	GLfloat turnSpeed;
 	GLboolean thirdperson;
-
+	GLboolean aerial;
 	// Estas variables guardan el estado anterior de la cámara antes del
 	// teletransporte. Cuando se suelta la tecla, la cámara regresa
 	// exactamente a su posición y orientación original.
@@ -86,6 +86,7 @@ private:
 
 
 	void update();
+	void updateaerial();
 	void updatethird(glm::vec3 objetivo);
 
 };
