@@ -284,6 +284,10 @@ Model es_aguila;
 Model es_aguila_ala_der;
 Model es_aguila_ala_izq;
 
+// Mega caja keyframes 
+Model bs_megacajakey1;
+Model bs_monedakey;
+
 //Puesto
 Model es_puesto;
 
@@ -593,6 +597,7 @@ void CreateShaders()
 //																	   //
 // =================================================================== //
 
+
 FRAME KeyFrameAguila[MAX_FRAMES];
 int FrameIndexAguila = 0;
 int playIndexAguila = 0;
@@ -603,6 +608,35 @@ int i_curr_stepsAguila = 0;
 float posXaguila = 0.0f, posYaguila = 150.0f, posZaguila = 0.0f;
 float movAguila_x = 0.0f, movAguila_y = 0.0f, movAguila_z = 0.0f;
 float giroAguila = 0.0f;
+
+
+
+FRAME KeyFrameMegacaja[MAX_FRAMES];
+int FrameIndexMegacaja = 0;
+int playIndexMegacaja = 0;
+int i_max_stepsMegacaja = 100;
+int i_curr_stepsMegacaja = 0;
+
+//NEW// Keyframes
+float posXmegacaja = 0.0f, posYmegacaja = 0.0f, posZmegacaja = 0.0f;
+float movMegacaja_x = 0.0f, movMegacaja_y = 0.0f, movMegacaja_z = 0.0f;
+float giroMegacaja = 0.0f;
+
+
+FRAME KeyFrameMegacaja2[MAX_FRAMES];
+int FrameIndexMegacaja2 = 0;
+int playIndexMegacaja2 = 0;
+int i_max_stepsMegacaja2 = 100;
+int i_curr_stepsMegacaja2 = 0;
+
+//NEW// Keyframes
+float posXmegacaja2 = 0.0f, posYmegacaja2 = 0.0f, posZmegacaja2 = 0.0f;
+float movMegacaja2_x = 0.0f, movMegacaja2_y = 0.0f, movMegacaja2_z = 0.0f;
+float giroMegacaja2 = 0.0f;
+
+
+
+
 
 // =================================================================== //
 
@@ -834,6 +868,12 @@ int main()
 	megacaja2 = Model();
 	megacaja2.LoadModel("Models/Brawl_stars/bs_megacaja_abajo.obj");
 
+
+	// Mega caja key frames
+	bs_megacajakey1 = Model();
+	bs_megacajakey1.LoadModel("Models/Brawl_stars/bs_megacajakey.obj");
+
+
 	//Cactus
 	cactus = Model();
 	cactus.LoadModel("Models/Brawl_stars/bs_cactus.obj");
@@ -956,6 +996,12 @@ int main()
 
 	CargarKeyframesDesdeArchivo("keyframes_aguila.txt", movAguila_x, movAguila_y, movAguila_z, giroAguila, KeyFrameAguila, FrameIndexAguila);
 
+	CargarKeyframesDesdeArchivo("keyframes_megacaja.txt", movMegacaja_x, movMegacaja_y, movMegacaja_z, giroMegacaja, KeyFrameMegacaja, FrameIndexMegacaja);
+
+	CargarKeyframesDesdeArchivo("keyframes_megacaja2.txt", movMegacaja2_x, movMegacaja2_y, movMegacaja2_z, giroMegacaja2, KeyFrameMegacaja2, FrameIndexMegacaja2);
+
+
+
 	printf("\n=== TECLAS PARA USO DE KEYFRAMES Y MOVIMIENTO ===\n");
 	printf("1.- Barra espaciadora: Reproducir animación\n");
 	printf("2.- Tecla 0: Habilitar nuevamente la reproducción de la animación\n");
@@ -1049,6 +1095,9 @@ int main()
 	float escalaY = 80.0f;
 	float escalaZ = 60.0f;
 
+	// Para la megacaja key
+	glm::mat4 megacajaAux(1.0);
+	glm::vec3 megacajaPos(0.0f, 0.0f, 0.0f);
 
 
 	////Loop mientras no se cierra la ventana
@@ -1081,8 +1130,13 @@ int main()
 		// =================================================================== //
 
 		inputKeyframes(KeyFrameAguila, mainWindow.getsKeys(), movAguila_x, movAguila_y, movAguila_z, giroAguila);
+
 		animate(KeyFrameAguila, playIndexAguila, i_curr_stepsAguila, i_max_stepsAguila, FrameIndexAguila, movAguila_x, movAguila_y, movAguila_z, giroAguila);
 
+		//inputKeyframes(KeyFrameMegacaja, mainWindow.getsKeys(), movMegacaja_x, movMegacaja_y, movMegacaja_z, giroMegacaja);
+		animate(KeyFrameMegacaja, playIndexMegacaja, i_curr_stepsMegacaja, i_max_stepsMegacaja, FrameIndexMegacaja, movMegacaja_x, movMegacaja_y, movMegacaja_z, giroMegacaja);
+
+		animate(KeyFrameMegacaja2, playIndexMegacaja2, i_curr_stepsMegacaja2, i_max_stepsMegacaja2, FrameIndexMegacaja2, movMegacaja2_x, movMegacaja2_y, movMegacaja2_z, giroMegacaja2);
 		
 		// Solo controlar el mouse si NO estamos teletransportados
 		if (!camera.isTeleportingActive())
@@ -1620,6 +1674,31 @@ int main()
 		//																					//
 		// ================================================================================ //
 		
+
+
+		// Mega caja key
+		model = ringCentro;
+		model = glm::translate(model, glm::vec3(-100.0f, 1.5f, -35.0f));
+		megacajaPos = glm::vec3(posXmegacaja + movMegacaja_x, posYmegacaja + movMegacaja_y * 0.1, posZmegacaja + movMegacaja_z);
+		model = glm::translate(model, megacajaPos);
+
+		// Escalado
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+
+		// Rotación
+		model = glm::rotate(model, giroMegacaja * 4 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		megacajaAux = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		bs_megacajakey1.RenderModel();
+
+
+		//megacaja 2
+		model = megacajaAux;
+		model = glm::translate(model, glm::vec3(-1.1f, 0.7f, 0.0f));
+		model = glm::rotate(model, giroMegacaja2 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		megacaja1.RenderModel();
+
 
 		if (mainWindow.getMegacaja() ) {
 			if (rotcaja < 60.0f) {
@@ -2362,6 +2441,7 @@ int main()
 		model = glm::translate(model, glm::vec3(-350.0f, 0.0f, -350.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		es_piramide.RenderModel();
+
 
 		// Aguila -----------------------------------------------------------
 
