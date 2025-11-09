@@ -288,6 +288,10 @@ Model es_aguila_ala_izq;
 Model bs_megacajakey1;
 Model bs_monedakey;
 
+// Aku-Aku
+Model cb_aku;
+
+
 //Puesto
 Model es_puesto;
 
@@ -598,6 +602,7 @@ void CreateShaders()
 // =================================================================== //
 
 
+//Aguila
 FRAME KeyFrameAguila[MAX_FRAMES];
 int FrameIndexAguila = 0;
 int playIndexAguila = 0;
@@ -608,6 +613,7 @@ int i_curr_stepsAguila = 0;
 float posXaguila = 0.0f, posYaguila = 150.0f, posZaguila = 0.0f;
 float movAguila_x = 0.0f, movAguila_y = 0.0f, movAguila_z = 0.0f;
 float giroAguila = 0.0f;
+
 
 
 
@@ -636,6 +642,18 @@ float giroMegacaja2 = 0.0f;
 
 
 
+
+
+//Aku
+FRAME KeyFrameaku[MAX_FRAMES];
+int FrameIndexaku = 0;
+int playIndexaku = 0;
+int i_max_stepsaku = 100;
+int i_curr_stepsaku = 0;
+
+float posXaku = 87.6f, posYaku = 20.0f, posZaku = -62.5f;
+float movaku_x = 0.0f, movaku_y = -0.0f, movaku_z = 0.0f;
+float giroaku = 260.0f;
 
 
 // =================================================================== //
@@ -896,6 +914,10 @@ int main()
 	cb_dr_cortex = Model();
 	cb_dr_cortex.LoadModel("Models/Crash_bandicoot/cb_dr_cortex.obj");
 
+	//aku
+	cb_aku = Model();
+	cb_aku.LoadModel("Models/Crash_bandicoot/cb_aku.obj");
+
 	// Piramide
 	es_piramide = Model();
 	es_piramide.LoadModel("Models/Escenario/es_pyramid.obj");
@@ -903,7 +925,6 @@ int main()
 	es_minecraft_temple.LoadModel("Models/Escenario/es_minecraft_temple.obj");
 	es_temple = Model();
 	es_temple.LoadModel("Models/Escenario/es_temple.obj");
-	
 
 	// Aguila
 	es_aguila = Model();
@@ -995,7 +1016,16 @@ int main()
 	// =================================================================== //
 
 	CargarKeyframesDesdeArchivo("keyframes_aguila.txt", movAguila_x, movAguila_y, movAguila_z, giroAguila, KeyFrameAguila, FrameIndexAguila);
+	CargarKeyframesDesdeArchivo("keyframes_aku.txt", movaku_x, movaku_y, movaku_z, giroaku, KeyFrameaku, FrameIndexaku);
 
+	
+	
+	
+	
+	
+	
+	
+	
 	CargarKeyframesDesdeArchivo("keyframes_megacaja.txt", movMegacaja_x, movMegacaja_y, movMegacaja_z, giroMegacaja, KeyFrameMegacaja, FrameIndexMegacaja);
 
 	CargarKeyframesDesdeArchivo("keyframes_megacaja2.txt", movMegacaja2_x, movMegacaja2_y, movMegacaja2_z, giroMegacaja2, KeyFrameMegacaja2, FrameIndexMegacaja2);
@@ -1010,19 +1040,19 @@ int main()
 
 	printf("=== MOVIMIENTO MANUAL DEL HELICÓPTERO ===\n");
 	printf("EJE X:\n");
-	printf("   Tecla 1: Mover en X positivo (+X)\n");
-	printf("   Tecla 2: Mover en X negativo (-X)\n");
-	printf("   Tecla 3: Desbloquear eje X para volver a mover\n\n");
+	printf("   Tecla X: Mover en X positivo (+X)\n");
+	printf("   Tecla C: Mover en X negativo (-X)\n");
+	printf("   Tecla V: Desbloquear eje X para volver a mover\n\n");
 
 	printf("EJE Y:\n");
-	printf("   Tecla 4: Mover en Y positivo (+Y)\n");
-	printf("   Tecla 5: Mover en Y negativo (-Y)\n");
-	printf("   Tecla 6: Desbloquear eje Y para volver a mover\n\n");
+	printf("   Tecla Y: Mover en Y positivo (+Y)\n");
+	printf("   Tecla U: Mover en Y negativo (-Y)\n");
+	printf("   Tecla I: Desbloquear eje Y para volver a mover\n\n");
 
 	printf("EJE Z:\n");
-	printf("   Tecla 7: Mover en Z positivo (+Z)\n");
-	printf("   Tecla 8: Mover en Z negativo (-Z)\n");
-	printf("   Tecla 9: Desbloquear eje Z para volver a mover\n\n");
+	printf("   Tecla H: Mover en Z positivo (+Z)\n");
+	printf("   Tecla J: Mover en Z negativo (-Z)\n");
+	printf("   Tecla K: Desbloquear eje Z para volver a mover\n\n");
 
 	printf("ROTACION EN EJE Y:\n");
 	printf("   Tecla Q: Rotar a la izquierda (−Y)\n");
@@ -1034,7 +1064,7 @@ int main()
 
 
 	//Variables ciclo dia/noche
-	float ciclo = 30.0f;
+	float ciclo = 60.0f;
 	float ctime;
 	float nfactor;
 
@@ -1129,6 +1159,7 @@ int main()
 		//																	   //
 		// =================================================================== //
 
+
 		inputKeyframes(KeyFrameAguila, mainWindow.getsKeys(), movAguila_x, movAguila_y, movAguila_z, giroAguila);
 
 		animate(KeyFrameAguila, playIndexAguila, i_curr_stepsAguila, i_max_stepsAguila, FrameIndexAguila, movAguila_x, movAguila_y, movAguila_z, giroAguila);
@@ -1137,6 +1168,12 @@ int main()
 		animate(KeyFrameMegacaja, playIndexMegacaja, i_curr_stepsMegacaja, i_max_stepsMegacaja, FrameIndexMegacaja, movMegacaja_x, movMegacaja_y, movMegacaja_z, giroMegacaja);
 
 		animate(KeyFrameMegacaja2, playIndexMegacaja2, i_curr_stepsMegacaja2, i_max_stepsMegacaja2, FrameIndexMegacaja2, movMegacaja2_x, movMegacaja2_y, movMegacaja2_z, giroMegacaja2);
+
+		//inputKeyframes(KeyFrameAguila, mainWindow.getsKeys(), movAguila_x, movAguila_y, movAguila_z, giroAguila);
+		animate(KeyFrameAguila, playIndexAguila, i_curr_stepsAguila, i_max_stepsAguila, FrameIndexAguila, movAguila_x, movAguila_y, movAguila_z, giroAguila);
+		//inputKeyframes(KeyFrameaku, mainWindow.getsKeys(), movaku_x, movaku_y, movaku_z, giroaku);
+		animate(KeyFrameaku, playIndexaku, i_curr_stepsaku, i_max_stepsaku, FrameIndexaku, movaku_x, movaku_y, movaku_z, giroaku);
+
 		
 		// Solo controlar el mouse si NO estamos teletransportados
 		if (!camera.isTeleportingActive())
@@ -1224,7 +1261,7 @@ int main()
 
 		posicionmodel = glm::vec3(model[3]) + glm::vec3(0.0f, 10.0f, -5.0f);
 
-
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		crashAux = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cb_cuerpo.RenderModel();
@@ -2404,6 +2441,23 @@ int main()
 		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cb_wbox.RenderModel();
+
+		// ================================================================================ //
+		//																					//
+		//								Aku-Aku												//
+		//																					//
+		// ================================================================================ //
+
+		model = ringCentro;
+		//posblackhawk = glm::vec3();
+		//model = glm::translate(model, glm::vec3());
+		model = glm::translate(model, glm::vec3(posXaku + movaku_x, posYaku + movaku_y, posZaku + movaku_z));
+		model = glm::scale(model, glm::vec3(15.0f, 15.0f, 15.0f));
+		model = glm::rotate(model, giroaku * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cb_aku.RenderModel();
 
 		// ================================================================================ //
 		//																					//

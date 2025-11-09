@@ -30,4 +30,3 @@ movAguila_x movAguila_y movAguila_z giroAguila
 10.0 -10.0 100.0 20.0
 -0.0 -10.0 10.0 0.0
 -0.0 -10.0 -0.0 0.0
-

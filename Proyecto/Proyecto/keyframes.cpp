@@ -37,7 +37,7 @@ void saveFrame(FRAME* KeyFrame, int& FrameIndex, float& mov_x, float& mov_y, flo
 	KeyFrame[FrameIndex].giro = giro;
 
 	// Guardar en el archivo de texto
-	AgregarKeyframeEnArchivo("keyframes_aguila.txt", mov_x, mov_y, mov_z, giro);
+	AgregarKeyframeEnArchivo("keyframes_aku.txt", mov_x, mov_y, mov_z, giro);
 
 	FrameIndex++;
 }
@@ -228,24 +228,24 @@ void inputKeyframes(FRAME* KeyFrame, bool* keys, float& mov_x, float& mov_y, flo
 	}
 
 	// Para Movimiento X (tecla 1 y 2 mueve, tecla 2 habilita)
-	if (keys[GLFW_KEY_1])
+	if (keys[GLFW_KEY_X])
 	{
 		if (ciclo < 1)
 		{
 			//printf("mov_x es: %f\n", mov_x);
-			mov_x += 10.0f;
+			mov_x += 2.0f;
 			printf("\n mov_x es: %f\n", mov_x);
 			ciclo++;
 			ciclo2 = 0;
 			printf("\n Presiona la tecla 2 para poder habilitar la variable\n");
 		}
 	}
-	if (keys[GLFW_KEY_2])
+	if (keys[GLFW_KEY_C])
 	{
 		if (ciclo < 1)
 		{
 			//printf("mov_x es: %f\n", mov_x);
-			mov_x -= 10.0f;
+			mov_x -= 2.0f;
 			printf("\n mov_x es: %f\n", mov_x);
 			ciclo++;
 			ciclo2 = 0;
@@ -253,7 +253,7 @@ void inputKeyframes(FRAME* KeyFrame, bool* keys, float& mov_x, float& mov_y, flo
 		}
 
 	}
-	if (keys[GLFW_KEY_3])
+	if (keys[GLFW_KEY_V])
 	{
 		if (ciclo2 < 1)
 		{
@@ -265,27 +265,27 @@ void inputKeyframes(FRAME* KeyFrame, bool* keys, float& mov_x, float& mov_y, flo
 
 	// ================= MOVIMIENTO EN Y =================
 	static bool cy1 = false, cy2 = false;
-	if (keys[GLFW_KEY_4]) // Mover +Y
+	if (keys[GLFW_KEY_Y]) // Mover +Y
 	{
 		if (!cy1)
 		{
-			mov_y += 10.0f;
+			mov_y += 2.0f;
 			printf("\nmov_y: %.2f (+Y)\n", mov_y);
 			cy1 = true; cy2 = false;
 			printf("Presiona 6 para desbloquear el eje Y\n");
 		}
 	}
-	if (keys[GLFW_KEY_5]) // Mover -Y
+	if (keys[GLFW_KEY_U]) // Mover -Y
 	{
 		if (!cy1)
 		{
-			mov_y -= 10.0f;
+			mov_y -= 2.0f;
 			printf("\nmov_y: %.2f (-Y)\n", mov_y);
 			cy1 = true; cy2 = false;
 			printf("Presiona 6 para desbloquear el eje Y\n");
 		}
 	}
-	if (keys[GLFW_KEY_6]) // Desbloquear eje Y
+	if (keys[GLFW_KEY_I]) // Desbloquear eje Y
 	{
 		if (!cy2)
 		{
@@ -296,27 +296,27 @@ void inputKeyframes(FRAME* KeyFrame, bool* keys, float& mov_x, float& mov_y, flo
 
 	// ================= MOVIMIENTO EN Z =================
 	static bool cz1 = false, cz2 = false;
-	if (keys[GLFW_KEY_7]) // Mover +Z
+	if (keys[GLFW_KEY_H]) // Mover +Z
 	{
 		if (!cz1)
 		{
-			mov_z += 10.0f;
+			mov_z += 2.0f;
 			printf("\nmov_z: %.2f (+Z)\n", mov_z);
 			cz1 = true; cz2 = false;
 			printf("Presiona 9 para desbloquear el eje Z\n");
 		}
 	}
-	if (keys[GLFW_KEY_8]) // Mover -Z
+	if (keys[GLFW_KEY_J]) // Mover -Z
 	{
 		if (!cz1)
 		{
-			mov_z -= 10.0f;
+			mov_z -= 2.0f;
 			printf("\nmov_z: %.2f (-Z)\n", mov_z);
 			cz1 = true; cz2 = false;
 			printf("Presiona 9 para desbloquear el eje Z\n");
 		}
 	}
-	if (keys[GLFW_KEY_9]) // Desbloquear eje Z
+	if (keys[GLFW_KEY_K]) // Desbloquear eje Z
 	{
 		if (!cz2)
 		{
