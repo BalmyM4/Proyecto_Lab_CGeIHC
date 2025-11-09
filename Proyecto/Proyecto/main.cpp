@@ -71,7 +71,7 @@ float alturaMax = 10.0f;
 
 // VS
 float timerUlti = 0.0f; 
-float intervaloUlti = 80.0f;
+float intervaloUlti = 150.0f;
 
 
 // Cartel
