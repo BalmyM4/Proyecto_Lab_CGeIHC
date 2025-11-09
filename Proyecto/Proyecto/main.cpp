@@ -756,7 +756,6 @@ int main()
 	cb_brazo_izq_1 = Model();
 	cb_brazo_izq_1.LoadModel("Models/Crash_bandicoot/cb_brazo_izq_1.obj");
 
-
 	// Banco Hollow Knight
 	hk_Banco = Model();
 	hk_Banco.LoadModel("Models/Hollow_knight/hk_Banco.obj");
@@ -836,7 +835,6 @@ int main()
 	// portal de rick y morty
 	rm_portal = Model();
 	rm_portal.LoadModel("Models/Rick_and_morty/rm_Portal.obj");
-
 
 	//Grada
 	grada = Model();
@@ -1029,6 +1027,8 @@ int main()
 	glm::mat4 ringCentro(1.0);
 	glm::mat4 luciernagaPos(1.0);
 	glm::mat4 iseldaPos(1.0);
+
+	// Crash Bandicoot (Avatar)
 	glm::mat4 crashAux(1.0);
 	glm::mat4 crashExtrAux(1.0);
 
@@ -1608,6 +1608,7 @@ int main()
 		//																					//
 		// ================================================================================ //
 	
+
 		// Grada 1
 		model = ringCentro;
 		model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
@@ -1617,14 +1618,12 @@ int main()
 		grada.RenderModel();
 
 
-		
-
-
 		// ================================================================================ //
 		//																					//
 		//									Shely											//
 		//																					//
 		// ================================================================================ //
+
 
 		// Shely
 		model = ringCentro;
@@ -1633,6 +1632,7 @@ int main()
 		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		shely.RenderModel();
+
 
 		// ================================================================================ //
 		//																					//
@@ -2185,6 +2185,7 @@ int main()
 			// Sube y baja
 			posW.y += sin((wumpaTime * 0.5f) + (i * 1.0f)) * 1.5f;
 
+			// Render wumpa
 			model = glm::mat4(1.0f);
 			model = ringCentro;
 			model = glm::translate(model, posW);

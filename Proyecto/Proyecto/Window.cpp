@@ -160,18 +160,6 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		}
 	}
 
-	/*
-	// Dash de Hollow Knight
-	if (key == GLFW_KEY_X && action == GLFW_PRESS)
-	{
-
-		if (!theWindow->bs_ulti)
-		{
-			theWindow->bs_ulti = true;
-		}
-
-
-	}*/
 
 	// Explotar TNT de Crash Bandicoot
 	if (key == GLFW_KEY_Z && action == GLFW_PRESS)
@@ -261,8 +249,7 @@ void Window::procesarMovimiento(Camera& camera)
 		actualizarAnguloMovimiento(anguloMovimiento, dirAnguloMovimiento, velocidadAngular, topeInf, topeSup);
 		actualizarAnguloMovimiento(anguloMovimiento2, dirAnguloMovimiento2, velocidadAngular2, topeInf2, topeSup2);
 		actualizarAnguloMovimiento(anguloMovimiento3, dirAnguloMovimiento3, velocidadAngular3, topeInf3, topeSup3);
-	}
-		
+	}	
 	if (keys[GLFW_KEY_D])  // Derecha
 	{
 		move += right * velocidad;
@@ -270,8 +257,7 @@ void Window::procesarMovimiento(Camera& camera)
 		actualizarAnguloMovimiento(anguloMovimiento, dirAnguloMovimiento, velocidadAngular, topeInf, topeSup);
 		actualizarAnguloMovimiento(anguloMovimiento2, dirAnguloMovimiento2, velocidadAngular2, topeInf2, topeSup2);
 		actualizarAnguloMovimiento(anguloMovimiento3, dirAnguloMovimiento3, velocidadAngular3, topeInf3, topeSup3);
-	}
-		
+	}	
 	if (keys[GLFW_KEY_A])  // Izquierda
 	{
 		move -= right * velocidad;
